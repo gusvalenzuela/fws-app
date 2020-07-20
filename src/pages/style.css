@@ -1,59 +1,11 @@
 html,
 body {
-  padding: 0;
-  margin: 0;
-  height: auto;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   /* background: url(../images/what-the-hex-dark.png); */
 }
 
-.container {
-  min-height: 100vh;
-  padding: 0 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 main {
-  padding: 5rem 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-footer {
-  color: #ffffff;
-  width: 100%;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-footer * {
-  padding: 0.25rem;
-  font-size: 1.25rem;
-}
-
-footer img {
-  margin-left: 0.5rem;
-}
-
-footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-footer a:hover {
-  color: #0070f3;
-  text-decoration: underline;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
 }
