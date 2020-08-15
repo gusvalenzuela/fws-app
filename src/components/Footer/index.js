@@ -1,4 +1,4 @@
-export default function Foot() {
+export default function Footer() {
   return (
     <footer className="footer">
       <div style={{ display: "flex" }}>

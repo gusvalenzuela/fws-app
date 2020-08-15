@@ -1,0 +1,22 @@
+.navList {
+  display: flex;
+  list-style: none;
+}
+.navList li {
+  margin-right: 14px;
+  padding: 10px;
+}
+.navList li:hover {
+  background-color: darkblue;
+}
+.navLink {
+  text-decoration: none;
+}
+
+.active:after {
+  content: "]";
+}
+
+.active::before {
+  content: "[";
+}

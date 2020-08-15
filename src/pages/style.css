@@ -7,5 +7,101 @@ body {
 
 main {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  height: 100vh;
+
+  grid-template-rows: auto 1fr auto;
+}
+.page-header {
+  padding: 1rem;
+  background: rgb(43, 255, 0);
+  margin-bottom: 1rem;
+}
+.main-content {
+  display: grid;
+  /* in grid-template > 
+  rows / columns
+
+  in rows > make new template here
+   */
+  grid-template-rows: max-content auto max-content;
+  /* grid-template-rows: min-content auto; */
+}
+.page-header,
+.page-footer {
+  /* grid-column: 1/13; */
+  justify-content: center;
+}
+
+.main-content > .page-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.matchup-container {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  height: fit-content;
+  /* background-color: rgb(0, 0, 0); */
+  /* height: max-content; */
+}
+.matchup-container .left-side,
+.matchup-container .right-side {
+  flex: 0 1 225px;
+  margin: 4px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* max-width: 373px; */
+  max-height: 290px;
+}
+/* .matchup-container .versus-icon{
+  flex: 0 1 375px;
+} */
+
+/* .matchup-container:hover {
+  opacity: 0.5;
+  cursor: pointer;
+} */
+.team-container {
+  justify-content: center;
+  display: flex;
+  flex: 0 1 300px;
+  padding: 0.25rem;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0);
+  background-position: center;
+  background-size: cover;
+  min-height: 100px;
+  border: 1px solid black;
+  justify-content: center;
+}
+.team-container div {
+  /* color: aliceblue; */
+  align-self: center;
+  padding: 1rem 0;
+  width: 100%;
+  /* background-color: rgba(0, 0, 0, 0.582); */
+}
+.versus-icon {
+  padding: 0;
+  margin: auto;
+  align-self: center;
+  font-size: 3rem;
+  position: absolute;
+  z-index: 7;
+  top: 0;
+  background-color: rgb(255, 0, 0);
+  font-weight: 800;
+}
+.selected-checkmark {
+  float: right;
+  font-size: 2.1rem;
+  font-weight: 900;
+  color: rgb(255, 255, 255);
+}
+.selected {
+  background-color: rgb(0, 255, 0) !important;
 }

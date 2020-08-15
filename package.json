@@ -8,8 +8,11 @@
     "start": "next start"
   },
   "dependencies": {
+    "lazysizes": "5.2.2",
     "next": "9.4.4",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "semantic-ui-css": "2.4.1",
+    "semantic-ui-react": "1.2.0"
   }
 }
