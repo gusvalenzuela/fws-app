@@ -1,5 +1,6 @@
 # local stuff
 .local*/
+.env.sample*
 
 # Logs
 logs

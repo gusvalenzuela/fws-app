@@ -16,6 +16,9 @@ main {
   background: rgb(43, 255, 0);
   margin-bottom: 1rem;
 }
+.page-content {
+  text-align: center;
+}
 .main-content {
   display: grid;
   grid-template-rows: max-content auto max-content;
@@ -68,6 +71,7 @@ main {
 }
 .team-container {
   text-align: center;
+  height: 100%;
 }
 .versus-icon {
   padding: 0;
@@ -81,7 +85,7 @@ main {
   font-weight: 800;
 }
 .team-selected {
-  background-color: aquamarine;
+  background-color: rgb(189, 189, 189);
 }
 .selected {
   background-color: rgb(0, 255, 0) !important;

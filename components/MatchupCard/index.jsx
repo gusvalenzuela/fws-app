@@ -6,8 +6,8 @@ const MatchupCard = ({ matchup }) => {
   const [msg, setMsg] = useState({ message: "", isError: false });
   const handleTeamSelection = async (event) => {
     event.preventDefault();
-    // if (isUpdating) return;
-    // setIsUpdating(true);
+    if (isUpdating) return;
+    setIsUpdating(true);
     let pick = {
       event_id: matchup.event_id,
       team_selected: event.currentTarget.dataset.team,
@@ -17,6 +17,8 @@ const MatchupCard = ({ matchup }) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(pick),
     });
+
+    setIsUpdating(false);
     if (res.status === 200) {
       await res.json();
       setMsg({ message: "Picks updated" });
@@ -44,39 +46,67 @@ const MatchupCard = ({ matchup }) => {
                   data-team={team.abbreviation}
                   data-event={matchup.event_id}
                   id={team.abbreviation}
+                  width="7"
                 >
                   <img
                     src={`/images/teamlogos/${team.abbreviation}.png`}
                     alt={`${team.abbreviation}'s team logo`}
                     id="team-logo-img"
                   />
-                  <h2 style={{ margin: 0, marginTop: "-20px" }}>
+                  <h2 style={{ margin: 0, marginTop: "-10px" }}>
                     {matchup.teams
                       ? `${team.name} ${team.mascot}`
                       : "Team Name"}
                   </h2>
                   <br />
-                  <p style={{ margin: 0, marginTop: "-20px" }}>
-                    {
-                      // if point spread is negative display
-                      // only if current rendered team is also fav
-                      team.is_home &&
-                      matchup.lines[2].spread.point_spread_home < 0
-                        ? matchup.lines[2].spread.point_spread_home
-                        : (team.is_away &&
-                            matchup.lines[2].spread.point_spread_away) < 0
-                        ? matchup.lines[2].spread.point_spread_away
-                        : ""
-                    }
-                  </p>
+                  {
+                    // if point spread is negative display
+                    // & only if current rendered team is also fav
+                    team.is_home &&
+                    matchup.lines[2].spread.point_spread_home < 0 ? (
+                      <p
+                        style={{
+                          margin: 0,
+                          marginTop: "-20px",
+                          fontSize: "2rem",
+                          color: "red",
+                          fontWeight: "800",
+                        }}
+                      >
+                        {matchup.lines[2].spread.point_spread_home}
+                      </p>
+                    ) : (team.is_away &&
+                        matchup.lines[2].spread.point_spread_away) < 0 ? (
+                      <p
+                        style={{
+                          margin: 0,
+                          marginTop: "-20px",
+                          fontSize: "2rem",
+                          color: "red",
+                          fontWeight: "800",
+                        }}
+                      >
+                        {matchup.lines[2].spread.point_spread_away}
+                      </p>
+                    ) : (
+                      <p style={{ visibility: "hidden" }}>underdog</p>
+                    )
+                  }
                 </Grid.Column>
                 {
                   // this makes the middle "third column" only on the first iteration of "teams"
                   index === 0 ? (
-                    <Grid.Column textAlign="center" className="matchup-divider">
+                    <Grid.Column
+                      width="2"
+                      textAlign="center"
+                      className="matchup-divider"
+                      verticalAlign="middle"
+                    >
                       <Icon size="huge" name="at" />
-                      <p>Stadium: </p>
-                      <p>Weather: </p>
+                      <p style={{ marginTop: ".5rem", fontSize: "1.2rem" }}>
+                        {new Date(matchup.event_date).toLocaleTimeString()}
+                      </p>
+                      {/* <p>Weather: </p> */}
                     </Grid.Column>
                   ) : (
                     ""

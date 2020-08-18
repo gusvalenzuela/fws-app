@@ -8,20 +8,18 @@ import { Dropdown, Divider } from "semantic-ui-react";
 import { useCurrentUser } from "../lib/hooks";
 
 function Weeks() {
-  const [week, setWeek] = useState(5);
+  const [week, setWeek] = useState(1);
+  const [tiebreaker, setTiebreaker] = useState(1);
   const [user] = useCurrentUser();
   const [userPicks, setUserPicks] = useState([]);
+  // sort by event date
+  Schedule.events.sort(
+    (a, b) => new Date(a.event_date) - new Date(b.event_date)
+  );
 
   var events = Schedule.events.filter((i) =>
     i.schedule && i.schedule.week === week ? i : null
   );
-
-  // const datesSorted = [...events.map((i) => i.event_date)].sort();
-
-  // events.forEach((i) => {
-  //   let tsh = new Date(Date.UTC(i.event_date));
-  //   console.log(tsh.getDate());
-  // });
 
   const weeksOptions = () => {
     // because the weeks here are iterable numerically (1-17)
@@ -33,11 +31,11 @@ function Weeks() {
         key: i,
         text: i,
         value: i,
-        // image: { avatar: true, src: "/images/avatar/small/matt.jpg" },
       });
     }
     return optionsArray;
   };
+
   const tiebreakerOptions = () => {
     // function that creates the dropdown options needed for tiebreaker
     // min 1 (declared in i), max 192 (declared in max)
@@ -53,6 +51,27 @@ function Weeks() {
       });
     }
     return optionsArray;
+  };
+
+  const handleTiebreakerSubmit = async () => {
+    // append this tiebreaker to
+    // event_id of matchup (i.e. MNF)
+    let tiePick = {
+      event_id: "something",
+      tiebreaker: tiebreaker,
+    };
+    const res = await fetch("/api/picks", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(tiePick),
+    });
+
+    if (res.status === 200) {
+      await res.json();
+      // setMsg({ message: "Pick updated" });
+    } else {
+      // setMsg({ message: await res.text(), isError: true });
+    }
   };
 
   async function getUserPicks() {
@@ -89,6 +108,11 @@ function Weeks() {
     getUserPicks();
   }, [week]);
 
+  useEffect(() => {
+    // add bounce delay
+    handleTiebreakerSubmit();
+  }, [tiebreaker]);
+
   // console.log(`events this week ${week}`, events);
 
   return (
@@ -114,12 +138,39 @@ function Weeks() {
           <Divider />
           {/* for each game of the week, make a matchup card component */}
           {events.map((matchup, inx) => {
+            // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
+            // this is for the header of each "matchup day" subsection
+            let print;
+            // we print the first date in the week every time
+            if (inx > 0) {
+              // check if the previous day of the week in the mapping is the same as current
+              if (
+                new Date(events[inx - 1].event_date).getDay() ===
+                new Date(matchup.event_date).getDay()
+              ) {
+                // if it is the same day as the previous
+                // do not print, by setting print to false
+                print = false;
+              } else {
+                // else print it
+                print = true;
+              }
+            } else {
+              // when inx = 0, print day
+              print = true;
+            }
+
             return (
-              <MatchupCard
-                key={inx}
-                matchup={matchup}
-                // mdScreen={viewportMin.matches}
-              />
+              <>
+                <h1>
+                  {!print ? "" : new Date(matchup.event_date).toDateString()}
+                </h1>
+                <MatchupCard
+                  key={inx}
+                  matchup={matchup}
+                  // mdScreen={viewportMin.matches}
+                />
+              </>
             );
           })}
         </div>
@@ -127,7 +178,14 @@ function Weeks() {
           <p>(D) = Divisional matchup</p>
           <div>
             <b>Your Tiebreaker</b>
-            <select></select>
+            <Dropdown
+              // placeholder="Select a week"
+              selection
+              options={tiebreakerOptions()}
+              onChange={(e, { value }) => setTiebreaker(value)}
+              text={tiebreaker.toString()}
+              labeled
+            />
             <span
               style={{
                 display: `${
