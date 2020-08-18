@@ -1,6 +1,10 @@
-require('dotenv').config();
+require("dotenv").config();
 
 module.exports = {
+  reactStrictMode: true,
+  // devIndicators: {
+  //   autoPrerender: false,
+  // },
   env: {
     MONGODB_URI: process.env.MONGODB_URI,
     CLOUDINARY_URL: process.env.CLOUDINARY_URL,

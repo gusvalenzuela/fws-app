@@ -2,6 +2,7 @@ import Head from "next/head";
 import Footer from "../components/Footer";
 import Nav from "../components/Nav";
 import MatchupCard from "../components/MatchupCard";
+import TimeDisplay from "../components/TimeDisplay";
 import React, { useState, useEffect } from "react";
 import Schedule from "../lib/local_schedule_events.json";
 import { Dropdown, Divider } from "semantic-ui-react";
@@ -9,18 +10,32 @@ import { useCurrentUser } from "../lib/hooks";
 
 function Weeks() {
   const [user] = useCurrentUser();
-  const [week, setWeek] = useState(1);
-  const [tiebreaker, setTiebreaker] = useState(1);
+  const [curTime, setCurTime] = useState(new Date(Date.now()));
   const [userPicks, setUserPicks] = useState([]);
+  const [events, setEvents] = useState(null);
+  const [week, setWeek] = useState(1);
+  const [tiebreaker, setTiebreaker] = useState(0);
+  const [tiebreakerMatchup, setTiebreakerMatchup] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  // sort by event date
-  Schedule.events.sort(
-    (a, b) => new Date(a.event_date) - new Date(b.event_date)
-  );
 
-  var events = Schedule.events.filter((i) =>
-    i.schedule && i.schedule.week === week ? i : null
-  );
+  // on mount
+  useEffect(() => {
+    // sort by event date
+    Schedule.events.sort(
+      (a, b) => new Date(a.event_date) - new Date(b.event_date)
+    );
+
+    // filter out the desired week
+    let filteredEvents = Schedule.events.filter((i) =>
+      i.schedule && i.schedule.week === week ? i : null
+    );
+    setEvents(filteredEvents);
+    setTiebreakerMatchup(filteredEvents[filteredEvents.length - 1]);
+    // update current time every second
+    setInterval(() => {
+      setCurTime(new Date(Date.now()));
+    }, 1000);
+  }, []);
 
   const weeksOptions = () => {
     // because the weeks here are iterable numerically (1-17)
@@ -58,7 +73,7 @@ function Weeks() {
     // append this tiebreaker to
     // event_id of matchup (i.e. MNF)
     let tiePick = {
-      event_id: "something",
+      event_id: tiebreakerMatchup.event_id || "throwaway_event",
       tiebreaker: tiebreaker,
     };
     const res = await fetch("/api/picks", {
@@ -80,13 +95,23 @@ function Weeks() {
       method: "GET",
     });
     if (res.status === 200) {
-      const response = await res.json();
-      setUserPicks(response.picks);
+      const { picks } = await res.json();
+      setUserPicks(picks);
+      // find eventId of tiebreaker match within user picks
+      for (const p of picks) {
+        // if found, set the current tiebreaker state or use 0
+        if (p.event_id === tiebreakerMatchup.event_id && p.tiebreaker) {
+          setTiebreaker(p.tiebreaker);
+        } else {
+          setTiebreaker(0);
+        }
+      }
     } else {
       console.log(`something went wrong`);
     }
   }
 
+  // visually update the teams selected by toggling a class name
   useEffect(() => {
     if (userPicks && userPicks.length > 0) {
       // updating the visuals for the current user's picks
@@ -110,7 +135,7 @@ function Weeks() {
       team.classList.remove("team-selected");
     });
     // triggers a re-render when a "pick" is made
-    // setupdating is sent to each MatchupCard 
+    // setupdating is sent to each MatchupCard
     if (!isUpdating) {
       getUserPicks();
     }
@@ -121,7 +146,7 @@ function Weeks() {
     handleTiebreakerSubmit();
   }, [tiebreaker]);
 
-  // console.log(`events this week ${week}`, events);
+  console.log(`events this week ${week}`, events);
 
   return (
     <main id="weeks">
@@ -131,76 +156,95 @@ function Weeks() {
       <Nav />
       <div className="main-content">
         <div className="page-header">
-          <h1>Today is: Friday, October 21st, 2049 7:55PM</h1>
-          <Dropdown
-            // placeholder="Select a week"
-            selection
-            options={weeksOptions()}
-            onChange={(e, data) => setWeek(data.value)}
-            text={`Week ${week.toString()}`}
-            labeled
-          />
+          <h1>
+            <TimeDisplay dt={curTime} />
+          </h1>
         </div>
         <div className="page-content">
-          <h1 className="week-header">Week {week}!</h1>
+          <div className="week-header">
+            {events &&
+              events.length > 0 &&
+              `${events[0].schedule?.season_year} ${events[0].schedule?.season_type} `}
+            <Dropdown
+              // placeholder="Select a week"
+              selection
+              options={weeksOptions()}
+              onChange={(e, data) => setWeek(data.value)}
+              text={`Week ${week.toString()}`}
+              labeled
+              className="week-dropdown"
+              compact
+            />{" "}
+            ({events && events.length > 0 && events[0].schedule?.week_detail})
+          </div>
           <Divider />
           {/* for each game of the week, make a matchup card component */}
-          {events.map((matchup, inx) => {
-            // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
-            // this is for the header of each "matchup day" subsection
-            let print;
-            // we print the first date in the week every time
-            if (inx > 0) {
-              // check if the previous day of the week in the mapping is the same as current
-              if (
-                new Date(events[inx - 1].event_date).getDay() ===
-                new Date(matchup.event_date).getDay()
-              ) {
-                // if it is the same day as the previous
-                // do not print, by setting print to false
-                print = false;
+          {events &&
+            events.length > 0 &&
+            events.map((matchup, inx) => {
+              // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
+              // this is for the header of each "matchup day" subsection
+              let print;
+              // we print the first date in the week every time
+              if (inx > 0) {
+                // check if the previous day of the week in the mapping is the same as current
+                if (
+                  new Date(events[inx - 1].event_date).getDay() ===
+                  new Date(matchup.event_date).getDay()
+                ) {
+                  // if it is the same day as the previous
+                  // do not print, by setting print to false
+                  print = false;
+                } else {
+                  // else print it
+                  print = true;
+                }
               } else {
-                // else print it
+                // when inx = 0, print day
                 print = true;
               }
-            } else {
-              // when inx = 0, print day
-              print = true;
-            }
 
-            return (
-              <>
-                {!print ? (
-                  ""
-                ) : (
-                  <h1 key={inx}>
-                    {new Date(matchup.event_date).toDateString()}
-                  </h1>
-                )}
+              return (
+                <>
+                  {!print ? (
+                    <Divider
+                      // content={matchup.schedule?.event_name}
+                      className="container-divider"
+                    />
+                  ) : (
+                    <h1 className="matchup-day-header" key={inx}>
+                      {new Date(matchup.event_date).toDateString()}
+                    </h1>
+                  )}
 
-                <MatchupCard
-                  key={matchup.event_id}
-                  matchup={matchup}
-                  isUpdating={isUpdating}
-                  setIsUpdating={setIsUpdating}
-                  // mdScreen={viewportMin.matches}
-                />
-              </>
-            );
-          })}
+                  <MatchupCard
+                    key={matchup.event_id}
+                    matchup={matchup}
+                    isUpdating={isUpdating}
+                    setIsUpdating={setIsUpdating}
+                    // mdScreen={viewportMin.matches}
+                  />
+                </>
+              );
+            })}
         </div>
         <div className="page-footer">
           <p>(D) = Divisional matchup</p>
           <div>
-            <b>Your Tiebreaker</b>
+            <b>Your Tiebreaker: </b>
             <Dropdown
               // placeholder="Select a week"
               selection
               options={tiebreakerOptions()}
               onChange={(e, { value }) => setTiebreaker(value)}
               text={tiebreaker.toString()}
+              compact
               labeled
-            />
+            />{" "}
+            (
+            {tiebreakerMatchup &&
+              `Total points scored in ${tiebreakerMatchup.teams_normalized[0].abbreviation} vs. ${tiebreakerMatchup.teams_normalized[1].abbreviation} game`}
+            )
             <span
               style={{
                 display: `${
@@ -213,7 +257,6 @@ function Weeks() {
               Actual Tiebreaker{`tiebreakerscore`}
             </span>
             <br />
-            (Total points scored in {`tiebreaker matchup`} game)
           </div>
         </div>
       </div>

@@ -34,7 +34,7 @@ const MatchupCard = ({ matchup, setIsUpdating, isUpdating }) => {
   return (
     <div className="matchup-container">
       {/* away team */}
-      <Segment style={{ position: "relative", minHeight: "100%" }} placeholder>
+      <Segment>
         <Grid columns={3} stackable>
           <>
             {matchup.teams_normalized.map((team, index) => (

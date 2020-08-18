@@ -6,15 +6,14 @@ body {
 }
 
 main {
-  display: grid;
+  display: grid !important;
   height: 100vh;
-
   grid-template-rows: auto 1fr auto;
 }
 .page-header {
   padding: 1rem;
-  background: rgb(43, 255, 0);
-  margin-bottom: 1rem;
+  background: rgb(0, 204, 255);
+  text-align: center;
 }
 .page-content {
   text-align: center;
@@ -28,7 +27,18 @@ main {
   /* grid-column: 1/13; */
   justify-content: center;
 }
-
+.page-footer {
+  padding: 1rem;
+  margin: auto;
+}
+.week-header {
+  font-size: 2rem;
+  font-weight: 800;
+  background: rgb(0, 204, 255);
+}
+.week-dropdown {
+  background-color: khaki !important ;
+}
 .matchup-container {
   /* display: flex; */
   position: relative;
@@ -56,6 +66,11 @@ main {
   opacity: 0.5;
   cursor: pointer;
 } */
+.matchup-day-header {
+  background-color: #000;
+  color: #fff;
+  padding: 1rem 0.5rem;
+}
 .matchup-divider {
   background-color: transparent;
   width: min-content;
@@ -64,6 +79,16 @@ main {
 .matchup-divider p {
   margin: 0;
 }
+.container-divider {
+  width: 200px;
+  max-width: 50%;
+  margin: 2rem auto !important;
+}
+/* @media screen and (max-width: 768px){
+  .container-divider{
+    width: 50%;
+  }
+} */
 #team-logo-img {
   max-width: 35%;
   display: block;
@@ -72,6 +97,10 @@ main {
 .team-container {
   text-align: center;
   height: 100%;
+}
+.team-container:hover {
+  cursor: pointer;
+  opacity: 0.5;
 }
 .versus-icon {
   padding: 0;
