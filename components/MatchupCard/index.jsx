@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Grid, Segment, Icon } from "semantic-ui-react";
 
-const MatchupCard = ({ matchup }) => {
-  const [isUpdating, setIsUpdating] = useState(false);
+const MatchupCard = ({ matchup, setIsUpdating, isUpdating }) => {
   const [msg, setMsg] = useState({ message: "", isError: false });
 
   const handleTeamSelection = async (event) => {

@@ -1,6 +1,5 @@
 import useSWR from "swr";
 import fetcher from "./fetch";
-import { use } from "passport";
 
 export function useCurrentUser() {
   const { data, mutate } = useSWR("/api/user", fetcher);
@@ -13,4 +12,11 @@ export function useUser(id) {
     revalidateOnFocus: false,
   });
   return data ? data.user : null;
+}
+export function getPick(id) {
+  const { data } = useSWR(`/api/picks/${id}`, fetcher, {
+    revalidateOnFocus: false,
+  });
+  console.log(data)
+  return data ? data : null;
 }

@@ -12,6 +12,7 @@ function Weeks() {
   const [week, setWeek] = useState(1);
   const [tiebreaker, setTiebreaker] = useState(1);
   const [userPicks, setUserPicks] = useState([]);
+  const [isUpdating, setIsUpdating] = useState(false);
   // sort by event date
   Schedule.events.sort(
     (a, b) => new Date(a.event_date) - new Date(b.event_date)
@@ -101,12 +102,19 @@ function Weeks() {
   }, [userPicks]);
 
   useEffect(() => {
+    // grab all divs with class "team-container"
     let teams = document.querySelectorAll(`.team-container`);
+    // cycle through and remove "team-selected" class
+    // we be reapplied when userPicks are redownloaded
     teams.forEach((team) => {
       team.classList.remove("team-selected");
     });
-    getUserPicks();
-  }, [week]);
+    // triggers a re-render when a "pick" is made
+    // setupdating is sent to each MatchupCard 
+    if (!isUpdating) {
+      getUserPicks();
+    }
+  }, [week, isUpdating]);
 
   useEffect(() => {
     // add bounce delay
@@ -173,6 +181,8 @@ function Weeks() {
                 <MatchupCard
                   key={matchup.event_id}
                   matchup={matchup}
+                  isUpdating={isUpdating}
+                  setIsUpdating={setIsUpdating}
                   // mdScreen={viewportMin.matches}
                 />
               </>
