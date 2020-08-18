@@ -73,7 +73,7 @@ function Weeks() {
     // append this tiebreaker to
     // event_id of matchup (i.e. MNF)
     let tiePick = {
-      event_id: tiebreakerMatchup.event_id || "throwaway_event",
+      event_id: tiebreakerMatchup && tiebreakerMatchup.event_id,
       tiebreaker: tiebreaker,
     };
     const res = await fetch("/api/picks", {
@@ -97,15 +97,6 @@ function Weeks() {
     if (res.status === 200) {
       const { picks } = await res.json();
       setUserPicks(picks);
-      // find eventId of tiebreaker match within user picks
-      for (const p of picks) {
-        // if found, set the current tiebreaker state or use 0
-        if (p.event_id === tiebreakerMatchup.event_id && p.tiebreaker) {
-          setTiebreaker(p.tiebreaker);
-        } else {
-          setTiebreaker(0);
-        }
-      }
     } else {
       console.log(`something went wrong`);
     }
@@ -146,7 +137,7 @@ function Weeks() {
     handleTiebreakerSubmit();
   }, [tiebreaker]);
 
-  console.log(`events this week ${week}`, events);
+  // console.log(`events this week ${week}`, events);
 
   return (
     <main id="weeks">

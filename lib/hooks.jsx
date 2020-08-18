@@ -13,10 +13,16 @@ export function useUser(id) {
   });
   return data ? data.user : null;
 }
+export function getPicks() {
+  const { data } = useSWR(`/api/picks/`, fetcher, {
+    revalidateOnFocus: false,
+  });
+  return data ? data : null;
+}
 export function getPick(id) {
   const { data } = useSWR(`/api/picks/${id}`, fetcher, {
     revalidateOnFocus: false,
   });
-  console.log(data)
+  console.log(data);
   return data ? data : null;
 }
