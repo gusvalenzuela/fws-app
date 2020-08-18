@@ -8,9 +8,9 @@ import { Dropdown, Divider } from "semantic-ui-react";
 import { useCurrentUser } from "../lib/hooks";
 
 function Weeks() {
+  const [user] = useCurrentUser();
   const [week, setWeek] = useState(1);
   const [tiebreaker, setTiebreaker] = useState(1);
-  const [user] = useCurrentUser();
   const [userPicks, setUserPicks] = useState([]);
   // sort by event date
   Schedule.events.sort(
@@ -162,11 +162,16 @@ function Weeks() {
 
             return (
               <>
-                <h1>
-                  {!print ? "" : new Date(matchup.event_date).toDateString()}
-                </h1>
+                {!print ? (
+                  ""
+                ) : (
+                  <h1 key={inx}>
+                    {new Date(matchup.event_date).toDateString()}
+                  </h1>
+                )}
+
                 <MatchupCard
-                  key={inx}
+                  key={matchup.event_id}
                   matchup={matchup}
                   // mdScreen={viewportMin.matches}
                 />
