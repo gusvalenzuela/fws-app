@@ -2,7 +2,7 @@ import React from "react";
 
 const TimeDisplay = ({ dt }) => {
   let options = {
-    weekday: "long",
+    // weekday: "long",
     month: "long",
     year: "numeric",
     day: "numeric",

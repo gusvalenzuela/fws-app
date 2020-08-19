@@ -17,6 +17,7 @@ handler.get(async (req, res) => {
     })
     .sort({ createdAt: -1 })
     .toArray();
+
   res.send({ picks });
 });
 

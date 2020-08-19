@@ -3,6 +3,7 @@ import Footer from "../components/Footer";
 import Nav from "../components/Nav";
 import MatchupCard from "../components/MatchupCard";
 import TimeDisplay from "../components/TimeDisplay";
+import PlayerDashboard from "../components/PlayerDashboard";
 import React, { useState, useEffect } from "react";
 import Schedule from "../lib/local_schedule_events.json";
 import { Dropdown, Divider } from "semantic-ui-react";
@@ -16,7 +17,6 @@ function Weeks() {
   const [week, setWeek] = useState(1);
   const [tiebreaker, setTiebreaker] = useState(0);
   const [tiebreakerMatchup, setTiebreakerMatchup] = useState(null);
-  const [isUpdating, setIsUpdating] = useState(false);
 
   // on mount
   useEffect(() => {
@@ -25,17 +25,21 @@ function Weeks() {
       (a, b) => new Date(a.event_date) - new Date(b.event_date)
     );
 
+    // update current time every second
+    setInterval(() => {
+      setCurTime(new Date(Date.now()));
+    }, 1000);
+  }, []);
+
+  // on week set
+  useEffect(() => {
     // filter out the desired week
     let filteredEvents = Schedule.events.filter((i) =>
       i.schedule && i.schedule.week === week ? i : null
     );
     setEvents(filteredEvents);
     setTiebreakerMatchup(filteredEvents[filteredEvents.length - 1]);
-    // update current time every second
-    setInterval(() => {
-      setCurTime(new Date(Date.now()));
-    }, 1000);
-  }, []);
+  }, [week]);
 
   const weeksOptions = () => {
     // because the weeks here are iterable numerically (1-17)
@@ -102,36 +106,6 @@ function Weeks() {
     }
   }
 
-  // visually update the teams selected by toggling a class name
-  useEffect(() => {
-    if (userPicks && userPicks.length > 0) {
-      // updating the visuals for the current user's picks
-      // picks fetched from db
-      userPicks.map((pick) => {
-        let element = document.getElementById(`${pick.team_selected}`);
-        // confirming it's the same event
-        if (element && element.dataset.event === pick.event_id) {
-          element.classList.toggle("team-selected");
-        }
-      });
-    }
-  }, [userPicks]);
-
-  useEffect(() => {
-    // grab all divs with class "team-container"
-    let teams = document.querySelectorAll(`.team-container`);
-    // cycle through and remove "team-selected" class
-    // we be reapplied when userPicks are redownloaded
-    teams.forEach((team) => {
-      team.classList.remove("team-selected");
-    });
-    // triggers a re-render when a "pick" is made
-    // setupdating is sent to each MatchupCard
-    if (!isUpdating) {
-      getUserPicks();
-    }
-  }, [week, isUpdating]);
-
   useEffect(() => {
     // add bounce delay
     handleTiebreakerSubmit();
@@ -150,25 +124,27 @@ function Weeks() {
           <h1>
             <TimeDisplay dt={curTime} />
           </h1>
-        </div>
-        <div className="page-content">
           <div className="week-header">
-            {events &&
-              events.length > 0 &&
-              `${events[0].schedule?.season_year} ${events[0].schedule?.season_type} `}
             <Dropdown
               // placeholder="Select a week"
+              // header="Select a week"
               selection
               options={weeksOptions()}
               onChange={(e, data) => setWeek(data.value)}
-              text={`Week ${week.toString()}`}
+              text={`Week ${week.toString()} (${
+                events && events[0].schedule?.week_detail
+              })`}
               labeled
               className="week-dropdown"
               compact
             />{" "}
-            ({events && events.length > 0 && events[0].schedule?.week_detail})
+            {events &&
+              events.length > 0 &&
+              ` - ${events[0].schedule.season_year} ${events[0].schedule.season_type} `}
           </div>
-          <Divider />
+        </div>
+        <div className="page-content">
+          <PlayerDashboard user={user} />
           {/* for each game of the week, make a matchup card component */}
           {events &&
             events.length > 0 &&
@@ -211,8 +187,8 @@ function Weeks() {
                   <MatchupCard
                     key={matchup.event_id}
                     matchup={matchup}
-                    isUpdating={isUpdating}
-                    setIsUpdating={setIsUpdating}
+                    userPicks={userPicks}
+                    getUserPicks={getUserPicks}
                     // mdScreen={viewportMin.matches}
                   />
                 </>

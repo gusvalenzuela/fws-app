@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, Segment, Icon } from "semantic-ui-react";
+import Style from "./MatchupCard.module.css";
 
-const MatchupCard = ({ matchup, setIsUpdating, isUpdating }) => {
+const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
   const [msg, setMsg] = useState({ message: "", isError: false });
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const handleTeamSelection = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     if (isUpdating) return;
     setIsUpdating(true);
 
@@ -22,39 +25,50 @@ const MatchupCard = ({ matchup, setIsUpdating, isUpdating }) => {
     setIsUpdating(false);
     if (res.status === 200) {
       await res.json();
+      getUserPicks();
       setMsg({ message: "Picks updated" });
     } else {
       setMsg({ message: await res.text(), isError: true });
     }
   };
 
-  // useEffect(() => {
-  // }, []);
+  useEffect(() => {
+    userPicks.filter(
+      (p) => p.event_id === matchup.event_id && setSelectedTeam(p.team_selected)
+    );
+  }, [userPicks]);
+
+  useEffect(() => {
+    getUserPicks();
+  }, []);
 
   return (
-    <div className="matchup-container">
+    <div className={Style.matchupContainer}>
       {/* away team */}
       <Segment>
-        <Grid columns={3} stackable>
+        <Grid columns={3}>
           <>
             {matchup.teams_normalized.map((team, index) => (
               <>
                 <Grid.Column
                   key={team.abbreviation}
                   onClick={handleTeamSelection}
-                  className="team-container"
+                  className={`${Style.teamContainer} team-container ${
+                    selectedTeam === team.abbreviation ? "picked" : ""
+                  }`}
                   verticalAlign="middle"
                   data-team={team.abbreviation}
                   data-event={matchup.event_id}
                   id={team.abbreviation}
                   width="6"
+                  stretched
                 >
                   <img
                     src={`/images/teamlogos/${team.abbreviation}.png`}
                     alt={`${team.abbreviation}'s team logo`}
                     id="team-logo-img"
                   />
-                  <h2 style={{ margin: 0, marginTop: "-10px" }}>
+                  <h2>
                     {matchup.teams
                       ? `${team.name} ${team.mascot}`
                       : "Team Name"}
@@ -105,6 +119,8 @@ const MatchupCard = ({ matchup, setIsUpdating, isUpdating }) => {
                           // dayPeriod: "short",
                         }).format(new Date(matchup.event_date))}
                       </p>
+                      <p style={{ marginTop: "1.5rem" }}>{selectedTeam ? selectedTeam === team.abbreviation ? `◀ ${selectedTeam}` : `${selectedTeam} ▶` : "You haven't picked yet!"}</p>
+                      <p>{}</p>
                       {/* <p>Weather: </p> */}
                     </Grid.Column>
                   ) : (

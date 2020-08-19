@@ -1,0 +1,72 @@
+.matchup-container .left-side,
+.matchup-container .right-side {
+  flex: 0 1 225px;
+  margin: 4px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* max-width: 373px; */
+  max-height: 290px;
+}
+/* .matchup-container .versus-icon{
+  flex: 0 1 375px;
+} */
+
+/* .matchup-container:hover {
+  opacity: 0.5;
+  cursor: pointer;
+} */
+.matchup-day-header {
+  background-color: #000;
+  color: #fff;
+  padding: 1rem 0.5rem;
+  margin-top: 5rem;
+}
+.matchup-day-header:first-of-type {
+  margin-top: 1rem;
+}
+.matchup-divider {
+  background-color: transparent;
+  width: min-content;
+  padding: 0;
+}
+.matchup-divider p {
+  margin: 0;
+}
+.container-divider {
+  width: 200px;
+  max-width: 50%;
+  margin: .5rem auto !important;
+}
+/* @media screen and (max-width: 768px){
+  .container-divider{
+    width: 50%;
+  }
+} */
+#team-logo-img {
+  max-width: 50%;
+  margin: auto;
+}
+
+.versus-icon {
+  padding: 0;
+  margin: auto;
+  align-self: center;
+  font-size: 3rem;
+  position: absolute;
+  z-index: 7;
+  top: 0;
+  background-color: rgb(255, 0, 0);
+  font-weight: 800;
+}
+.picked {
+  background-color: rgb(222, 222, 222);
+}
+.week-header {
+  font-size: 2rem;
+  font-weight: 800;
+  background: rgb(0, 204, 255);
+}
+.week-dropdown {
+  background-color: khaki !important ;
+}
