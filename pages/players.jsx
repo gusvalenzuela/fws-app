@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Head from "next/head";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
+import { getPicks } from "../lib/hooks";
 
 const Player = () => {
   async function getUserInfo() {
@@ -15,6 +16,10 @@ const Player = () => {
     //   console.log(`something went wrong`);
     // }
   }
+  const picks = getPicks();
+  useEffect(() => {
+    console.log(picks);
+  }, [picks]);
   return (
     <main id="player">
       <Head>

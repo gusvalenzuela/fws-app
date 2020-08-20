@@ -68,11 +68,11 @@ const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
                     alt={`${team.abbreviation}'s team logo`}
                     id="team-logo-img"
                   />
-                  <h2>
+                  <h3>
                     {matchup.teams
                       ? `${team.name} ${team.mascot}`
                       : "Team Name"}
-                  </h2>
+                  </h3>
                   <br />
                   <p
                     style={{

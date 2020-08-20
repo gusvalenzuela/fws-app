@@ -14,8 +14,8 @@ export function useUser(id) {
   return data ? data.user : null;
 }
 export function getPicks() {
-  const { data, error } = useSWR(`/api/picks/`, fetcher, {});
-  // console.log(data);
+  const { data, error } = useSWR(`/api/picks/`, fetcher);
+  console.log(data);
   return data ? data : error;
 }
 export function getPick(id) {
