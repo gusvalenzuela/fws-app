@@ -54,7 +54,9 @@ const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
                   color={selectedTeam === team.abbreviation ? "black" : ""}
                   key={team.abbreviation}
                   onClick={handleTeamSelection}
-                  className={`${Style.teamContainer} team-container`}
+                  className={`${Style.teamContainer} team-container ${
+                    selectedTeam === team.abbreviation ? "picked" : ""
+                  }`}
                   verticalAlign="middle"
                   data-team={team.abbreviation}
                   data-event={matchup.event_id}
