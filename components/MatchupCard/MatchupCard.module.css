@@ -1,11 +1,7 @@
 .matchupContainer {
-  /* display: flex; */
-  position: relative;
-  max-width: 978px;
+  max-width: 825px;
   margin: auto;
   height: fit-content;
-  /* background-color: rgb(0, 0, 0); */
-  /* height: max-content; */
 }
 .matchupContainer h3 {
   margin: 0;

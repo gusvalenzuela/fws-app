@@ -46,21 +46,20 @@ const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
     <div className={Style.matchupContainer}>
       {/* away team */}
       <Segment>
-        <Grid columns={3}>
+        <Grid columns="equal">
           <>
             {matchup.teams_normalized.map((team, index) => (
               <>
                 <Grid.Column
+                  color={selectedTeam === team.abbreviation ? "black" : ""}
                   key={team.abbreviation}
                   onClick={handleTeamSelection}
-                  className={`${Style.teamContainer} team-container ${
-                    selectedTeam === team.abbreviation ? "picked" : ""
-                  }`}
+                  className={`${Style.teamContainer} team-container`}
                   verticalAlign="middle"
                   data-team={team.abbreviation}
                   data-event={matchup.event_id}
                   id={team.abbreviation}
-                  width="6"
+                  // width="6"
                   stretched
                 >
                   <img
@@ -103,23 +102,41 @@ const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
                   index === 0 ? (
                     <Grid.Column
                       key={"versus"}
-                      width="4"
+                      width="3"
                       textAlign="center"
                       className="matchup-divider"
                       verticalAlign="middle"
                     >
                       <Icon size="huge" name="at" />
-                      <p style={{ marginTop: ".5rem", fontSize: "1.12rem" }}>
-                        {new Intl.DateTimeFormat("default", {
-                          month: "numeric",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "2-digit",
-                          timeZoneName: "short",
-                          // dayPeriod: "short",
-                        }).format(new Date(matchup.event_date))}
+                      <p style={{ fontSize: "1.12rem" }}>
+                        {/* separating into multiple lines */}
+                        {/* Date */}
+                        <p>
+                          {new Intl.DateTimeFormat("default", {
+                            year: "numeric",
+                            month: "numeric",
+                            day: "numeric",
+                            // dayPeriod: "short",
+                          }).format(new Date(matchup.event_date))}
+                        </p>
+                        {/* <br /> */}
+                        {/* Time */}
+                        <p>
+                          {new Intl.DateTimeFormat("default", {
+                            hour: "numeric",
+                            minute: "2-digit",
+                            timeZoneName: "short",
+                            // dayPeriod: "short",
+                          }).format(new Date(matchup.event_date))}
+                        </p>
                       </p>
-                      <p style={{ marginTop: "1.5rem" }}>{selectedTeam ? selectedTeam === team.abbreviation ? `◀ ${selectedTeam}` : `${selectedTeam} ▶` : "You haven't picked yet!"}</p>
+                      <p style={{ marginTop: "1.5rem" }}>
+                        {selectedTeam
+                          ? selectedTeam === team.abbreviation
+                            ? `◀ ${selectedTeam}`
+                            : `${selectedTeam} ▶`
+                          : "You haven't picked yet!"}
+                      </p>
                       <p>{}</p>
                       {/* <p>Weather: </p> */}
                     </Grid.Column>

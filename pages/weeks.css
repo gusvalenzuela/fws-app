@@ -30,13 +30,16 @@
   width: min-content;
   padding: 0;
 }
+.matchup-divider i {
+  margin: 2rem auto 1rem !important;
+}
 .matchup-divider p {
   margin: 0;
 }
 .container-divider {
   width: 200px;
   max-width: 50%;
-  margin: .5rem auto !important;
+  margin: 0.5rem auto !important;
 }
 /* @media screen and (max-width: 768px){
   .container-divider{
