@@ -48,14 +48,12 @@ handler.patch(async (req, res) => {
   }
 
   // console.log(req.body);
-  const { result } = await req.db.collection("picks").updateOne(
+  const { result } = await req.db.collection("picks").replaceOne(
     { event_id: req.body.event_id },
     {
-      $set: {
-        ...req.body,
-        userId: req.user._id,
-        updatedAt: Date.now(),
-      },
+      ...req.body,
+      userId: req.user._id,
+      updatedAt: Date.now(),
     },
     { upsert: true }
   );
