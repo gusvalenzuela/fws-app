@@ -12,7 +12,6 @@ const ActiveLink = ({ children, activeClassName, ...props }) => {
     asPath === props.href
       ? `${childClassName} ${activeClassName}`.trim()
       : childClassName
-
   return (
     <Link {...props}>
       {React.cloneElement(child, {

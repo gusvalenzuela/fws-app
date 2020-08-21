@@ -1,22 +1,15 @@
-.navList {
-  display: flex;
-  list-style: none;
-}
-.navList li {
-  margin-right: 14px;
-  padding: 10px;
-}
-
 .navLink {
-  text-decoration: none;
+  padding: 0 !important;
 }
-
-.active:after {
-  content: "]";
+.navLink a {
+  padding: 1rem 0 !important;
+  min-width: 80px;
+  text-align: center;
 }
-
-.active::before {
-  content: "[";
+.nav{
+  background-color: #00ffb3 !important;
+  border: none !important;
+  border-radius: 0 !important;
 }
 
 /* animations  */

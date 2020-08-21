@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Footer from "../components/Footer";
-import Nav from "../components/Nav";
 import MatchupCard from "../components/MatchupCard";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
@@ -118,7 +117,6 @@ function Weeks() {
       <Head>
         <title>FWS | Weekly Matchups</title>
       </Head>
-      <Nav />
       <div className="main-content">
         <div className="page-header">
           <h1>

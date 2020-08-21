@@ -110,7 +110,7 @@ const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
                       verticalAlign="middle"
                     >
                       <Icon size="huge" name="at" />
-                      <p style={{ fontSize: "1.12rem" }}>
+                      <div style={{ fontSize: "1.12rem" }}>
                         {/* separating into multiple lines */}
                         {/* Date */}
                         <p>
@@ -131,7 +131,7 @@ const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
                             // dayPeriod: "short",
                           }).format(new Date(matchup.event_date))}
                         </p>
-                      </p>
+                      </div>
                       <p style={{ marginTop: "1.5rem" }}>
                         {selectedTeam
                           ? selectedTeam === team.abbreviation

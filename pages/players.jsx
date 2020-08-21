@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
-import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { getPicks } from "../lib/hooks";
 
@@ -25,9 +24,13 @@ const Player = () => {
       <Head>
         <title>FWS | Player</title>
       </Head>
-      <Nav />
-      <div className="">Dashboard</div>
-      <div className="main-content ">hi player</div>
+      <main>
+        <div className="main-content">
+          <h1 className="page-header">Welcome, Player.</h1>
+          <h2 className="page-content">🚧Page is under construction👷‍♂️</h2>
+          <div className="page-footer">👋</div>
+        </div>
+      </main>
       <Footer />
     </main>
   );
