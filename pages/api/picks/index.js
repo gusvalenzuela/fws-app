@@ -54,7 +54,7 @@ handler.patch(async (req, res) => {
       $set: {
         ...req.body,
         userId: req.user._id,
-        updatedAt: new Date(),
+        updatedAt: Date.now(),
       },
     },
     { upsert: true }

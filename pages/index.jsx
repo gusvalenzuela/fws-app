@@ -20,7 +20,7 @@ const Home = () => {
             <h2>Log in to start making your picks.</h2>
           </div>
 
-          <div className="page-footer">👋</div>
+          <div className="page-footer">🎉</div>
         </div>
       </main>
 

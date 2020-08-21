@@ -13,8 +13,18 @@ const SettingPage = () => {
   }
   return (
     <>
-      <h1>Settings</h1>
-      <ProfileSection />
+      <main id="index" className="index">
+        <div className="main-content">
+          <header className="page-header">
+            <h1>Change your account's settings:</h1>
+          </header>
+          <div className="page-content">
+            <ProfileSection />
+          </div>
+
+          <div className="page-footer">🎉</div>
+        </div>
+      </main>
     </>
   );
 };
