@@ -46,4 +46,37 @@ handler.post(async (req, res) => {
   });
 });
 
+handler.get(async ({ user, db }, res) => {
+  if (!user) res.send(null);
+  const options = {
+    // Include only the `_id`, `name`, and `emailverified` fields in each returned document
+    // (one of, not both), {'a':1, 'b': 1} or {'a': 0, 'b': 0}
+    projection: {
+      _id: 1,
+      name: 1,
+      emailVerified: 1,
+    },
+  };
+  const users = await db.collection("users").find({}, options).toArray();
+  const picks = await db.collection("picks").find({}).toArray();
+
+  // mapping each picks Array to its respective player
+  const allData = users.map((user) => {
+    // filtering out picks that match the user iD
+    let userPicks = picks.filter((pick) => {
+      if (pick.userId !== user._id) {
+        return null;
+      }
+      return pick;
+    });
+
+    // add userPicks array to the user obj
+    user.picks = userPicks;
+
+    return user;
+  });
+
+  res.status(200).json({ users: allData });
+});
+
 export default handler;

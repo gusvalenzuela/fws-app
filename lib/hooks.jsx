@@ -1,10 +1,23 @@
 import useSWR from "swr";
 import fetcher from "./fetch";
 
+export function getPlayersPicks() {
+  const { data } = useSWR("/api/picks", fetcher);
+  const picks = data ? data.picks : null;
+  // const user = data ? data.user : null;
+  return [picks];
+}
+
 export function useCurrentUser() {
   const { data, mutate } = useSWR("/api/user", fetcher);
   const user = data ? data.user : null;
   return [user, { mutate }];
+}
+
+export function getAllUsers() {
+  const { data } = useSWR("/api/users", fetcher);
+  const users = data ? data.users : null;
+  return [users];
 }
 
 export function useUser(id) {
@@ -13,14 +26,9 @@ export function useUser(id) {
   });
   return data ? data.user : null;
 }
-export function getPicks() {
-  const { data, error } = useSWR(`/api/picks/`, fetcher);
+
+export function getAllPicks() {
+  const { data } = useSWR(`/api/picks/`, fetcher);
   console.log(data);
-  return data ? data : error;
-}
-export function getPick(id) {
-  const { data } = useSWR(`/api/picks/${id}`, fetcher, {
-    revalidateOnFocus: false,
-  });
   return data ? data : null;
 }

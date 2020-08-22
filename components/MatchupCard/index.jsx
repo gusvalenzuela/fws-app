@@ -2,19 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Grid, Segment, Icon } from "semantic-ui-react";
 import Style from "./MatchupCard.module.css";
 
-const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
-  const [msg, setMsg] = useState({ message: "", isError: false });
+const MatchupCard = ({ matchup, userPicks, user }) => {
+  const [msg, setMsg] = useState({ message: null, isError: false });
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  // on mount
+  useEffect(() => {
+    // look for (filter) the event_id in the user's picks
+    // if found, set the selected team
+    userPicks?.filter((p) =>
+      p.event_id === matchup.event_id ? setSelectedTeam(p.selected_team) : null
+    );
+  }, [userPicks]);
 
   const handleTeamSelection = async (event) => {
+    // if any message is used whilst team picking, clear it after 2 secs
+    setTimeout(() => {
+      setMsg({ ...msg, message: null });
+    }, 2000);
     // event.preventDefault();
     if (isUpdating) return;
+    // if no signed in user, display message about logging in
+    if (!user) return setMsg({ ...msg, message: "Login to make your pick!" });
     setIsUpdating(true);
 
     let pick = {
       event_id: matchup.event_id,
-      team_selected: event.currentTarget.dataset.team,
+      event_date: matchup.event_date,
+      selected_team: event.currentTarget.dataset.team,
+      matchup: { ...matchup.schedule, teams: matchup.teams_normalized },
     };
     const res = await fetch("/api/picks", {
       method: "PATCH",
@@ -24,27 +40,21 @@ const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
 
     setIsUpdating(false);
     if (res.status === 200) {
-      await res.json();
-      getUserPicks();
-      setMsg({ message: "Picks updated" });
+      const pick = await res.json();
+      // PATCH /api/picks returns the updated pick
+      setSelectedTeam(pick.selected_team);
+      setMsg({ message: "Pick updated" });
     } else {
-      setMsg({ message: await res.text(), isError: true });
+      setMsg({
+        message: (await res.text()).toUpperCase(),
+        isError: true,
+      });
     }
   };
 
-  useEffect(() => {
-    userPicks.filter(
-      (p) => p.event_id === matchup.event_id && setSelectedTeam(p.team_selected)
-    );
-  }, [userPicks]);
-
-  useEffect(() => {
-    getUserPicks();
-  }, []);
   // console.log(matchup)
   return (
     <div className={Style.matchupContainer}>
-      {/* away team */}
       <Segment>
         <Grid key={matchup.schedule.event_name} columns="equal">
           {matchup.teams_normalized.map((team, index) => (
@@ -106,6 +116,18 @@ const MatchupCard = ({ matchup, userPicks, getUserPicks }) => {
                     className="matchup-divider"
                     verticalAlign="middle"
                   >
+                    {/* msg received after updating pick to db */}
+                    {msg.message ? (
+                      <p
+                        style={{
+                          color: "red",
+                          fontSize: "large",
+                          fontWeight: "700",
+                        }}
+                      >
+                        {msg.message}
+                      </p>
+                    ) : null}
                     <Icon size="huge" name="at" />
                     <div style={{ fontSize: "1.12rem" }}>
                       {/* separating into multiple lines */}

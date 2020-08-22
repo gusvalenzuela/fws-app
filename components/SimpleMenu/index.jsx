@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ActiveLink from "../ActiveLink";
 import { useCurrentUser } from "../../lib/hooks";
 import { Icon } from "semantic-ui-react";
@@ -9,7 +9,7 @@ const SimpleNav = () => {
     return document.getElementById("menubar").classList.toggle("responsive");
   };
   return (
-    <div className="menubar" id="menubar">
+    <nav className="menubar" id="menubar">
       <div role="header">FWS Football Pool</div>
       <ActiveLink activeClassName="active" href="/">
         <a>Home</a>
@@ -56,7 +56,7 @@ const SimpleNav = () => {
           name="bars"
         />
       </a>
-    </div>
+    </nav>
   );
 };
 export default SimpleNav;

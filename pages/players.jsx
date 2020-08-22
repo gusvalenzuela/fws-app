@@ -1,24 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
-import Footer from "../components/Footer";
-import { getPicks } from "../lib/hooks";
+import { useCurrentUser, getAllUsers } from "../lib/hooks";
 
 const Player = () => {
-  async function getUserInfo() {
-    // const res = await fetch("/api/picks", {
-    //   method: "GET",
-    // });
-    // if (res.status === 200) {
-    //   const { picks } = await res.json();
-    //   setUserPicks(picks);
-    // } else {
-    //   console.log(`something went wrong`);
-    // }
-  }
-  const picks = getPicks();
-  useEffect(() => {
-    console.log(picks);
-  }, [picks]);
+  const [dbUsers] = getAllUsers();
+  const [user] = useCurrentUser();
+
+  // useEffect(() => {
+  //   console.log(dbUsers);
+  // }, [dbUsers]);
+
   return (
     <main id="player">
       <Head>
@@ -26,12 +17,51 @@ const Player = () => {
       </Head>
       <main>
         <div className="main-content">
-          <h1 className="page-header">Welcome, Player.</h1>
-          <h2 className="page-content">🚧Page is under construction👷‍♂️</h2>
+          <header className="page-header">
+            <h1>Welcome, Player.</h1>
+          </header>
+          <div className="page-content">
+            {dbUsers?.length > 0
+              ? dbUsers.map((user) => {
+                  return (
+                    <>
+                      {/* <h3>
+                        {user.name} has {user.picks.length} picks made.
+                      </h3> */}
+                      <h3>
+                        {user.name} has made the following picks for Week {1}:
+                      </h3>
+                      <span>
+                        {user.picks &&
+                          user.picks.map((pick) => {
+                            if (pick.matchup?.week !== 1) return;
+                            return (
+                              <>
+                                <span
+                                  style={{
+                                    backgroundColor: `${
+                                      pick.winning_team &&
+                                      pick.winning_team === pick.selected_team
+                                        ? "green"
+                                        : "transparent"
+                                    }`,
+                                  }}
+                                >
+                                  {" "}
+                                  {pick.selected_team}{" "}
+                                </span>
+                              </>
+                            );
+                          })}
+                      </span>
+                    </>
+                  );
+                })
+              : ""}
+          </div>
           <div className="page-footer">👋</div>
         </div>
       </main>
-      <Footer />
     </main>
   );
 };

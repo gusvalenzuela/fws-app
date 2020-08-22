@@ -1,42 +1,40 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCurrentUser } from "../lib/hooks";
 
 const LogoutPage = () => {
   const router = useRouter();
-  // const [errorMsg, setErrorMsg] = useState("");
-  const [user] = useCurrentUser();
+  const [user, { mutate }] = useCurrentUser();
 
   useEffect(() => {
-    if (user) logOut();
+    logOut();
   }, []);
 
   async function logOut() {
     const res = await fetch("/api/auth", {
       method: "DELETE",
     });
-    if (res.status === 200) {
-      router.push("/logout");
+    if (res.status === 204) {
+      mutate({});
       setTimeout(() => {
         router.push("/");
-      }, 1000);
-    } else {
-      router.push("/");
+      }, 3000);
     }
   }
 
   return (
-    <>
+    <main id="logout">
       <Head>
         <title>FWS | Logged Out</title>
       </Head>
-      <h2>You've been logged out.</h2>
-      <Link href="/forget-password">
-        <a>Forget password</a>
-      </Link>
-    </>
+      <div className="main-content">
+        <header className="page-header">Come back soon!</header>
+        <div className="page-content">
+          <h2>You've been succesfully logged out</h2>
+        </div>
+      </div>
+    </main>
   );
 };
 

@@ -6,6 +6,7 @@ Read more: https://err.sh/next.js/css-global
 import "./_app.css";
 import "semantic-ui-css/semantic.min.css";
 import SimpleMenu from "../components/SimpleMenu";
+import Footer from "../components/Footer";
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
@@ -13,6 +14,7 @@ export default function MyApp({ Component, pageProps }) {
     <>
       <SimpleMenu />
       <Component {...pageProps} />
+      <Footer />
     </>
   );
 }

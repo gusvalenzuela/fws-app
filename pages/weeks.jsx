@@ -1,14 +1,14 @@
 import Head from "next/head";
-import Footer from "../components/Footer";
 import MatchupCard from "../components/MatchupCard";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
 import React, { useState, useEffect } from "react";
 import Schedule from "../lib/local_schedule_events.json";
 import { Dropdown, Divider } from "semantic-ui-react";
-import { useCurrentUser } from "../lib/hooks";
+import { useCurrentUser, getPlayersPicks } from "../lib/hooks";
 
 function Weeks() {
+  const [dbPicks] = getPlayersPicks();
   const [user] = useCurrentUser();
   const [curTime, setCurTime] = useState(new Date(Date.now()));
   const [userPicks, setUserPicks] = useState([]);
@@ -39,6 +39,14 @@ function Weeks() {
     setEvents(filteredEvents);
     setTiebreakerMatchup(filteredEvents[filteredEvents.length - 1]);
   }, [week]);
+
+  // on events set
+  useEffect(() => {
+    let newPicks = dbPicks?.filter((p) =>
+      p.matchup?.week === week ? p : null
+    );
+    setUserPicks(newPicks);
+  }, [events, dbPicks]);
 
   const weeksOptions = () => {
     // because the weeks here are iterable numerically (1-17)
@@ -93,19 +101,15 @@ function Weeks() {
     }
   };
 
-  async function getUserPicks() {
-    const res = await fetch("/api/picks", {
-      method: "GET",
-    });
-    if (res.status === 200) {
-      const { picks } = await res.json();
-      setUserPicks(picks);
-    } else {
-      console.log(`something went wrong`);
-    }
-  }
+  useEffect(() => {
+    console.log(userPicks);
+    // userPicks.filter(
+    //   (p) => p.event_id === matchup.event_id && setSelectedTeam(p.team_selected)
+    // );
+  }, [userPicks]);
 
   useEffect(() => {
+    if (tiebreaker === 0) return;
     // add bounce delay
     handleTiebreakerSubmit();
   }, [tiebreaker]);
@@ -119,36 +123,35 @@ function Weeks() {
       </Head>
       <div className="main-content">
         <div className="page-header">
-          <h1>
+          <h3>
             <TimeDisplay dt={curTime} />
-          </h1>
+          </h3>
           <div className="week-header">
+            {events?.length > 0 &&
+              `${events[0].schedule.season_year} ${events[0].schedule.season_type}:`}{" "}
             <Dropdown
-              // placeholder="Select a week"
-              // header="Select a week"
+              className="week-dropdown"
+              closeOnChange
+              compact
               selection
+              lazyLoad
               options={weeksOptions()}
-              onChange={(e, data) => setWeek(data.value)}
+              onChange={(e, { value }) => setWeek(value)}
               text={`Week ${week.toString()} (${
                 events && events[0].schedule?.week_detail
               })`}
               labeled
-              className="week-dropdown"
-              compact
-            />{" "}
-            {events &&
-              events.length > 0 &&
-              ` - ${events[0].schedule.season_year} ${events[0].schedule.season_type} `}
+            />
           </div>
         </div>
         <div className="page-content">
           <PlayerDashboard user={user} />
           {/* for each game of the week, make a matchup card component */}
-          {events &&
-            events.length > 0 &&
-            events.map((matchup, inx) => {
+          {events?.length > 0 &&
+            events?.map((matchup, inx) => {
               // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
-              // this is for the header of each "matchup day" subsection
+              // this is for the header of each "matchup day" subsection.
+              // console.log(userPicks.event_id, matchup.event_id);
               let print;
               // we print the first date in the week every time
               if (inx > 0) {
@@ -183,10 +186,11 @@ function Weeks() {
                   )}
 
                   <MatchupCard
-                    key={matchup.event_id}
+                    key={matchup?.event_id}
                     matchup={matchup}
                     userPicks={userPicks}
-                    getUserPicks={getUserPicks}
+                    user={user}
+                    // getUserPicks={getUserPicks}
                     // mdScreen={viewportMin.matches}
                   />
                 </>
@@ -225,7 +229,6 @@ function Weeks() {
           </div>
         </div>
       </div>
-      <Footer />
     </main>
   );
 }
