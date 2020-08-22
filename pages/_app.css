@@ -12,7 +12,8 @@ main {
 }
 .page-header {
   padding: 1rem;
-  background: rgb(0, 204, 255);
+  background: rgb(0, 0, 0);
+  color: #ddd;
   text-align: center;
 }
 .page-content {
@@ -34,10 +35,11 @@ main {
 
 .menubar {
   overflow: hidden;
-  background-color: #333;
+  background-color: #408383;
 }
 
-.menubar a {
+.menubar a,
+.menubar div {
   float: left;
   display: block;
   color: #f2f2f2;
@@ -47,7 +49,7 @@ main {
   font-size: 17px;
   text-transform: capitalize;
 }
-.menubar a.icon{
+.menubar a.icon {
   padding: 5px;
 }
 
@@ -60,7 +62,7 @@ main {
 }
 
 .menubar a.active {
-  background-color: #4caf50;
+  background-color: #306363;
   color: white;
 }
 
@@ -87,7 +89,8 @@ main {
     right: 2.5px;
     top: 2.5px;
   }
-  .menubar.responsive a {
+  .menubar.responsive a,
+  .menubar.responsive div {
     float: none;
     display: block;
     text-align: left;

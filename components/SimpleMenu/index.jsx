@@ -10,6 +10,7 @@ const SimpleNav = () => {
   };
   return (
     <div className="menubar" id="menubar">
+      <div role="header">FWS Football Pool</div>
       <ActiveLink activeClassName="active" href="/">
         <a>Home</a>
       </ActiveLink>
@@ -19,12 +20,12 @@ const SimpleNav = () => {
       <ActiveLink activeClassName="active" href="/players">
         <a>players</a>
       </ActiveLink>
-      <ActiveLink activeClassName="active" href="/info">
+      {/* <ActiveLink activeClassName="active" href="/info">
         <a>info</a>
-      </ActiveLink>
-      <ActiveLink activeClassName="active" href="/about">
+      </ActiveLink> */}
+      {/* <ActiveLink activeClassName="active" href="/about">
         <a>about</a>
-      </ActiveLink>
+      </ActiveLink> */}
       {user && user._id ? (
         <>
           <ActiveLink activeClassName="active" href="/settings">
