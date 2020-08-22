@@ -1,6 +1,6 @@
-import nextConnect from 'next-connect';
-import middleware from '../../../../middlewares/middleware';
-import { getUser } from '../../../../lib/db';
+import nextConnect from "next-connect";
+import middleware from "../../../../middlewares/middleware";
+import { getUser } from "../../../../lib/db";
 
 const handler = nextConnect();
 

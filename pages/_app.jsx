@@ -5,13 +5,13 @@ Read more: https://err.sh/next.js/css-global
 */
 import "./_app.css";
 import "semantic-ui-css/semantic.min.css";
-import NavMenu from "../components/NavMenu";
+import SimpleMenu from "../components/SimpleMenu";
 
 // This default export is required in a new `pages/_app.js` file.
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
-      <NavMenu />
+      <SimpleMenu />
       <Component {...pageProps} />
     </>
   );

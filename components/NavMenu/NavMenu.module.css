@@ -6,10 +6,35 @@
   min-width: 80px;
   text-align: center;
 }
-.nav{
+.menubar {
   background-color: #00ffb3 !important;
   border: none !important;
   border-radius: 0 !important;
+}
+/* @media screen and (max-width: 600px) {
+  .menubar a:not(:first-child) {
+    display: none;
+  }
+  .menubar a.icon {
+    float: right;
+    display: block;
+  }
+} */
+
+@media screen and (max-width: 600px) {
+  .menubar.responsive {
+    position: relative;
+  }
+  .menubar.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .menubar.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
 }
 
 /* animations  */

@@ -49,12 +49,14 @@ function SignupPage() {
               name="email"
               type="email"
               placeholder="Email address"
+              autoComplete="true"
             />
           </label>
           <label htmlFor="password">
             <input
               id="password"
-              name="password"
+              autoComplete="true"
+              name="new-password"
               type="password"
               placeholder="Create a password"
             />
