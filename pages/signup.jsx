@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-
 import Head from "next/head";
 import Router from "next/router";
-import { Confirm } from "semantic-ui-react";
 import { useCurrentUser } from "../lib/hooks";
 
 function SignupPage() {
@@ -70,12 +68,6 @@ function SignupPage() {
           Note: The database is public. For your privacy, please avoid using
           your personal, work email.
         </p>
-        <Confirm
-          open={open}
-          content="This is a custom message"
-          onCancel={this.handleCancel}
-          onConfirm={this.handleConfirm}
-        />
       </div>
     </>
   );
