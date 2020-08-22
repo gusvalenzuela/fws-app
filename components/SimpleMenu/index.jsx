@@ -1,22 +1,15 @@
-import React, { useState } from "react";
-// import { Menu, Dropdown, Icon, Button, Responsive } from "semantic-ui-react";
+import React from "react";
 import ActiveLink from "../ActiveLink";
-// import Style from "./NavMenu.module.css";
 import { useCurrentUser } from "../../lib/hooks";
 import { Icon } from "semantic-ui-react";
 const SimpleNav = () => {
   const [user] = useCurrentUser();
 
-  const openMenu = (evt) => {
-    evt.preventDefault();
-    document.getElementById("menubar").classList.toggle("responsive");
-    // document.getElementById("menubar").classList.toggle(Style.responsive);
+  const openMenu = () => {
+    return document.getElementById("menubar").classList.toggle("responsive");
   };
   return (
     <div className="menubar" id="menubar">
-      {/* <a href="#home" class="active">
-        Home
-      </a> */}
       <ActiveLink activeClassName="active" href="/">
         <a>Home</a>
       </ActiveLink>
@@ -32,20 +25,35 @@ const SimpleNav = () => {
       <ActiveLink activeClassName="active" href="/about">
         <a>about</a>
       </ActiveLink>
-      <ActiveLink activeClassName="active" href="/settings">
-        <a>settings</a>
-      </ActiveLink>
-      <ActiveLink activeClassName="active" href="/login">
-        <a>login</a>
-      </ActiveLink>
-      <ActiveLink activeClassName="active" href="/signup">
-        <a>sign up</a>
-      </ActiveLink>
-      <ActiveLink activeClassName="active" href="/logout">
-        <a>logout</a>
-      </ActiveLink>
+      {user && user._id ? (
+        <>
+          <ActiveLink activeClassName="active" href="/settings">
+            <a>settings</a>
+          </ActiveLink>
+
+          <ActiveLink activeClassName="active" href="/logout">
+            <a>logout</a>
+          </ActiveLink>
+        </>
+      ) : (
+        <>
+          <ActiveLink activeClassName="active" href="/login">
+            <a>login</a>
+          </ActiveLink>
+          <ActiveLink activeClassName="active" href="/signup">
+            <a>sign up</a>
+          </ActiveLink>
+        </>
+      )}
+
       <a onClick={openMenu} className="icon">
-        <Icon aria-label="Bars to open top menu" fitted circular inverted name="bars" />
+        <Icon
+          aria-label="Top bar to open menu"
+          fitted
+          circular
+          inverted
+          name="bars"
+        />
       </a>
     </div>
   );
