@@ -6,7 +6,6 @@ export function getPlayersPicks() {
     shouldRetryOnError: false,
   });
   // console.log(error)
-
   const picks = data ? data.picks : null;
   // const user = data ? data.user : null;
   return [picks];

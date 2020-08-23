@@ -49,7 +49,7 @@ main {
 
 .menubar {
   overflow: hidden;
-  background-color: #60bcab;
+  background-color: #4e978a;
 }
 
 .menubar a,
@@ -76,7 +76,7 @@ main {
 }
 
 .menubar a.active {
-  background-color: #609fbc;
+  background-color: #3d756b;
   color: white;
 }
 

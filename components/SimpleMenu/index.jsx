@@ -17,9 +17,7 @@ const SimpleNav = () => {
       <ActiveLink activeClassName="active" href="/weeks">
         <a>Weeks</a>
       </ActiveLink>
-      <ActiveLink activeClassName="active" href="/players">
-        <a>players</a>
-      </ActiveLink>
+
       {/* <ActiveLink activeClassName="active" href="/info">
         <a>info</a>
       </ActiveLink> */}
@@ -28,12 +26,14 @@ const SimpleNav = () => {
       </ActiveLink> */}
       {user && user._id ? (
         <>
+          <ActiveLink activeClassName="active" href="/players">
+            <a>players</a>
+          </ActiveLink>
           <ActiveLink activeClassName="active" href="/settings">
             <a>settings</a>
           </ActiveLink>
-
           <ActiveLink activeClassName="active" href="/logout">
-            <a>logout</a>
+            <a style={{ float: "right" }}>logout</a>
           </ActiveLink>
         </>
       ) : (

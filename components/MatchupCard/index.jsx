@@ -41,6 +41,7 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
     setIsUpdating(false);
     if (res.status === 200) {
       const pick = await res.json();
+      console.log(pick)
       // PATCH /api/picks returns the updated pick
       setSelectedTeam(pick.selected_team);
       setMsg({ message: `Pick updated to ${pick.selected_team}` });

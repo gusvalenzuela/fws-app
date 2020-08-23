@@ -46,20 +46,30 @@ function Weeks() {
     let newPicks = dbPicks?.filter((p) =>
       p.matchup?.week === week ? p : null
     );
-
-    if (events?.length - newPicks?.length <= 3) {
-      setLockedInMsg(
-        `You've only ${
-          events.length - newPicks.length
-        } matchups left to choose from this week.`
-      );
-    } else if (events?.length && newPicks?.length) {
-      setLockedInMsg(
-        `You've picked in ${newPicks.length}/${events.length} of the matchups this week.`
-      );
+    let tbMatch = dbPicks?.filter((p) =>
+      p.event_id === tiebreakerMatchup?.event_id && p.userId === user._id
+        ? p
+        : null
+    );
+    if (tbMatch && tbMatch !== undefined) {
+      setTiebreaker(tbMatch.tiebreaker);
+    } else {
+      setTiebreaker(0);
     }
     setUserPicks(newPicks);
   }, [events, dbPicks]);
+
+  // if (events?.length - newPicks?.length <= 3) {
+  //   setLockedInMsg(
+  //     `You've only ${
+  //       events.length - newPicks.length
+  //     } matchups left to choose from this week.`
+  //   );
+  // } else if (events?.length && newPicks?.length) {
+  //   setLockedInMsg(
+  //     `You've picked in ${newPicks.length}/${events.length} of the matchups this week.`
+  //   );
+  // }
 
   const weeksOptions = () => {
     // because the weeks here are iterable numerically (1-17)
@@ -93,21 +103,22 @@ function Weeks() {
     return optionsArray;
   };
 
-  const handleTiebreakerSubmit = async () => {
+  const handleTiebreakerSubmit = async (evt) => {
     // append this tiebreaker to
     // event_id of matchup (i.e. MNF)
     let tiePick = {
       event_id: tiebreakerMatchup && tiebreakerMatchup.event_id,
       tiebreaker: tiebreaker,
     };
-    const res = await fetch("/api/picks", {
+    const res = await fetch("/api/picks/" + tiePick.event_id, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(tiePick),
     });
 
     if (res.status === 200) {
-      await res.json();
+      const pick = await res.json();
+      console.log(pick);
       // setMsg({ message: "Pick updated" });
     } else {
       // setMsg({ message: await res.text(), isError: true });
@@ -196,8 +207,6 @@ function Weeks() {
                     matchup={matchup}
                     userPicks={userPicks}
                     user={user}
-                    // getUserPicks={getUserPicks}
-                    // mdScreen={viewportMin.matches}
                   />
                 </>
               );
@@ -212,7 +221,7 @@ function Weeks() {
               selection
               options={tiebreakerOptions()}
               onChange={(e, { value }) => setTiebreaker(value)}
-              text={tiebreaker.toString()}
+              text={tiebreaker?.toString()}
               compact
               labeled
             />{" "}
