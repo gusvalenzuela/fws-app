@@ -12,6 +12,7 @@ function Weeks() {
   const [user] = useCurrentUser();
   const [curTime, setCurTime] = useState(new Date(Date.now()));
   const [userPicks, setUserPicks] = useState([]);
+  const [lockedInMsg, setLockedInMsg] = useState("");
   const [events, setEvents] = useState(null);
   const [week, setWeek] = useState(1);
   const [tiebreaker, setTiebreaker] = useState(0);
@@ -45,6 +46,18 @@ function Weeks() {
     let newPicks = dbPicks?.filter((p) =>
       p.matchup?.week === week ? p : null
     );
+
+    if (events?.length - newPicks?.length <= 3) {
+      setLockedInMsg(
+        `You've only ${
+          events.length - newPicks.length
+        } matchups left to choose from this week.`
+      );
+    } else if (events?.length && newPicks?.length) {
+      setLockedInMsg(
+        `You've picked in ${newPicks.length}/${events.length} of the matchups this week.`
+      );
+    }
     setUserPicks(newPicks);
   }, [events, dbPicks]);
 
@@ -138,7 +151,7 @@ function Weeks() {
           </div>
         </div>
         <div className="page-content">
-          <PlayerDashboard user={user} />
+          <PlayerDashboard user={user} msg={lockedInMsg} />
           {/* for each game of the week, make a matchup card component */}
           {events?.length > 0 &&
             events?.map((matchup, inx) => {
