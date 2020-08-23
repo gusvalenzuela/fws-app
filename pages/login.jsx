@@ -24,8 +24,7 @@ const LoginPage = () => {
         <div className="page-content">
           <LoginForm />
           <p style={{ color: "#777", textAlign: "center" }}>
-            Note: This app is for ENTERTAINMENT USE ONLY. <br />
-            Use as is.
+            <b>Note: </b>This app is for ENTERTAINMENT USE ONLY. Very much in alpha; subject to change without notice.
           </p>
         </div>
       </div>

@@ -40,7 +40,7 @@ const LoginForm = () => {
             transition: box-shadow 0.2s ease 0s;
           }
           form {
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
           }
           form.login input {
             width: 90%;
@@ -48,6 +48,9 @@ const LoginForm = () => {
             border-bottom: 2px solid black;
             padding: 0.5rem 0.1rem;
             margin-bottom: 1.25rem;
+          }
+          .form a {
+            line-height: 2.25;
           }
           form.login button {
             display: block;
@@ -81,6 +84,8 @@ const LoginForm = () => {
           <button type="submit">Login</button>
         </form>
         <a href="/forget-password">Forgot password?</a>
+        <br />
+        <a href="/signup">Don't have an account?</a>
       </div>
     </>
   );

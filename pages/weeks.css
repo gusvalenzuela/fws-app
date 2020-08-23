@@ -31,7 +31,8 @@
   padding: 0;
 }
 .matchup-divider i {
-  margin: 2rem auto 1rem !important;
+  margin: 0 auto 1rem !important;
+  font-size: 5rem !important;
 }
 .matchup-divider p {
   margin: 0;
@@ -77,5 +78,25 @@
 @media screen and (max-width: 768px) {
   .week-header {
     font-size: 1rem;
+  }
+
+  .matchup-divider i {
+    font-size: 3rem !important;
+  }
+  .matchup-divider p {
+    font-size: 0.9rem !important;
+  }
+}
+/* @media screen and (max-width: 576px) {
+  .matchup-divider i {
+    font-size: 2.5rem !important;
+  }
+  .matchup-divider p {
+    font-size: 0.9rem !important;
+  }
+} */
+@media screen and (max-width: 425px) {
+  .matchup-divider i {
+    font-size: 2rem !important;
   }
 }

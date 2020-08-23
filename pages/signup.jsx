@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Router from "next/router";
+import SignupForm from "../components/SignupForm";
 import { useCurrentUser } from "../lib/hooks";
 
 function SignupPage() {
@@ -33,53 +34,24 @@ function SignupPage() {
   };
 
   return (
-      <main id="signup">
-        <Head>
-          <title>FWS | Sign Up</title>
-        </Head>
-        <div className="main-content">
-          <header className="page-header">
-            <h1>Sign Up</h1>
-          </header>
-          <div className="page-content">
-            <form className="signup" onSubmit={handleSubmit}>
-              {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
-              <label htmlFor="name">
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Your name"
-                />
-              </label>
-              <label htmlFor="email">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Email address"
-                  autoComplete="true"
-                />
-              </label>
-              <label htmlFor="password">
-                <input
-                  id="password"
-                  autoComplete="true"
-                  name="new-password"
-                  type="password"
-                  placeholder="Create a password"
-                />
-              </label>
-              <button type="submit">Sign up</button>
-            </form>
-            <p style={{ color: "#777", textAlign: "center" }}>
-              Note: The database is public. For your privacy, please avoid using
-              your personal, work email.
-            </p>
-          </div>
-          <div className="page-footer">ℹ Page</div>
+    <main id="signup">
+      <Head>
+        <title>FWS | Sign Up</title>
+      </Head>
+      <div className="main-content">
+        <header className="page-header">
+          <h1>Sign Up</h1>
+        </header>
+        <div className="page-content">
+          <SignupForm />
+          <p style={{ color: "#777", textAlign: "center" }}>
+            Note: The database is public. For your privacy, please avoid using
+            your personal, work email.
+          </p>
         </div>
-      </main>
+        <div className="page-footer">ℹ Page</div>
+      </div>
+    </main>
   );
 }
 

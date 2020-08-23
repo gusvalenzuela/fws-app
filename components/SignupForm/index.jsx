@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import Link from "next/Link";
 import { useCurrentUser } from "../../lib/hooks";
+import { Icon } from "semantic-ui-react";
 
 const SignupForm = () => {
-  
   const [u, { mutate }] = useCurrentUser();
 
   const [errorMsg, setErrorMsg] = useState("");
-  
+
   async function onSubmit(e) {
     e.preventDefault();
     const body = {
@@ -30,53 +29,63 @@ const SignupForm = () => {
     <>
       <style jsx>
         {`
-          div.form {
+           div.form {
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
             padding: 1.5rem;
             margin: 2.5rem auto;
-            max-width: 576px;
-            text-align: left !important;
+            max-width: 350px;
             transition: box-shadow 0.2s ease 0s;
           }
-          form.login input {
-            margin-bottom: 0.75rem;
+          form {
+            margin-bottom: 1rem;
           }
-          form.login button {
-            margin-bottom: 3.75rem;
-            padding: ;
+          form.signup input {
+            width: 85%;
+            border: none;
+            border-bottom: 2px solid black;
+            padding: 0.5rem 0.1rem;
+            margin-bottom: 1.25rem;
+          }
+          form.signup button {
+            display: block;
+            margin: auto;
+            padding: 0.5rem 1rem;
           }
         `}
       </style>
       <div className="form">
-        <form className="login" onSubmit={onSubmit}>
+        <form className="signup" onSubmit={onSubmit}>
           {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
-          <label htmlFor="email">Email Address: </label>
+          <Icon name="user" size="big" aria-label="Username" />{" "}
           <input
+            required
+            id="name"
+            type="name"
+            name="name"
+            autoComplete="true"
+            placeholder="Username"
+          />
+          <Icon name="envelope" size="big" aria-label="Email" />{" "}
+          <input
+            required
             id="email"
             type="email"
             name="email"
             autoComplete="true"
-            placeholder="example@email.com"
+            placeholder="Email"
           />
-
-          <label htmlFor="password">Password: </label>
+          <Icon name="lock" size="big" aria-label="Password" />{" "}
           <input
+            required
             id="password"
             type="password"
+            name="new-password"
             autoComplete="true"
-            name="current-password"
-            placeholder="password"
+            placeholder="Password"
           />
-
-          <button type="submit">SignupForm HEHEHE</button>
+          <button type="submit">Sign up</button>
         </form>
-        <Link href="/forget-password">
-          <a>Forgot password?</a>
-        </Link>
-        <p style={{ color: "#777", textAlign: "center" }}>
-          Note: This app is for ENTERTAINMENT USE ONLY. <br />
-          Comes as is.
-        </p>
+        <a href="/login">Already have an account?</a>
       </div>
     </>
   );

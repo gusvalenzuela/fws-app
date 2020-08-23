@@ -43,7 +43,7 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
       const pick = await res.json();
       // PATCH /api/picks returns the updated pick
       setSelectedTeam(pick.selected_team);
-      setMsg({ message: "Pick updated" });
+      setMsg({ message: `Pick updated to ${pick.selected_team}` });
     } else {
       setMsg({
         message: (await res.text()).toUpperCase(),
@@ -55,6 +55,20 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
   // console.log(matchup)
   return (
     <div className={Style.matchupContainer}>
+      {/* msg received after updating pick to db */}
+      {msg.message ? (
+        <p
+          style={{
+            color: "red",
+            fontSize: "large",
+            fontWeight: "700",
+            margin: ".5rem 0 .25rem",
+            padding: "0",
+          }}
+        >
+          {msg.message}
+        </p>
+      ) : null}
       <Segment>
         <Grid key={matchup.schedule.event_name} columns="equal">
           {matchup.teams_normalized.map((team, index) => (
@@ -86,6 +100,7 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
                   style={{
                     margin: 0,
                     marginTop: "-20px",
+                    marginBottom: "20px",
                     fontSize: "2rem",
                     color: "red",
                     fontWeight: "800",
@@ -116,25 +131,13 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
                     className="matchup-divider"
                     verticalAlign="middle"
                   >
-                    {/* msg received after updating pick to db */}
-                    {msg.message ? (
-                      <p
-                        style={{
-                          color: "red",
-                          fontSize: "large",
-                          fontWeight: "700",
-                        }}
-                      >
-                        {msg.message}
-                      </p>
-                    ) : null}
-                    <Icon size="huge" name="at" />
+                    <Icon name="at" />
                     <div style={{ fontSize: "1.12rem" }}>
                       {/* separating into multiple lines */}
                       {/* Date */}
                       <p>
                         {new Intl.DateTimeFormat("default", {
-                          year: "numeric",
+                          // year: "numeric",
                           month: "numeric",
                           day: "numeric",
                           // dayPeriod: "short",
@@ -154,9 +157,9 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
                     <p style={{ marginTop: "1.5rem" }}>
                       {selectedTeam
                         ? selectedTeam === team.abbreviation
-                          ? `◀ ${selectedTeam}`
-                          : `${selectedTeam} ▶`
-                        : "You haven't picked yet!"}
+                          ? `◀ ${selectedTeam}  `
+                          : `  ${selectedTeam} ▶`
+                        : "◀ Pick ▶"}
                     </p>
                     <p>{}</p>
                     {/* <p>Weather: </p> */}

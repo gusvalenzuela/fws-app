@@ -2,7 +2,11 @@ import useSWR from "swr";
 import fetcher from "./fetch";
 
 export function getPlayersPicks() {
-  const { data } = useSWR("/api/picks", fetcher);
+  const { data, error } = useSWR("/api/picks", fetcher, {
+    shouldRetryOnError: false,
+  });
+  // console.log(error)
+
   const picks = data ? data.picks : null;
   // const user = data ? data.user : null;
   return [picks];

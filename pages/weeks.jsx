@@ -102,13 +102,6 @@ function Weeks() {
   };
 
   useEffect(() => {
-    console.log(userPicks);
-    // userPicks.filter(
-    //   (p) => p.event_id === matchup.event_id && setSelectedTeam(p.team_selected)
-    // );
-  }, [userPicks]);
-
-  useEffect(() => {
     if (tiebreaker === 0) return;
     // add bounce delay
     handleTiebreakerSubmit();
