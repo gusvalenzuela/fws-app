@@ -7,29 +7,30 @@ const SignupForm = () => {
 
   const [errorMsg, setErrorMsg] = useState("");
 
-  async function onSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const body = {
-      email: e.currentTarget.email.value.trim(),
-      password: e.currentTarget.password.value.trim(),
+      email: e.currentTarget.email.value,
+      name: e.currentTarget.name.value,
+      password: e.currentTarget.password.value,
     };
-    const res = await fetch("/api/auth", {
+    const res = await fetch("/api/users", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    if (res.status === 200) {
+    if (res.status === 201) {
       const userObj = await res.json();
       mutate(userObj);
     } else {
-      setErrorMsg("Incorrect username or password. Try again!");
+      setErrorMsg(await res.text());
     }
-  }
+  };
   return (
     <>
       <style jsx>
         {`
-           div.form {
+          div.form {
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
             padding: 1.5rem;
             margin: 2.5rem auto;
@@ -54,7 +55,7 @@ const SignupForm = () => {
         `}
       </style>
       <div className="form">
-        <form className="signup" onSubmit={onSubmit}>
+        <form className="signup" onSubmit={handleSubmit}>
           {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
           <Icon name="user" size="big" aria-label="Username" />{" "}
           <input
