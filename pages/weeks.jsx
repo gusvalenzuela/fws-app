@@ -2,33 +2,39 @@ import Head from "next/head";
 import MatchupCard from "../components/MatchupCard";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
+import Tiebreaker from "../components/Tiebreaker";
 import React, { useState, useEffect } from "react";
 import Schedule from "../lib/local_schedule_events.json";
 import { Dropdown, Divider } from "semantic-ui-react";
-import { useCurrentUser, getPlayersPicks } from "../lib/hooks";
+import { useCurrentUser, getPlayerPicks } from "../lib/hooks";
+// import Store from "../lib/pick-store";
 
 function Weeks() {
-  const [dbPicks] = getPlayersPicks();
+  const [playerPicks] = getPlayerPicks();
   const [user] = useCurrentUser();
   const [curTime, setCurTime] = useState(new Date(Date.now()));
   const [userPicks, setUserPicks] = useState([]);
   const [lockedInMsg, setLockedInMsg] = useState("");
-  const [events, setEvents] = useState(null);
+  const [tiebreakMatch, setTiebreakMatch] = useState(false);
+  const [events, setEvents] = useState([]);
   const [week, setWeek] = useState(1);
-  const [tiebreaker, setTiebreaker] = useState(0);
-  const [tiebreakerMatchup, setTiebreakerMatchup] = useState(null);
 
   // on mount
   useEffect(() => {
+    clearInterval(timer);
+    // update current time every second
+    const timer = setInterval(() => {
+      setCurTime(new Date(Date.now()));
+    }, 1000);
     // sort by event date
     Schedule.events.sort(
       (a, b) => new Date(a.event_date) - new Date(b.event_date)
     );
-
-    // update current time every second
-    setInterval(() => {
-      setCurTime(new Date(Date.now()));
-    }, 1000);
+    // filter out the desired week
+    let filteredEvents = Schedule.events.filter((i) =>
+      i.schedule && i.schedule.week === week ? i : null
+    );
+    setEvents(filteredEvents);
   }, []);
 
   // on week set
@@ -38,26 +44,17 @@ function Weeks() {
       i.schedule && i.schedule.week === week ? i : null
     );
     setEvents(filteredEvents);
-    setTiebreakerMatchup(filteredEvents[filteredEvents.length - 1]);
   }, [week]);
 
   // on events set
   useEffect(() => {
-    let newPicks = dbPicks?.filter((p) =>
+    let currentPicks = playerPicks?.filter((p) =>
       p.matchup?.week === week ? p : null
     );
-    let tbMatch = dbPicks?.filter((p) =>
-      p.event_id === tiebreakerMatchup?.event_id && p.userId === user._id
-        ? p
-        : null
-    );
-    if (tbMatch && tbMatch !== undefined) {
-      setTiebreaker(tbMatch.tiebreaker);
-    } else {
-      setTiebreaker(0);
-    }
-    setUserPicks(newPicks);
-  }, [events, dbPicks]);
+    setUserPicks(currentPicks);
+    // set tiebreak match to last of the week's events
+    setTiebreakMatch(events[events.length - 1]);
+  }, [events]);
 
   // if (events?.length - newPicks?.length <= 3) {
   //   setLockedInMsg(
@@ -86,51 +83,6 @@ function Weeks() {
     return optionsArray;
   };
 
-  const tiebreakerOptions = () => {
-    // function that creates the dropdown options needed for tiebreaker
-    // min 1 (declared in i), max 192 (declared in max)
-    var max = 192;
-    var optionsArray = [];
-
-    for (let i = 1; i < max + 1; i++) {
-      optionsArray.push({
-        key: i,
-        text: i,
-        value: i,
-        // image: { avatar: true, src: "/images/avatar/small/matt.jpg" },
-      });
-    }
-    return optionsArray;
-  };
-
-  const handleTiebreakerSubmit = async (evt) => {
-    // append this tiebreaker to
-    // event_id of matchup (i.e. MNF)
-    let tiePick = {
-      event_id: tiebreakerMatchup && tiebreakerMatchup.event_id,
-      tiebreaker: tiebreaker,
-    };
-    const res = await fetch("/api/picks/" + tiePick.event_id, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(tiePick),
-    });
-
-    if (res.status === 200) {
-      const pick = await res.json();
-      console.log(pick);
-      // setMsg({ message: "Pick updated" });
-    } else {
-      // setMsg({ message: await res.text(), isError: true });
-    }
-  };
-
-  useEffect(() => {
-    if (tiebreaker === 0) return;
-    // add bounce delay
-    handleTiebreakerSubmit();
-  }, [tiebreaker]);
-
   // console.log(`events this week ${week}`, events);
 
   return (
@@ -155,20 +107,19 @@ function Weeks() {
               options={weeksOptions()}
               onChange={(e, { value }) => setWeek(value)}
               text={`Week ${week.toString()} (${
-                events && events[0].schedule?.week_detail
+                events && events.length > 0 && events[0].schedule?.week_detail
               })`}
               labeled
             />
           </div>
         </div>
         <div className="page-content">
-          <PlayerDashboard user={user} msg={lockedInMsg} />
+          <PlayerDashboard user={user} />
           {/* for each game of the week, make a matchup card component */}
           {events?.length > 0 &&
             events?.map((matchup, inx) => {
               // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
               // this is for the header of each "matchup day" subsection.
-              // console.log(userPicks.event_id, matchup.event_id);
               let print;
               // we print the first date in the week every time
               if (inx > 0) {
@@ -207,42 +158,17 @@ function Weeks() {
                     matchup={matchup}
                     userPicks={userPicks}
                     user={user}
+                    Tiebreaker={
+                      tiebreakMatch?.event_id === matchup.event_id
+                        ? Tiebreaker
+                        : false
+                    }
                   />
                 </>
               );
             })}
         </div>
-        <div className="page-footer">
-          <p>(D) = Divisional matchup</p>
-          <div>
-            <b>Your Tiebreaker: </b>
-            <Dropdown
-              // placeholder="Select a week"
-              selection
-              options={tiebreakerOptions()}
-              onChange={(e, { value }) => setTiebreaker(value)}
-              text={tiebreaker?.toString()}
-              compact
-              labeled
-            />{" "}
-            (
-            {tiebreakerMatchup &&
-              `Total points scored in ${tiebreakerMatchup.teams_normalized[0].abbreviation} vs. ${tiebreakerMatchup.teams_normalized[1].abbreviation} game`}
-            )
-            <span
-              style={{
-                display: `${
-                  "check if MNF || tiebreaker game is finished"
-                    ? "none"
-                    : "none"
-                }`,
-              }}
-            >
-              Actual Tiebreaker{`tiebreakerscore`}
-            </span>
-            <br />
-          </div>
-        </div>
+        <div className="page-footer"></div>
       </div>
     </main>
   );

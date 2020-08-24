@@ -8,29 +8,30 @@ const SimpleNav = () => {
   const openMenu = () => {
     return document.getElementById("menubar").classList.toggle("responsive");
   };
+  
   return (
     <nav className="menubar" id="menubar">
       <div role="header">FWS Football Pool</div>
       <ActiveLink activeClassName="active" href="/">
-        <a>Home</a>
+        <a onClick={openMenu}>Home</a>
       </ActiveLink>
       <ActiveLink activeClassName="active" href="/weeks">
-        <a>Weeks</a>
+        <a onClick={openMenu}>Weeks</a>
       </ActiveLink>
 
       {/* <ActiveLink activeClassName="active" href="/info">
-        <a>info</a>
+        <a onClick={openMenu}>info</a>
       </ActiveLink> */}
       {/* <ActiveLink activeClassName="active" href="/about">
-        <a>about</a>
+        <a onClick={openMenu}>about</a>
       </ActiveLink> */}
       {user && user._id ? (
         <>
           <ActiveLink activeClassName="active" href="/players">
-            <a>players</a>
+            <a onClick={openMenu}>players</a>
           </ActiveLink>
           <ActiveLink activeClassName="active" href="/settings">
-            <a>settings</a>
+            <a onClick={openMenu}>settings</a>
           </ActiveLink>
           <ActiveLink activeClassName="active" href="/logout">
             <a style={{ float: "right" }}>logout</a>
@@ -39,10 +40,10 @@ const SimpleNav = () => {
       ) : (
         <>
           <ActiveLink activeClassName="active" href="/login">
-            <a>login</a>
+            <a onClick={openMenu}>login</a>
           </ActiveLink>
           <ActiveLink activeClassName="active" href="/signup">
-            <a>sign up</a>
+            <a onClick={openMenu}>sign up</a>
           </ActiveLink>
         </>
       )}

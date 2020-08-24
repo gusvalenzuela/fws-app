@@ -1,7 +1,7 @@
 import useSWR from "swr";
 import fetcher from "./fetch";
 
-export function getPlayersPicks() {
+export function getPlayerPicks() {
   const { data, error } = useSWR("/api/picks", fetcher, {
     shouldRetryOnError: false,
   });
@@ -30,8 +30,3 @@ export function useUser(id) {
   return data ? data.user : null;
 }
 
-export function getAllPicks() {
-  const { data } = useSWR(`/api/picks/`, fetcher);
-  console.log(data);
-  return data ? data : null;
-}

@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Segment, Icon } from "semantic-ui-react";
+import { Grid, Segment, Icon, Dropdown } from "semantic-ui-react";
 import Style from "./MatchupCard.module.css";
 
-const MatchupCard = ({ matchup, userPicks, user }) => {
+const MatchupCard = ({ matchup, userPicks, user, Tiebreaker }) => {
   const [msg, setMsg] = useState({ message: null, isError: false });
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
+
   // on mount
   useEffect(() => {
-    // look for (filter) the event_id in the user's picks
-    // if found, set the selected team
-    userPicks?.filter((p) =>
-      p.event_id === matchup.event_id ? setSelectedTeam(p.selected_team) : null
-    );
+    //  look in the user's picks
+    for (let i = 0; i < userPicks?.length; i++) {
+      const pick = userPicks[i];
+      if (pick.event_id === matchup.event_id) {
+        setSelectedTeam(pick.selected_team);
+        return;
+      }
+    }
   }, [userPicks]);
 
   const handleTeamSelection = async (event) => {
@@ -41,7 +45,6 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
     setIsUpdating(false);
     if (res.status === 200) {
       const pick = await res.json();
-      console.log(pick)
       // PATCH /api/picks returns the updated pick
       setSelectedTeam(pick.selected_team);
       setMsg({ message: `Pick updated to ${pick.selected_team}` });
@@ -53,7 +56,6 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
     }
   };
 
-  // console.log(matchup)
   return (
     <div className={Style.matchupContainer}>
       {/* msg received after updating pick to db */}
@@ -72,6 +74,7 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
       ) : null}
       <Segment>
         <Grid key={matchup.schedule.event_name} columns="equal">
+          {/* render for each team  */}
           {matchup.teams_normalized.map((team, index) => (
             <>
               <Grid.Column
@@ -122,6 +125,7 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
                   }
                 </p>
               </Grid.Column>
+
               {
                 // this makes the middle "third column" only on the first iteration of "teams"
                 index === 0 ? (
@@ -173,6 +177,13 @@ const MatchupCard = ({ matchup, userPicks, user }) => {
           ))}
         </Grid>
       </Segment>
+      {Tiebreaker && (
+        <Tiebreaker
+          event_id={matchup.event_id}
+          hometeam={matchup.teams_normalized[0]}
+          awayteam={matchup.teams_normalized[1]}
+        />
+      )}
     </div>
   );
 };

@@ -17,9 +17,7 @@ const LogoutPage = () => {
     });
     if (res.status === 204) {
       mutate({});
-      setTimeout(() => {
-        router.push("/");
-      }, 3000);
+      router.push("/login");
     }
   }
 
