@@ -17,7 +17,7 @@ const MatchupCard = ({ matchup, userPicks, user, Tiebreaker }) => {
         return;
       }
     }
-  }, [userPicks]);
+  }, [userPicks, matchup]);
 
   const handleTeamSelection = async (event) => {
     // if any message is used whilst team picking, clear it after 2 secs

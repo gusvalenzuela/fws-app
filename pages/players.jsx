@@ -24,7 +24,7 @@ const Player = () => {
             {dbUsers?.length > 0
               ? dbUsers.map((user) => {
                   return (
-                    <>
+                    <div key={user._id}>
                       {/* <h3>
                         {user.name} has {user.picks.length} picks made.
                       </h3> */}
@@ -36,25 +36,24 @@ const Player = () => {
                           user.picks.map((pick) => {
                             if (pick.matchup?.week !== 1) return;
                             return (
-                              <>
-                                <span
-                                  style={{
-                                    backgroundColor: `${
-                                      pick.winning_team &&
-                                      pick.winning_team === pick.selected_team
-                                        ? "green"
-                                        : "transparent"
-                                    }`,
-                                  }}
-                                >
-                                  {" "}
-                                  {pick.selected_team}{" "}
-                                </span>
-                              </>
+                              <span
+                                key={pick.event_id}
+                                style={{
+                                  backgroundColor: `${
+                                    pick.winning_team &&
+                                    pick.winning_team === pick.selected_team
+                                      ? "green"
+                                      : "transparent"
+                                  }`,
+                                }}
+                              >
+                                {" "}
+                                {pick.selected_team}{" "}
+                              </span>
                             );
                           })}
                       </span>
-                    </>
+                    </div>
                   );
                 })
               : ""}

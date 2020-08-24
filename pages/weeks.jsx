@@ -30,11 +30,7 @@ function Weeks() {
     Schedule.events.sort(
       (a, b) => new Date(a.event_date) - new Date(b.event_date)
     );
-    // filter out the desired week
-    let filteredEvents = Schedule.events.filter((i) =>
-      i.schedule && i.schedule.week === week ? i : null
-    );
-    setEvents(filteredEvents);
+    
   }, []);
 
   // on week set
@@ -54,7 +50,7 @@ function Weeks() {
     setUserPicks(currentPicks);
     // set tiebreak match to last of the week's events
     setTiebreakMatch(events[events.length - 1]);
-  }, [events]);
+  }, [events, playerPicks, week]);
 
   // if (events?.length - newPicks?.length <= 3) {
   //   setLockedInMsg(
