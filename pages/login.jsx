@@ -19,12 +19,20 @@ const LoginPage = () => {
       </Head>
       <div className="main-content">
         <header className="page-header">
-          <h1>Get ready to make your picks!</h1>
+          <h1 className="hero">Get ready to make your picks!</h1>
         </header>
         <div className="page-content">
           <LoginForm />
-          <p style={{ color: "#777", textAlign: "center" }}>
-            <b>Note: </b>This app is for ENTERTAINMENT USE ONLY. Very much in alpha; subject to change without notice.
+          <p
+            style={{
+              color: "#777",
+              textAlign: "center",
+              width: "80%",
+              margin: "auto",
+            }}
+          >
+            <b>Note: </b>This app is for ENTERTAINMENT USE ONLY.
+            <br /> Very much in alpha and subject to change without notice.
           </p>
         </div>
       </div>

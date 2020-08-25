@@ -36,6 +36,7 @@ const SignupForm = () => {
             margin: 2.5rem auto;
             max-width: 350px;
             transition: box-shadow 0.2s ease 0s;
+            background: #ffff;
           }
           form {
             margin-bottom: 1rem;
@@ -46,11 +47,6 @@ const SignupForm = () => {
             border-bottom: 2px solid black;
             padding: 0.5rem 0.1rem;
             margin-bottom: 1.25rem;
-          }
-          form.signup button {
-            display: block;
-            margin: auto;
-            padding: 0.5rem 1rem;
           }
         `}
       </style>
@@ -84,7 +80,9 @@ const SignupForm = () => {
             autoComplete="true"
             placeholder="Password"
           />
-          <button type="submit">Sign up</button>
+          <button className="button" type="submit">
+            Sign up
+          </button>
         </form>
         <a href="/login">Already have an account?</a>
       </div>

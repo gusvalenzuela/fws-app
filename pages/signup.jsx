@@ -13,8 +13,6 @@ function SignupPage() {
     if (user) Router.replace("/");
   }, [user]);
 
-  
-
   return (
     <main id="signup">
       <Head>
@@ -22,11 +20,18 @@ function SignupPage() {
       </Head>
       <div className="main-content">
         <header className="page-header">
-          <h1>Sign Up</h1>
+          <h1 className="hero">Sign Up!</h1>
         </header>
         <div className="page-content">
           <SignupForm />
-          <p style={{ color: "#777", textAlign: "center" }}>
+          <p
+            style={{
+              color: "#777",
+              textAlign: "center",
+              width: "80%",
+              margin: "auto",
+            }}
+          >
             Note: The database is public. For your privacy, please avoid using
             your personal, work email.
           </p>

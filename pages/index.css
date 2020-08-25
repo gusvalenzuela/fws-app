@@ -1,0 +1,43 @@
+.hero {
+  margin: 0;
+  color: white;
+  background-color: #0000008a;
+  min-height: 25vh;
+  padding: 2rem 5rem;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+}
+.hero h1 {
+  text-transform: uppercase;
+  font-weight: 600;
+  word-spacing: 4px;
+  letter-spacing: 1px;
+  width: 80%;
+  max-width: 800px;
+}
+#index .page-header {
+  padding: 0;
+  text-align: left;
+  background: no-repeat center/cover
+    url(../assets/images/closeup-stadium-seats.jpg);
+}
+/* #index .page-content {
+  background: var(--base-warm-light);
+} */
+a.button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 98%;
+  max-width: 250px;
+  height: 50px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 700;
+  background: var(--base-color);
+  color: var(--main-black);
+  padding: 0.5rem 1rem;
+  margin-bottom: 8px;
+  margin-right: 8px;
+  justify-content: center;
+}

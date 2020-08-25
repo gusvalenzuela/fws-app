@@ -1,4 +1,5 @@
 /* load any page css */
+@import "./index.css";
 @import "./weeks.css";
 @import "./info.css";
 @import "./signup.css";
@@ -9,19 +10,51 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   /* background: url(../images/what-the-hex-dark.png); */
 }
-/* #__next{
-  display: grid;
-  grid-template-rows: max-content auto max-content !important;
-} */
+
+/* 
+  split complementary color pallete:
+
+  > base-color: #4B940C
+  > cool:
+    #6B28E0
+    #421394
+  > warm:
+    #E02847
+    #94041D
+ 
+*/
 
 :root {
   --main-white: #f2f2f2;
+  --main-black: #020202;
+  --brand-color1: #ab2616;
+  --base-color: #4c940c;
+  --base-cool-light: #6b28e0;
+  --base-cool-dark: #421394;
+  --base-warm-light: #e02847;
+  --base-warm-dark: #94041d;
+  --base-triad-cool: #1b3094;
+  --base-triad-cool-lighter: #213ab8;
+  --base-triad-warm: #94381b;
+  --base-triad-warm-lighter: #b94622;
 }
 
 main {
   display: grid !important;
-  min-height: calc(100vh - 169px);
+  min-height: calc(100vh - 150px);
   grid-template-rows: auto 1fr auto;
+}
+.brand-name {
+  font-weight: 700;
+  text-shadow: 1px 1px 2px var(--main-black);
+  color: var(--brand-color1);
+  word-spacing: initial;
+  letter-spacing: initial;
+  scale: 1.5;
+  /* text-decoration: overline underline white; */
+}
+.brand-name::after {
+  content: "Fun with Sports‼";
 }
 .page-header {
   padding: 1rem;
@@ -30,6 +63,8 @@ main {
   text-align: center;
 }
 .page-content {
+  padding: .5rem 1.5rem 2.5rem;
+  background: var(--main-white);
   text-align: center;
 }
 .main-content {
@@ -38,9 +73,10 @@ main {
 }
 .page-header,
 .page-footer {
-  padding: 2rem 1rem;
-  /* grid-column: 1/13; */
   justify-content: center;
+}
+.page-header {
+  padding: 2.6rem 3.4rem;
 }
 .page-footer {
   padding: 1rem;
@@ -49,7 +85,7 @@ main {
 
 .menubar {
   overflow: hidden;
-  background-color: #4e978a;
+  background-color: var(--base-warm-dark);
 }
 
 .menubar a,
@@ -76,7 +112,7 @@ main {
 }
 
 .menubar a.active {
-  background-color: #3d756b;
+  background-color: var(--base-warm-light);
   color: white;
 }
 
@@ -110,11 +146,49 @@ main {
     text-align: left;
   }
 }
+
+#signup .page-header {
+  background: no-repeat center/cover
+    url(../assets/images/whiteline-on-field.jpg);
+}
+
+#signup .hero,
+#login .hero {
+  max-width: fit-content;
+  margin: auto;
+  min-height: 5vh !important;
+}
+#login .page-header {
+  background: no-repeat bottom/cover
+    url(../assets/images/stadium-long-shot.jpg);
+}
+
+button.button {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 98%;
+  max-width: 250px;
+  height: 50px;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 700;
+  background: var(--base-color);
+  color: var(--main-black);
+  padding: 0.5rem 1rem;
+  justify-content: center;
+  border-radius: 2px;
+}
+
 footer.footer {
-  margin-top: 50px;
-  border-top: 4px solid #408383;
+  background: var(--base-warm-dark);
+  margin-top: 5px;
+  border-top: 4px solid var(--base-warm-light);
   padding: 1rem 1rem 5rem;
 }
 .footer div * {
+  color: var(--main-white);
   margin-left: 5px;
 }

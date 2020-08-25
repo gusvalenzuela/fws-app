@@ -84,7 +84,7 @@ const Tiebreaker = ({ event_id, hometeam, awayteam }) => {
   return (
     <>
       {/* <p>(D) = Divisional matchup</p> */}
-      <div style={{ border: "none", borderBottom: "2px solid gray", paddingBottom: "1rem" }}>
+      <div style={{ border: "none", paddingBottom: "1rem" }}>
         <b>Your Tiebreaker: </b>
         <Dropdown
           // placeholder="Select a week"

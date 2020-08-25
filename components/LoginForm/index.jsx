@@ -38,6 +38,7 @@ const LoginForm = () => {
             margin: 2.5rem auto;
             max-width: 300px;
             transition: box-shadow 0.2s ease 0s;
+            background: #ffff;
           }
           form {
             margin-bottom: 2rem;
@@ -48,14 +49,6 @@ const LoginForm = () => {
             border-bottom: 2px solid black;
             padding: 0.5rem 0.1rem;
             margin-bottom: 1.25rem;
-          }
-          .form a {
-            line-height: 2.25;
-          }
-          form.login button {
-            display: block;
-            margin: auto;
-            padding: 0.5rem 1rem;
           }
         `}
       </style>
@@ -81,7 +74,9 @@ const LoginForm = () => {
             name="current-password"
             placeholder="Password"
           />
-          <button type="submit">Login</button>
+          <button className="button" type="submit">
+            <span>LOG IN</span>
+          </button>
         </form>
         <a href="/forget-password">Forgot password?</a>
         <br />

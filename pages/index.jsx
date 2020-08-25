@@ -13,26 +13,30 @@ const HomePage = () => {
         <title>FWS | HOME</title>
       </Head>
       <main id="index" className="index">
-        <div className="main-content">
-          <header className="page-header">
-            <h1>Welcome to Fun with Sports!</h1>
-          </header>
-          <div className="page-content">
+        <header className="page-header">
+          <div className="hero">
+            <h1>
+              <span className="brand-name"></span> brings picking sides in major
+              sporting events to your fingertips.
+            </h1>
             <div
               style={{
-                margin: "auto",
-                minHeight: "500px",
-                maxWidth: "800px",
-                padding: "2rem",
-                boxShadow: "0 5px 10px rgba(0, 0, 0, 0.12)",
+                alignItems: "center",
               }}
             >
-              <a href="/login">Log In</a> or
-              <a href="/signup"> Sign Up</a> to start making your picks.
+              <a className="button" name="signup" href="/signup">
+                <span>Sign up for FREE!</span>
+              </a>
+              <a className="button" name="login" href="/login">
+                <span>Log In</span>
+              </a>
             </div>
           </div>
+        </header>
+        <div className="page-content"></div>
 
-          <div className="page-footer">🎉</div>
+        <div className="page-footer">
+          <i>FOR ENTERTAINMENT USE ONLY</i>
         </div>
       </main>
     </div>
