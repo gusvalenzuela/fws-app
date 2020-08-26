@@ -1,3 +1,7 @@
+#weeks .page-content {
+  padding: 0;
+}
+
 .matchup-container .left-side,
 .matchup-container .right-side {
   flex: 0 1 225px;
@@ -37,6 +41,7 @@
 .matchup-divider p {
   margin: 0;
 }
+
 .container-divider {
   width: 200px;
   max-width: 50%;
@@ -48,7 +53,7 @@
   }
 } */
 #team-logo-img {
-  max-width: 100%;
+  max-width: 69%;
   margin: auto;
 }
 
@@ -71,7 +76,8 @@
   font-weight: 800;
   /* background: rgb(0, 204, 255); */
 }
-.week-dropdown {
+.week-dropdown,
+.sport-dropdown {
   background-color: transparent !important ;
   color: var(--main-white) !important;
 }
@@ -98,5 +104,8 @@
 @media screen and (max-width: 425px) {
   .matchup-divider i {
     font-size: 2rem !important;
+  }
+  .matchup-divider p.divider-pick {
+    font-size: 0.8rem !important;
   }
 }

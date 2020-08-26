@@ -1,10 +1,11 @@
 import Head from "next/head";
-import MatchupCard from "../components/MatchupCard";
+import MatchupCard from "../components/Matchup/Card";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
 import Tiebreaker from "../components/Tiebreaker";
 import React, { useState, useEffect } from "react";
-import Schedule from "../lib/local_schedule_events.json";
+import NFLSchedule from "../schedules/nfl/events.json";
+import UFCSchedule from "../schedules/ufc/events.json";
 import { Dropdown, Divider } from "semantic-ui-react";
 import { useCurrentUser, getPlayerPicks } from "../lib/hooks";
 // import Store from "../lib/pick-store";
@@ -14,10 +15,11 @@ function Weeks() {
   const [user] = useCurrentUser();
   const [curTime, setCurTime] = useState(new Date(Date.now()));
   const [userPicks, setUserPicks] = useState([]);
-  const [lockedInMsg, setLockedInMsg] = useState("");
+  // const [lockedInMsg, setLockedInMsg] = useState("");
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
   const [week, setWeek] = useState(1);
+  const [Schedule, setSchedule] = useState(NFLSchedule); //2 =
 
   // on mount
   useEffect(() => {
@@ -30,23 +32,39 @@ function Weeks() {
     Schedule.events.sort(
       (a, b) => new Date(a.event_date) - new Date(b.event_date)
     );
-    
   }, []);
 
   // on week set
   useEffect(() => {
     // filter out the desired week
-    let filteredEvents = Schedule.events.filter((i) =>
-      i.schedule && i.schedule.week === week ? i : null
-    );
+    let filteredEvents = Schedule.events.filter((event) => {
+      // switch case to set "weekly events"
+      switch (event.sport_id) {
+        case 2:
+          if (event.schedule?.week === week) {
+            return event;
+          }
+          break;
+        case 7:
+          // sport_id = 7 is UFC
+          // does not have weeks in schedule
+          if (event.schedule.event_name.includes("Fight Night")) {
+            return event;
+          }
+          break;
+        default:
+          break;
+      }
+    });
     setEvents(filteredEvents);
-  }, [week]);
+  }, [week, Schedule]);
 
   // on events set
   useEffect(() => {
     let currentPicks = playerPicks?.filter((p) =>
       p.matchup?.week === week ? p : null
     );
+
     setUserPicks(currentPicks);
     // set tiebreak match to last of the week's events
     setTiebreakMatch(events[events.length - 1]);
@@ -88,22 +106,51 @@ function Weeks() {
       </Head>
       <div className="main-content">
         <div className="page-header">
-          <h3>
+          <h1 className="hero">
             <TimeDisplay dt={curTime} />
-          </h3>
+          </h1>
           <div className="week-header">
+            <div>
+              Choose a different sport:
+              <Dropdown
+                className="sport-dropdown"
+                closeOnChange
+                compact
+                selection
+                lazyLoad
+                options={[
+                  {
+                    key: 2,
+                    text: "NFL",
+                    value: 2,
+                  },
+                  {
+                    key: 7,
+                    text: "UFC",
+                    value: 7,
+                  },
+                ]}
+                onChange={(e, { value }) =>
+                  setSchedule(value === 2 ? NFLSchedule : UFCSchedule)
+                }
+                text={`${Schedule.events[0].sport_id === 2 ? "NFL" : "UFC"}`}
+                labeled
+              />
+            </div>
             {events?.length > 0 &&
-              `${events[0].schedule.season_year} ${events[0].schedule.season_type}:`}{" "}
+              `${events[0].schedule.season_year} ${events[0].schedule.season_type}:`}
             <Dropdown
               className="week-dropdown"
               closeOnChange
               compact
               selection
-              lazyLoad
               options={weeksOptions()}
               onChange={(e, { value }) => setWeek(value)}
               text={`Week ${week.toString()} (${
-                events && events.length > 0 && events[0].schedule?.week_detail
+                events &&
+                events.length > 0 &&
+                (events[0].schedule?.week_detail ||
+                  events[0].schedule?.week_detail)
               })`}
               labeled
             />

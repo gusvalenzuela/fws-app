@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Segment, Icon, Dropdown } from "semantic-ui-react";
-import Style from "./MatchupCard.module.css";
+import { Grid, Segment } from "semantic-ui-react";
+import MatchupDivider from "../Divider";
+import Style from "./Card.module.css";
 
 const MatchupCard = ({ matchup, userPicks, user, Tiebreaker }) => {
   const [msg, setMsg] = useState({ message: null, isError: false });
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const [sport, setSport] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
   // on mount
   useEffect(() => {
+    setSport(matchup.sport_id);
     //  look in the user's picks
     for (let i = 0; i < userPicks?.length; i++) {
       const pick = userPicks[i];
@@ -92,7 +95,9 @@ const MatchupCard = ({ matchup, userPicks, user, Tiebreaker }) => {
                 stretched
               >
                 <img
-                  src={`/images/teamlogos/${team.abbreviation}.png`}
+                  src={`/images/teamlogos/${
+                    sport === 2 ? team.abbreviation : "ufc-fighter"
+                  }.png`}
                   alt={`${team.abbreviation}'s team logo`}
                   id="team-logo-img"
                 />
@@ -100,75 +105,58 @@ const MatchupCard = ({ matchup, userPicks, user, Tiebreaker }) => {
                   {matchup.teams ? `${team.name} ${team.mascot}` : "Team Name"}
                 </h3>
                 <br />
-                <p
-                  style={{
-                    margin: 0,
-                    marginTop: "-20px",
-                    marginBottom: "20px",
-                    fontSize: "2rem",
-                    color: "red",
-                    fontWeight: "800",
-                  }}
-                >
-                  {
-                    // if point spread is negative display
-                    // & only if current rendered team is also fav
-                    team.is_home &&
-                    matchup.lines[2].spread.point_spread_home < 0 ? (
-                      matchup.lines[2].spread.point_spread_home
-                    ) : (team.is_away &&
-                        matchup.lines[2].spread.point_spread_away) < 0 ? (
-                      matchup.lines[2].spread.point_spread_away
-                    ) : (
-                      <span style={{ visibility: "hidden" }}>underdog</span>
-                    )
-                  }
-                </p>
-              </Grid.Column>
-
-              {
-                // this makes the middle "third column" only on the first iteration of "teams"
-                index === 0 ? (
-                  <Grid.Column
-                    key={"versus"}
-                    width="3"
-                    textAlign="center"
-                    className="matchup-divider"
-                    verticalAlign="middle"
-                  >
-                    <Icon name="at" />
-                    <div style={{ fontSize: "1.12rem" }}>
-                      {/* separating into multiple lines */}
-                      {/* Date */}
-                      <p>
-                        {new Intl.DateTimeFormat("default", {
-                          // year: "numeric",
-                          month: "numeric",
-                          day: "numeric",
-                          // dayPeriod: "short",
-                        }).format(new Date(matchup.event_date))}
-                      </p>
-                      {/* <br /> */}
-                      {/* Time */}
-                      <p>
-                        {new Intl.DateTimeFormat("default", {
-                          hour: "numeric",
-                          minute: "2-digit",
-                          timeZoneName: "short",
-                          // dayPeriod: "short",
-                        }).format(new Date(matchup.event_date))}
-                      </p>
-                    </div>
-                    <p style={{ marginTop: "1.5rem" }}>
-                      {selectedTeam
-                        ? selectedTeam === team.abbreviation
-                          ? `◀ ${selectedTeam}  `
-                          : `  ${selectedTeam} ▶`
-                        : "◀ Pick ▶"}
+                {sport === 7 ? (
+                  <>
+                    <p
+                      style={{
+                        margin: 0,
+                        marginTop: "-15px",
+                        marginBottom: "15px",
+                        fontWeight: "400",
+                      }}
+                    >
+                      {team.record || "0-0-0"}
                     </p>
-                    <p>{}</p>
-                    {/* <p>Weather: </p> */}
-                  </Grid.Column>
+                    <br />
+                  </>
+                ) : (
+                  <p
+                    style={{
+                      margin: 0,
+                      marginTop: "-15px",
+                      marginBottom: "15px",
+                      fontSize: "2rem",
+                      color: "red",
+                      fontWeight: "800",
+                    }}
+                  >
+                    {
+                      // if point spread is negative display
+                      // & only if current rendered team is also fav
+                      team.is_home &&
+                      matchup.lines[2].spread.point_spread_home < 0 ? (
+                        matchup.lines[2].spread.point_spread_home
+                      ) : (team.is_away &&
+                          matchup.lines[2].spread.point_spread_away) < 0 ? (
+                        matchup.lines[2].spread.point_spread_away
+                      ) : (
+                        <span style={{ visibility: "hidden" }}>underdog</span>
+                      )
+                    }
+                  </p>
+                )}
+              </Grid.Column>
+              {
+                // this makes the middle "third column"
+                // by rendering only on the first iteration of "teams"
+                index === 0 ? (
+                  // this divider has slight changes
+                  // varied on the sport type (i.e. american football vs mma)
+                  <MatchupDivider
+                    selectedTeam={selectedTeam}
+                    matchup={matchup}
+                    sport={sport}
+                  />
                 ) : (
                   ""
                 )

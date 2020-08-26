@@ -33,11 +33,30 @@ const HomePage = () => {
             </div>
           </div>
         </header>
-        <div className="page-content"></div>
-
-        <div className="page-footer">
-          <i>FOR ENTERTAINMENT USE ONLY</i>
+        <div className="page-content">
+          {" "}
+          <p
+            style={{
+              color: "#777",
+              textAlign: "center",
+              margin: "auto",
+              fontSize:"18px"
+            }}
+          >
+            <b>FOR ENTERTAINMENT USE ONLY.</b> <br />
+            Subject to change without notice.
+            <br /> Please play responsibly.{" "}
+            <span
+              role="image"
+              aria-label="Winking face emoji"
+              alt="Winking face emoji"
+            >
+              😉
+            </span>
+          </p>
         </div>
+
+        <div className="page-footer"></div>
       </main>
     </div>
   );

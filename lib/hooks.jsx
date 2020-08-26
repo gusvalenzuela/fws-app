@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import fetcher from "./fetch";
+import { fetcher } from "./fetch";
 
 export function getPlayerPicks() {
   const { data, error } = useSWR("/api/picks", fetcher, {
@@ -9,6 +9,12 @@ export function getPlayerPicks() {
   const picks = data ? data.picks : null;
   // const user = data ? data.user : null;
   return [picks];
+}
+export function getSchedule(sport) {
+  const { data } = useSWR(`/api/schedule/${sport}`, fetcher);
+  console.log(data);
+  const schedule = data ? data.schedule : null;
+  return [schedule];
 }
 
 export function useCurrentUser() {
@@ -29,4 +35,3 @@ export function useUser(id) {
   });
   return data ? data.user : null;
 }
-

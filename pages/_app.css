@@ -3,7 +3,20 @@
 @import "./weeks.css";
 @import "./info.css";
 @import "./signup.css";
-
+:root {
+  --main-white: #f2f2f2;
+  --main-black: #020202;
+  --brand-color1: #ab2616;
+  --base-color: #4c940c;
+  --base-cool-light: #6b28e0;
+  --base-cool-dark: #421394;
+  --base-warm-light: #e02847;
+  --base-warm-dark: #94041d;
+  --base-triad-cool: #1b3094;
+  --base-triad-cool-lighter: #213ab8;
+  --base-triad-warm: #94381b;
+  --base-triad-warm-lighter: #b94622;
+}
 html,
 body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
@@ -24,21 +37,6 @@ body {
  
 */
 
-:root {
-  --main-white: #f2f2f2;
-  --main-black: #020202;
-  --brand-color1: #ab2616;
-  --base-color: #4c940c;
-  --base-cool-light: #6b28e0;
-  --base-cool-dark: #421394;
-  --base-warm-light: #e02847;
-  --base-warm-dark: #94041d;
-  --base-triad-cool: #1b3094;
-  --base-triad-cool-lighter: #213ab8;
-  --base-triad-warm: #94381b;
-  --base-triad-warm-lighter: #b94622;
-}
-
 main {
   display: grid !important;
   min-height: calc(100vh - 150px);
@@ -56,6 +54,11 @@ main {
 .brand-name::after {
   content: "Fun with Sports‼";
 }
+.page-header,
+.page-content,
+.page-footer {
+  background-color: transparent;
+}
 .page-header {
   padding: 1rem;
   background: rgb(0, 0, 0);
@@ -63,8 +66,7 @@ main {
   text-align: center;
 }
 .page-content {
-  padding: .5rem 1.5rem 2.5rem;
-  background: var(--main-white);
+  padding: 2rem 1.5rem 3rem;
   text-align: center;
 }
 .main-content {
@@ -76,7 +78,7 @@ main {
   justify-content: center;
 }
 .page-header {
-  padding: 2.6rem 3.4rem;
+  padding: 0;
 }
 .page-footer {
   padding: 1rem;
@@ -148,18 +150,31 @@ main {
 }
 
 #signup .page-header {
-  background: no-repeat center/cover
+  background: no-repeat 50% 10% / cover
     url(../assets/images/whiteline-on-field.jpg);
 }
+.hero {
+  margin: 0;
+  color: white;
+  background-color: #0000008a;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+}
+.hero h1 {
+  text-transform: uppercase;
+  font-weight: 600;
+  word-spacing: 4px;
+  letter-spacing: 1px;
+  width: 80%;
+  max-width: 800px;
+}
 
-#signup .hero,
-#login .hero {
-  max-width: fit-content;
-  margin: auto;
-  min-height: 5vh !important;
+#index .hero {
+  min-height: 615px !important;
+  padding: 8rem 4rem;
 }
 #login .page-header {
-  background: no-repeat bottom/cover
+  background: no-repeat 50% 40% / cover
     url(../assets/images/stadium-long-shot.jpg);
 }
 

@@ -1,19 +1,4 @@
-.hero {
-  margin: 0;
-  color: white;
-  background-color: #0000008a;
-  min-height: 25vh;
-  padding: 2rem 5rem;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
-}
-.hero h1 {
-  text-transform: uppercase;
-  font-weight: 600;
-  word-spacing: 4px;
-  letter-spacing: 1px;
-  width: 80%;
-  max-width: 800px;
-}
+
 #index .page-header {
   padding: 0;
   text-align: left;
