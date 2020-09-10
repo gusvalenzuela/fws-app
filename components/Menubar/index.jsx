@@ -124,6 +124,7 @@ const Menubar = () => {
                 as="a"
                 onClick={() => {
                   router.push("/login");
+                  openMenu();
                 }}
               >
                 Log In
@@ -132,6 +133,7 @@ const Menubar = () => {
                 as="a"
                 onClick={() => {
                   router.push("/signup");
+                  openMenu();
                 }}
               >
                 Sign Up
@@ -151,6 +153,7 @@ const Menubar = () => {
                 as="a"
                 onClick={() => {
                   router.push("/logout");
+                  openMenu();
                 }}
               >
                 Log Out
