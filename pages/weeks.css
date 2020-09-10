@@ -90,7 +90,7 @@
   color: var(--main-black) !important;
 }
 .tiebreaker-dropdown .menu {
- height: 10rem;
+ max-height: 13.3rem !important;
 }
 @media screen and (max-width: 766px) {
   .week-header {

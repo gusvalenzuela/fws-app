@@ -139,7 +139,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
         render: (
           <>
             Week {pick.matchup.week} pick updated to {pick.selected_team}.
-            <br /> 🎉 Good luck!
+            <br />
+            <b style={{ fontSize: "small" }}>Good luck! 🎉</b>
           </>
         ),
         type: toast.TYPE.SUCCESS,

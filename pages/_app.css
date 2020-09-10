@@ -234,11 +234,11 @@ by: Toastify-react
 }
 .Toastify__toast--info,
 .Toastify__toast--success {
-  text-align: center;
+  width: 100%;
   font-size: 1.23rem;
   font-weight: 600;
 }
 .Toastify__toast {
-  width: 90%;
+  width: 95%;
   margin: auto;
 }

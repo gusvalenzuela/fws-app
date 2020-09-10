@@ -71,19 +71,17 @@ const Tiebreaker = ({
 
     setIsUpdating(false);
     const pick = await res.json();
-    console.log(pick);
     setTiebreaker(pick.tiebreaker);
     if (res.status === 200) {
       // updating the toast alert and setting the autoclose
       toast.update(tiebreakToast.current, {
         render: (
           <>
-            🎉 Tiebreaker updated to {pick.tiebreaker}.
+            🎉 Tiebreaker updated to {pick.tiebreaker}!
             <br />{" "}
-            <i>
-              total points scored in {pick.matchup.week} vs. {pick.matchup.week}{" "}
-              matchup.
-            </i>
+            <span style={{ fontSize: "x-small"}}>
+              total points scored in {pick.matchup.event_name}
+            </span>
           </>
         ),
         type: toast.TYPE.SUCCESS,
@@ -107,7 +105,7 @@ const Tiebreaker = ({
   return (
     <>
       {/* <p>(D) = Divisional matchup</p> */}
-      <div style={{ border: "none", paddingBottom: "1rem" }}>
+      <div style={{ border: "none", padding: ".25rem 1rem 1rem", textAlign: "center" }}>
         <b>Your Tiebreaker: </b>
         <Dropdown
           closeOnChange
