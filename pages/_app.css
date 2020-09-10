@@ -199,3 +199,46 @@ footer.footer {
   color: var(--main-white);
   margin-left: 5px;
 }
+
+/* 
+TOAST RELATED
+by: Toastify-react
+*/
+
+/** Classes for the progress bar **/
+.Toastify__progress-bar--dark {
+  background: linear-gradient(
+    to right,
+    var(--base-cool-dark),
+    var(--base-warm-dark)
+  ) !important;
+}
+.Toastify__progress-bar {
+  background: linear-gradient(
+    to right,
+    var(--base-cool-light),
+    var(--base-warm-light)
+  ) !important;
+}
+/** Used to define the position of the ToastContainer **/
+.Toastify__toast-container--top-center {
+  top: 20px !important;
+}
+/** Classes for the displayed toast **/
+.Toastify__toast--default {
+  background-color: #fffffff7 !important;
+  text-align: center;
+  color: #020202 !important;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.Toastify__toast--info,
+.Toastify__toast--success {
+  text-align: center;
+  font-size: 1.23rem;
+  font-weight: 600;
+}
+.Toastify__toast {
+  width: 90%;
+  margin: auto;
+}

@@ -6,22 +6,20 @@ Read more: https://err.sh/next.js/css-global
 import "./_app.css";
 import "semantic-ui-css/semantic.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import SimpleMenu from "../components/SimpleMenu";
 import Menubar from "../components/Menubar";
 import Footer from "../components/Footer";
 import { ToastContainer } from "react-toastify";
 
-// This default export is required in a new `pages/_app.js` file.
+// This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
   return (
     <>
       <Menubar />
       <ToastContainer
-        limit={5}
+        limit={3}
         newestOnTop
-        progressStyle={{ color: "Highlight" }}
         // autoClose={5000}
-        role="Notify successful pick update"
+        role="notification"
         position="top-center"
       />
       <Component {...pageProps} />

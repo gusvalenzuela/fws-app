@@ -10,6 +10,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
   const [sport, setSport] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [tiebreaker, setTiebreaker] = useState(null);
+  const initToast = React.useRef(null);
+  const loginToPickToast = React.useRef(null);
   useEffect(() => {
     setSport(matchup.sport_id);
     setSelectedTeam(null); // clear selected team for refresh
@@ -96,12 +98,23 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
   };
 
   const handleTeamSelection = async (event) => {
-    if (isUpdating) return;
+    if (isUpdating) return toast.dark("Still updating, please wait");
     // if no signed in user, display message about logging in
-    if (!user) return toast("Log in to lock your pick!");
-    // set selected team to the clicked team (saved in ID) for visuals
-    // will clear in time out if no user is logged in
-    setSelectedTeam(event.currentTarget.id);
+    if (!user) {
+      // check to see to no similar toast is active (prevent dupes)
+      if (!toast.isActive(loginToPickToast.current)) {
+        loginToPickToast.current = toast("Log in to lock your pick!", {
+          toastId: "toast-not-loggedin",
+        });
+      }
+      return;
+    }
+    // initializing the toast
+    initToast.current = toast.info(`Updating, please wait...`, {
+      containerId: "toast-update-pick",
+      autoClose: false,
+      closeButton: false,
+    });
     setIsUpdating(true);
 
     let pick = {
@@ -121,9 +134,18 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
       const pick = await res.json();
       // PATCH /api/picks returns the updated pick
       setSelectedTeam(pick.selected_team);
-      toast(
-        `Pick updated to ${pick.selected_team} for Week ${pick.matchup.week}. Good luck! 🎉`
-      );
+      // updating the toast alert and setting the autoclose
+      toast.update(initToast.current, {
+        render: (
+          <>
+            Week {pick.matchup.week} pick updated to {pick.selected_team}.
+            <br /> 🎉 Good luck!
+          </>
+        ),
+        type: toast.TYPE.SUCCESS,
+        autoClose: 5000,
+        closeButton: null,
+      });
     } else {
       toast((await res.text()).toUpperCase());
     }
