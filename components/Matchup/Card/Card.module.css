@@ -6,14 +6,13 @@
 }
 .matchupContainer h3 {
   margin: 0;
-  margin-top: -15px;
+  margin-top: -8px;
 }
 
 .teamContainer {
   text-align: center;
   height: 100%;
   cursor: pointer;
-  padding: 0 !important;
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
   -webkit-animation-fill-mode: both;

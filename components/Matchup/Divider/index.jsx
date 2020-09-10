@@ -3,15 +3,15 @@ import { Grid, Icon } from "semantic-ui-react";
 const MatchupDivider = ({ matchup, selectedTeam, sport }) => {
   return (
     <Grid.Column
+
       key={"versus"}
       width="3"
       textAlign="center"
       className="matchup-divider"
       verticalAlign="middle"
     >
-      <Icon name={`${sport === 7 ? "handshake" : "at"}`} />
-      <div style={{ fontSize: "1.12rem" }}>
-        {/* separating into multiple lines */}
+      {/* separating into multiple lines */}
+      <div style={{ fontSize: "1.12rem", marginBottom: "2rem" }}>
         {/* Date */}
         <p>
           {new Intl.DateTimeFormat("default", {
@@ -32,7 +32,10 @@ const MatchupDivider = ({ matchup, selectedTeam, sport }) => {
           }).format(new Date(matchup.event_date))}
         </p>
       </div>
-      <p className="divider-pick" style={{ marginTop: "1.5rem" }}>
+      {/* versus / at icon */}
+      <Icon name={`${sport === 7 ? "handshake" : "at"}`} />
+      {/* make a selection / picked  */}
+      <p className="divider-pick" style={{ marginTop: ".5rem" }}>
         {selectedTeam
           ? selectedTeam === matchup.teams_normalized[0].abbreviation
             ? `◀ ${selectedTeam}  `

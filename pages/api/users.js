@@ -47,7 +47,7 @@ handler.post(async (req, res) => {
 });
 
 handler.get(async ({ user, db }, res) => {
-  if (!user) res.send(null);
+  // if (!user) res.send({ users: "Unauthenticated" });
   const options = {
     // Include only the `_id`, `name`, and `emailverified` fields in each returned document
     // (one of, not both), {'a':1, 'b': 1} or {'a': 0, 'b': 0}
@@ -59,6 +59,17 @@ handler.get(async ({ user, db }, res) => {
   };
   const users = await db.collection("users").find({}, options).toArray();
   const picks = await db.collection("picks").find({}).toArray();
+
+  // sort alphabetically by name
+  users.sort((a, b) => {
+    if (a.name.toLowerCase() > b.name.toLowerCase()) {
+      return 1;
+    }
+    if (a.name.toLowerCase() < b.name.toLowerCase()) {
+      return -1;
+    }
+    return 0;
+  });
 
   // mapping each picks Array to its respective player
   const allData = users.map((user) => {

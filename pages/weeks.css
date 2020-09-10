@@ -1,6 +1,11 @@
 #weeks .page-content {
   padding: 0;
 }
+.current-time-container {
+  padding: 1rem 0.5rem;
+  line-height: normal;
+  font-size: 1.8rem !important;
+}
 
 .matchup-container .left-side,
 .matchup-container .right-side {
@@ -24,18 +29,16 @@
   background-color: #000;
   color: #fff;
   padding: 1rem 0.5rem;
-  margin-top: 5rem;
-}
-.matchup-day-header:first-of-type {
-  margin-top: 1rem;
+  margin-top: 3rem !important;
+  text-align: center;
 }
 .matchup-divider {
   background-color: transparent;
   width: min-content;
-  padding: 0;
+  padding: 0.5rem !important;
 }
 .matchup-divider i {
-  margin: 0 auto 1rem !important;
+  /* margin: 0 auto 1rem !important; */
   font-size: 5rem !important;
 }
 .matchup-divider p {
@@ -53,7 +56,7 @@
   }
 } */
 #team-logo-img {
-  max-width: 69%;
+  max-width: 75%;
   margin: auto;
 }
 
@@ -72,8 +75,10 @@
   filter: grayscale(100%);
 }
 .week-header {
-  font-size: 1.2rem;
+  font-size: 2rem;
   font-weight: 800;
+  line-height: normal;
+  padding: 1rem 0.5rem 0.25rem;
   /* background: rgb(0, 204, 255); */
 }
 .week-dropdown,
@@ -81,11 +86,13 @@
   background-color: transparent !important ;
   color: var(--main-white) !important;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 766px) {
   .week-header {
-    font-size: 1rem;
+    font-size: 1.5rem;
   }
-
+  .current-time-container {
+    font-size: 1.4rem !important;
+  }
   .matchup-divider i {
     font-size: 3rem !important;
   }
@@ -102,6 +109,12 @@
   }
 } */
 @media screen and (max-width: 425px) {
+  .week-header {
+    font-size: 1.2rem;
+  }
+  .current-time-container {
+    font-size: 1.1rem !important;
+  }
   .matchup-divider i {
     font-size: 2rem !important;
   }

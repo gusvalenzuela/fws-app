@@ -2,42 +2,55 @@ import Head from "next/head";
 import MatchupCard from "../components/Matchup/Card";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
-import Tiebreaker from "../components/Tiebreaker";
 import React, { useState, useEffect } from "react";
-import NFLSchedule from "../schedules/nfl/events.json";
-import UFCSchedule from "../schedules/ufc/events.json";
-import { Dropdown, Divider } from "semantic-ui-react";
-import { useCurrentUser, getPlayerPicks } from "../lib/hooks";
-// import Store from "../lib/pick-store";
+import { Divider } from "semantic-ui-react";
+import {
+  useCurrentUser,
+  getPlayerPicks,
+  useUser,
+  useSchedule,
+} from "../lib/hooks";
+import Store from "../lib/stores/FootballPool";
+
+// import NFLSchedule from "../lib/schedules/nfl/events.json";
 
 function Weeks() {
-  const [playerPicks] = getPlayerPicks();
   const [user] = useCurrentUser();
-  const [curTime, setCurTime] = useState(new Date(Date.now()));
+  const [Sport, setSport] = useState(2); //2 =
   const [userPicks, setUserPicks] = useState([]);
-  // const [lockedInMsg, setLockedInMsg] = useState("");
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
-  const [week, setWeek] = useState(1);
-  const [Schedule, setSchedule] = useState(NFLSchedule); //2 =
+  const week = Store.getState().week;
+  // "State store" has selectedUser as undefined
+  // on refresh "weeks" page
+  const selectedUser = useUser(Store.getState().selectedUser);
+  const [dbSchedule] = useSchedule(Sport, 2020);
+  // const dbSchedule = NFLSchedule;
+  const [playerPicks] = getPlayerPicks(
+    Store.getState().selectedUser || (user && user._id)
+  );
 
+  const getWeekNumber = (date) => {
+    let datetoCompare = date ? new Date(date) : new Date();
+    let onejan = new Date(datetoCompare.getFullYear(), 0, 1);
+    let week = Math.ceil(
+      ((datetoCompare - onejan) / 86400000 + onejan.getDay() + 1) / 7
+    );
+    return week;
+  };
   // on mount
   useEffect(() => {
-    clearInterval(timer);
-    // update current time every second
-    const timer = setInterval(() => {
-      setCurTime(new Date(Date.now()));
-    }, 1000);
-    // sort by event date
-    Schedule.events.sort(
+    console.log(selectedUser);
+  }, [selectedUser]);
+
+  // on week, dbschedule set
+  useEffect(() => {
+    // // sort by event date
+    dbSchedule?.events.sort(
       (a, b) => new Date(a.event_date) - new Date(b.event_date)
     );
-  }, []);
-
-  // on week set
-  useEffect(() => {
     // filter out the desired week
-    let filteredEvents = Schedule.events.filter((event) => {
+    let filteredEvents = dbSchedule?.events.filter((event) => {
       // switch case to set "weekly events"
       switch (event.sport_id) {
         case 2:
@@ -48,7 +61,10 @@ function Weeks() {
         case 7:
           // sport_id = 7 is UFC
           // does not have weeks in schedule
-          if (event.schedule.event_name.includes("Fight Night")) {
+          // if (event.schedule.event_name.includes("Fight Night")) {
+          //   return event;
+          // }
+          if (getWeekNumber(event.event_date) === getWeekNumber() + 1) {
             return event;
           }
           break;
@@ -56,46 +72,22 @@ function Weeks() {
           break;
       }
     });
-    setEvents(filteredEvents);
-  }, [week, Schedule]);
+    if (filteredEvents && filteredEvents.length > 0) {
+      setEvents(filteredEvents);
+    }
+  }, [week, dbSchedule]);
 
   // on events set
   useEffect(() => {
+    // playerPicks default = current user
+    // else selected user stored in state store
     let currentPicks = playerPicks?.filter((p) =>
       p.matchup?.week === week ? p : null
     );
-
     setUserPicks(currentPicks);
     // set tiebreak match to last of the week's events
     setTiebreakMatch(events[events.length - 1]);
-  }, [events, playerPicks, week]);
-
-  // if (events?.length - newPicks?.length <= 3) {
-  //   setLockedInMsg(
-  //     `You've only ${
-  //       events.length - newPicks.length
-  //     } matchups left to choose from this week.`
-  //   );
-  // } else if (events?.length && newPicks?.length) {
-  //   setLockedInMsg(
-  //     `You've picked in ${newPicks.length}/${events.length} of the matchups this week.`
-  //   );
-  // }
-
-  const weeksOptions = () => {
-    // because the weeks here are iterable numerically (1-17)
-    // it's easier to make a function that creates the dropdown options needed
-    var max = 17;
-    var optionsArray = [];
-    for (let i = 1; i < max + 1; i++) {
-      optionsArray.push({
-        key: i,
-        text: i,
-        value: i,
-      });
-    }
-    return optionsArray;
-  };
+  }, [events, playerPicks, Sport, selectedUser]);
 
   // console.log(`events this week ${week}`, events);
 
@@ -104,67 +96,38 @@ function Weeks() {
       <Head>
         <title>FWS | Weekly Matchups</title>
       </Head>
+
       <div className="main-content">
         <div className="page-header">
-          <h1 className="hero">
-            <TimeDisplay dt={curTime} />
-          </h1>
           <div className="week-header">
-            <div>
-              Choose a different sport:
-              <Dropdown
-                className="sport-dropdown"
-                closeOnChange
-                compact
-                selection
-                lazyLoad
-                options={[
-                  {
-                    key: 2,
-                    text: "NFL",
-                    value: 2,
-                  },
-                  {
-                    key: 7,
-                    text: "UFC",
-                    value: 7,
-                  },
-                ]}
-                onChange={(e, { value }) =>
-                  setSchedule(value === 2 ? NFLSchedule : UFCSchedule)
-                }
-                text={`${Schedule.events[0].sport_id === 2 ? "NFL" : "UFC"}`}
-                labeled
-              />
-            </div>
             {events?.length > 0 &&
               `${events[0].schedule.season_year} ${events[0].schedule.season_type}:`}
-            <Dropdown
-              className="week-dropdown"
-              closeOnChange
-              compact
-              selection
-              options={weeksOptions()}
-              onChange={(e, { value }) => setWeek(value)}
-              text={`Week ${week.toString()} (${
-                events &&
-                events.length > 0 &&
-                (events[0].schedule?.week_detail ||
-                  events[0].schedule?.week_detail)
-              })`}
-              labeled
-            />
+            <span style={{ color: "#FE9AAC" }}>{` Week ${week.toString()} (${
+              events &&
+              events.length > 0 &&
+              (events[0].schedule?.week_detail ||
+                events[0].schedule?.event_name)
+            })`}</span>
+            <div className="current-time-container">
+              <TimeDisplay />
+            </div>
           </div>
         </div>
         <div className="page-content">
-          <PlayerDashboard user={user} />
-          {/* for each game of the week, make a matchup card component */}
+          <span style={selectedUser && { background: "#777" }}>
+            <PlayerDashboard
+              user={selectedUser || user}
+              otherUser={selectedUser ? true : false}
+            />
+          </span>
+          {/* for each game of the week, make a header or divider and a matchup card component */}
+
           {events?.length > 0 &&
             events?.map((matchup, inx) => {
               // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
               // this is for the header of each "matchup day" subsection.
               let print;
-              // we print the first date in the week every time
+              // we print the first date in the week every time (i.e. index 0)
               if (inx > 0) {
                 // check if the previous day of the week in the mapping is the same as current
                 if (
@@ -175,7 +138,7 @@ function Weeks() {
                   // do not print, by setting print to false
                   print = false;
                 } else {
-                  // else print it
+                  //  print it
                   print = true;
                 }
               } else {
@@ -184,7 +147,7 @@ function Weeks() {
               }
 
               return (
-                <>
+                <span key={matchup.event_id}>
                   {!print ? (
                     <Divider
                       // content={matchup.schedule?.event_name}
@@ -197,17 +160,16 @@ function Weeks() {
                   )}
 
                   <MatchupCard
-                    key={matchup?.event_id}
                     matchup={matchup}
                     userPicks={userPicks}
-                    user={user}
-                    Tiebreaker={
+                    user={user ? true : false}
+                    tiebreak={
                       tiebreakMatch?.event_id === matchup.event_id
-                        ? Tiebreaker
+                        ? true
                         : false
                     }
                   />
-                </>
+                </span>
               );
             })}
         </div>

@@ -7,8 +7,15 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.get(async (req, res) => {
-  const pick = await getPick(req, req.query.eventId);
-  res.send({ pick });
+  if (!req.query.userId) res.send(null);
+
+  const picks = await req.db
+    .collection("picks")
+    .find({
+      userId: req.query.userId,
+    })
+    .toArray();
+  res.status(200).json({ picks: picks });
 });
 
 handler.patch(async (req, res) => {

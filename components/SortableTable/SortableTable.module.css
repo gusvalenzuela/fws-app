@@ -1,0 +1,62 @@
+:root {
+  --main-bg: #ff897467;
+  --main-bg-old: #fff67467;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.wow {
+  background: var(--main-bg);
+}
+
+.table-responsive {
+  max-height: 500px;
+}
+
+thead th {
+  text-align: left;
+  border-bottom: 2px solid black;
+  /* width: 100%; */
+}
+
+thead button {
+  text-align: left;
+  display: inline-block;
+  border: 0;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: inherit;
+  padding: 0.5em 0.25rem;
+  margin-bottom: 1px;
+  width: 100%;
+}
+thead button:focus {
+  outline: none !important;
+}
+thead button.ascending:enabled,
+thead button.descending:enabled {
+  background: #aaaaaa;
+  outline: none !important;
+}
+
+thead button.ascending::after {
+  content: "🔽";
+  margin-left: 0.5rem;
+}
+
+thead button.descending::after {
+  content: "🔼";
+  margin-left: 0.5rem;
+}
+
+tbody td {
+  padding: 0.25em;
+  text-align: left;
+  min-width: 120px;
+  border-bottom: 1px solid #ccc;
+}
+
+tbody tr:hover {
+  background-color: #eee;
+}

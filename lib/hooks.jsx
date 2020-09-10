@@ -1,18 +1,17 @@
 import useSWR from "swr";
-import { fetcher } from "./fetch";
+import fetcher from './fetch';
 
-export function getPlayerPicks() {
-  const { data, error } = useSWR("/api/picks", fetcher, {
+// const fetcher = (url) => fetch(url).then((r) => r.json());
+
+export function getPlayerPicks(userId) {
+  const { data, error } = useSWR(`/api/picks/${userId}`, fetcher, {
     shouldRetryOnError: false,
   });
-  // console.log(error)
   const picks = data ? data.picks : null;
-  // const user = data ? data.user : null;
   return [picks];
 }
-export function getSchedule(sport) {
-  const { data } = useSWR(`/api/schedule/${sport}`, fetcher);
-  console.log(data);
+export function useSchedule(sport, season) {
+  const { data } = useSWR(`/api/schedule/${sport}&${season}`, fetcher);
   const schedule = data ? data.schedule : null;
   return [schedule];
 }

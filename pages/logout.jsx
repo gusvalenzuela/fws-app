@@ -17,8 +17,8 @@ const LogoutPage = () => {
     });
     if (res.status === 204) {
       mutate({});
-      router.push("/login");
     }
+    router.push("/");
   }
 
   return (

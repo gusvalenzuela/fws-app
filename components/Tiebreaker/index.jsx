@@ -1,32 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown } from "semantic-ui-react";
-import { getPlayerPicks } from "../../lib/hooks";
 
-const Tiebreaker = ({ event_id, hometeam, awayteam }) => {
-  const [playerPicks] = getPlayerPicks();
+const Tiebreaker = ({
+  event_id,
+  hometeam,
+  awayteam,
+  tiebreaker,
+  setTiebreaker,
+}) => {
   const [msg, setMsg] = useState({ message: null, isError: false });
   const [isUpdating, setIsUpdating] = useState(false);
-  const [tiebreaker, setTiebreaker] = useState(null);
-
-  useEffect(() => {
-    if (tiebreaker === null) return;
-
-    clearTimeout(tieBounce);
-    // .5s bounce just to lower the load a teeny bit
-    const tieBounce = setTimeout(() => {
-      handleTiebreakerSubmit();
-    }, 500);
-  }, [tiebreaker]);
-
-  useEffect(() => {
-    if (playerPicks === null) return;
-    // look for match event in picks that matches the event_id sent to this Tiebreaker
-    for (let i = 0; i < playerPicks.length; i++) {
-      const pick = playerPicks[i];
-      if (pick.event_id === event_id) setTiebreaker(pick.tiebreaker);
-    }
-    // setTiebreaker(playerPicks);
-  }, [playerPicks]);
 
   const tiebreakerOptions = () => {
     // function that creates the dropdown options needed for tiebreaker
@@ -45,7 +28,7 @@ const Tiebreaker = ({ event_id, hometeam, awayteam }) => {
     return optionsArray;
   };
 
-  const handleTiebreakerSubmit = async () => {
+  const handleTiebreakerSubmit = async (input) => {
     clearTimeout(displayTimeoout);
     // if any message is used whilst team picking, clear it after 2 secs
     const displayTimeoout = setTimeout(() => {
@@ -61,7 +44,7 @@ const Tiebreaker = ({ event_id, hometeam, awayteam }) => {
     // event_id of matchup (i.e. MNF)
     let tiePick = {
       event_id: event_id,
-      tiebreaker: tiebreaker,
+      tiebreaker: input,
     };
     const res = await fetch("/api/picks/" + tiePick.event_id, {
       method: "PATCH",
@@ -70,8 +53,9 @@ const Tiebreaker = ({ event_id, hometeam, awayteam }) => {
     });
 
     setIsUpdating(false);
+    const pick = await res.json();
+    setTiebreaker(pick.tiebreaker);
     if (res.status === 200) {
-      const pick = await res.json();
       setMsg({
         message: `Tiebreaker successfully updated to ${pick.tiebreaker}`,
       });
@@ -90,7 +74,10 @@ const Tiebreaker = ({ event_id, hometeam, awayteam }) => {
           // placeholder="Select a week"
           selection
           options={tiebreakerOptions()}
-          onChange={(e, d) => setTiebreaker(d.value)}
+          onChange={(e, { value }) => {
+            setTiebreaker(value);
+            return handleTiebreakerSubmit(value);
+          }}
           text={`${!tiebreaker ? 1 : tiebreaker}`}
           compact
           labeled

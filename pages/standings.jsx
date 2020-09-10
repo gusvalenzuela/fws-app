@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { useCurrentUser, getAllUsers } from "../lib/hooks";
 
-const Player = () => {
+const Standings = () => {
   const [dbUsers] = getAllUsers();
   const [user] = useCurrentUser();
 
@@ -11,9 +11,9 @@ const Player = () => {
   // }, [dbUsers]);
 
   return (
-    <main id="player">
+    <main id="standings">
       <Head>
-        <title>FWS | Player</title>
+        <title>FWS | Standings</title>
       </Head>
       <main>
         <div className="main-content">
@@ -65,4 +65,4 @@ const Player = () => {
   );
 };
 
-export default Player;
+export default Standings;

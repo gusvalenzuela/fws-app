@@ -1,22 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 
-const TimeDisplay = ({ dt }) => {
+const TimeDisplay = () => {
+  const [curTime, setCurTime] = useState(new Date(Date.now()));
+  // update current time every second
+  // setInterval(() => {
+  //   setCurTime(new Date(Date.now()));
+  // }, 1000);
   let options = {
-    // weekday: "long",
+    weekday: "long",
     month: "long",
     year: "numeric",
     day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    time: "numeric",
-    timeZoneName: "short",
+    // hour: "numeric",
+    // minute: "numeric",
+    // second: "numeric",
+    // time: "numeric",
+    // timeZoneName: "short",
   };
-  return (
-    <span className="current-time-container">
-      {`${dt.toLocaleDateString([], options)}`}
-    </span>
-  );
+  return <span>{`${curTime.toLocaleDateString([], options)}`}</span>;
 };
 
 export default TimeDisplay;
