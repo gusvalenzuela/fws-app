@@ -182,6 +182,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
           <Tiebreaker
             tiebreaker={tiebreaker}
             setTiebreaker={setTiebreaker}
+            user={user}
             event_id={matchup.event_id}
             hometeam={matchup.teams_normalized[0]}
             awayteam={matchup.teams_normalized[1]}
