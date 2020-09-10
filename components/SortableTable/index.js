@@ -1,5 +1,4 @@
-import React, { useState, useMemo, useContext, useEffect } from "react";
-import UserContext from "../../utils/UserContext";
+import React, { useState, useMemo, useContext } from "react";
 
 const useSortableData = (
   items,
@@ -53,7 +52,7 @@ const useSortableData = (
 };
 
 const SortableTable = () => {
-  const { users } = useContext(UserContext);
+  const { users } = useContext([]);
 
   const { data, requestSort, sortConfig } = useSortableData(users);
 
