@@ -1,5 +1,5 @@
 import nextConnect from "next-connect";
-import middleware from "../../../../middlewares/middleware";
+import middleware from "../../../middlewares/middleware";
 
 const handler = nextConnect();
 
