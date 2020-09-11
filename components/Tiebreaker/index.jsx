@@ -9,7 +9,6 @@ const Tiebreaker = ({
   setTiebreaker,
   user,
 }) => {
-  const [msg, setMsg] = useState({ message: null, isError: false });
   const [isUpdating, setIsUpdating] = useState(false);
   const tiebreakToast = React.useRef(null);
   const loginToPickToast = React.useRef(null);
@@ -101,11 +100,16 @@ const Tiebreaker = ({
     }
   };
 
-  // console.log(matchup)
   return (
     <>
       {/* <p>(D) = Divisional matchup</p> */}
-      <div style={{ border: "none", padding: ".25rem 1rem 1rem", textAlign: "center" }}>
+      <div
+        style={{
+          border: "none",
+          padding: ".25rem 1rem 1rem",
+          textAlign: "center",
+        }}
+      >
         <b>Your Tiebreaker: </b>
         <Dropdown
           closeOnChange
@@ -120,26 +124,13 @@ const Tiebreaker = ({
             return handleTiebreakerSubmit(value);
           }}
           text={`${!tiebreaker ? 1 : tiebreaker}`}
-          defaultValue={tiebreaker}
+          value={tiebreaker}
           compact
           labeled
         />{" "}
         (
         {`Total points scored in ${awayteam.abbreviation} vs. ${hometeam.abbreviation} game`}
-        ){/* msg received after updating pick to db */}
-        {msg.message ? (
-          <p
-            style={{
-              color: "blue",
-              fontSize: "large",
-              fontWeight: "700",
-              margin: ".5rem 0 .25rem",
-              padding: "0",
-            }}
-          >
-            {msg.message}
-          </p>
-        ) : null}
+        )
         <span
           style={{
             display: `${

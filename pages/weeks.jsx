@@ -38,10 +38,6 @@ function Weeks() {
     );
     return week;
   };
-  // on mount
-  useEffect(() => {
-    console.log(selectedUser);
-  }, [selectedUser]);
 
   // on week, dbschedule set
   useEffect(() => {
