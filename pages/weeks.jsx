@@ -3,7 +3,7 @@ import MatchupCard from "../components/Matchup/Card";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
 import React, { useState, useEffect } from "react";
-import Loader from "react-loader";
+import Loader from "react-content-loader";
 import { Divider } from "semantic-ui-react";
 import {
   useCurrentUser,
@@ -106,16 +106,14 @@ function Weeks() {
       </Head>
 
       {!events.length ? (
-        <>
-          <Loader />
-        </>
+        <Loader />
       ) : (
         <div className="main-content">
           <div className="page-header">
             <div className="week-header">
               {events?.length > 0 &&
                 `${events[0].schedule.season_year} ${events[0].schedule.season_type}:`}
-              <span style={{ color: "#FE9AAC" }}>{` Week ${week.toString()} (${
+              <span style={{ color: "#e02847" }}>{` Week ${week.toString()} (${
                 events?.length > 0 &&
                 (events[0].schedule?.week_detail ||
                   events[0].schedule?.event_name)

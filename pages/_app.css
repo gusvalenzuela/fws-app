@@ -41,7 +41,7 @@ body {
 */
 
 main {
-  display: grid !important;
+  /* display: grid !important; */
   min-height: calc(100vh - 150px);
   grid-template-rows: auto 1fr auto;
 }
@@ -88,15 +88,16 @@ main {
 }
 .top.stackable.menu {
   border-radius: 0 !important;
-  background-color: var(--base-warm-dark) !important;
+  background-color: #1a1a1a !important;
 }
 .menu,
 .menu .item {
   color: var(--main-white) !important;
 }
-.menubar button {
+.right.menu button {
   margin: 0.25rem;
   border: none;
+  /* max-width: fit-content; */
   background-color: #1b3094 !important;
 }
 .menu.transition.visible {
@@ -142,6 +143,15 @@ main {
     float: none !important;
     display: none !important;
     text-align: left !important;
+  }
+
+  /* when collapsed the buttons need to have max-width: ; */
+  .right.menu button {
+    max-width: max-content !important;
+  }
+  .right.menu {
+    flex-direction: initial !important;
+    justify-content: center !important;
   }
 }
 
@@ -194,7 +204,7 @@ button.button {
 }
 
 footer.footer {
-  background: var(--base-warm-dark);
+  background:#1a1a1a;
   margin-top: 5px;
   border-top: 4px solid var(--base-warm-light);
   padding: 1rem 1rem 5rem;

@@ -42,14 +42,13 @@ const Menubar = () => {
   };
 
   return (
-    <nav className="menubar" id="menubar">
+    <nav className="menubar responsive" id="menubar">
       <Menu inverted stackable attached="top">
         <Menu.Header onClick={openMenu} as="h3" className="menubar-header">
-          <span style={{ color: "#EADFFB" }}>FWS Football Pool</span>{" "}
+          <span style={{ color: "#EADFFB" }}>FWS Pool </span>
           {user ? (
             <span style={{ color: "#FFF70F", fontWeight: "bolder" }}>
-              {" "}
-              | {user.name}
+              {` | ${user.name}`}
             </span>
           ) : (
             ""
@@ -145,23 +144,33 @@ const Menubar = () => {
             </>
           ) : (
             <>
-              <Dropdown.Item
-                as="a"
-                onClick={() => {
-                  router.push("/user/" + user._id);
-                }}
-              >
-                My Account
-              </Dropdown.Item>
-              <Dropdown.Item
-                as="button"
-                onClick={() => {
-                  router.push("/logout");
-                  openMenu();
-                }}
-              >
-                Log Out
-              </Dropdown.Item>
+              <Dropdown className="account" simple item text="My Account">
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    onClick={() => {
+                      router.push("/user/" + user._id);
+                    }}
+                  >
+                    My Profile
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    text="Settings"
+                    icon="settings"
+                    onClick={() => {
+                      router.push("/settings");
+                      openMenu();
+                    }}
+                  />
+                  <Dropdown.Item
+                    icon="log out"
+                    text="Log out"
+                    onClick={() => {
+                      router.push("/logout");
+                      openMenu();
+                    }}
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
             </>
           )}
         </Menu.Menu>
