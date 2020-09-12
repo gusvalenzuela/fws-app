@@ -58,10 +58,10 @@ const Menubar = () => {
         <Dropdown.Item
           as="a"
           onClick={() => {
+            router.push("/");
             // when user clicks home, reset a few globally stored states
             // set "selectedUser" to undefined when clicking home, defaults to current user
             Store.setState({ selectedUser: undefined, week: 1, season: 2020 });
-            router.push("/");
             openMenu(); // this assures the responsive menu is closed when clicked
           }}
         >

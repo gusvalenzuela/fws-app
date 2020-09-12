@@ -35,11 +35,14 @@ const PlayerDashboard = ({ user, msg, otherUser }) => {
       </style>
       <div className={`player-container${otherUser ? " other-user" : ""}`}>
         <h1>{user ? `${user?.name}'s picks.` : "Demo Account"}</h1>
-        <p>
-          {user?.locked_in
-            ? "All GOOD To Go"
-            : `Picks locked at the scheduled time of the first Sunday game`}
-        </p>
+        {!otherUser && (
+          <p>
+            {user?.locked_in
+              ? "All GOOD To Go"
+              : `Picks locked at the scheduled time of the first Sunday game`}
+          </p>
+        )}
+
         {/* msg received on count of picks left to make*/}
         {msg ? (
           <p

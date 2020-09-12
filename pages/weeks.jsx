@@ -20,6 +20,7 @@ function Weeks() {
   const [userPicks, setUserPicks] = useState([]);
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
+  const [lockDate, setLockDate] = useState(undefined);
   const week = Store.getState().week;
   // "State store" has selectedUser as undefined
   // on refresh "weeks" page
@@ -41,10 +42,19 @@ function Weeks() {
 
   // on week, dbschedule set
   useEffect(() => {
-    // // sort by event date
+    // sort by event date
     dbSchedule?.events.sort(
       (a, b) => new Date(a.event_date) - new Date(b.event_date)
     );
+    // find the first sunday game
+    let sunday = dbSchedule?.events.find(
+      (e) =>
+        new Date(e.event_date).getDay() === 0 &&
+        Date.parse(e.event_date) > Date.now()
+    );
+    if (sunday) {
+      setLockDate(Date.parse(sunday.event_date));
+    }
     // filter out the desired week
     let filteredEvents = dbSchedule?.events.filter((event) => {
       // switch case to set "weekly events"
@@ -68,6 +78,7 @@ function Weeks() {
           break;
       }
     });
+
     if (filteredEvents && filteredEvents.length > 0) {
       setEvents(filteredEvents);
     }
@@ -116,58 +127,74 @@ function Weeks() {
               otherUser={selectedUser ? true : false}
             />
           </span>
-          {/* for each game of the week, make a header or divider and a matchup card component */}
 
-          {events?.length > 0 &&
-            events?.map((matchup, inx) => {
-              // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
-              // this is for the header of each "matchup day" subsection.
-              let print;
-              // we print the first date in the week every time (i.e. index 0)
-              if (inx > 0) {
-                // check if the previous day of the week in the mapping is the same as current
-                if (
-                  new Date(events[inx - 1].event_date).getDay() ===
-                  new Date(matchup.event_date).getDay()
-                ) {
-                  // if it is the same day as the previous
-                  // do not print, by setting print to false
-                  print = false;
+          {
+            /* 
+          for each game of the week, make a header or divider and a matchup card component 
+          Caveat: -- only displays other user's if Date now is after the lockdate (i.e. after first Sunday Game)
+          */
+            events?.length > 0 &&
+            selectedUser &&
+            Date.now() < lockDate ? (
+              <>
+                <p style={{ textAlign: "center", paddingTop: "1rem" }}>
+                  Other users' picks are not viewable until after the start of
+                  the first Sunday game.
+                </p>
+                
+              </>
+            ) : (
+              events?.map((matchup, inx) => {
+                // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
+                // this is for the header of each "matchup day" subsection.
+                let print;
+                // we print the first date in the week every time (i.e. index 0)
+                if (inx > 0) {
+                  // check if the previous day of the week in the mapping is the same as current
+                  if (
+                    new Date(events[inx - 1].event_date).getDay() ===
+                    new Date(matchup.event_date).getDay()
+                  ) {
+                    // if it is the same day as the previous
+                    // do not print, by setting print to false
+                    print = false;
+                  } else {
+                    //  print it
+                    print = true;
+                  }
                 } else {
-                  //  print it
+                  // when inx = 0, print day
                   print = true;
                 }
-              } else {
-                // when inx = 0, print day
-                print = true;
-              }
 
-              return (
-                <span key={matchup.event_id}>
-                  {!print ? (
-                    <Divider
-                      // content={matchup.schedule?.event_name}
-                      className="container-divider"
+                return (
+                  <span key={matchup.event_id}>
+                    {!print ? (
+                      <Divider
+                        // content={matchup.schedule?.event_name}
+                        className="container-divider"
+                      />
+                    ) : (
+                      <h1 className="matchup-day-header" key={inx}>
+                        {new Date(matchup.event_date).toDateString()}
+                      </h1>
+                    )}
+
+                    <MatchupCard
+                      matchup={matchup}
+                      userPicks={userPicks}
+                      user={user ? true : false}
+                      tiebreak={
+                        tiebreakMatch?.event_id === matchup.event_id
+                          ? true
+                          : false
+                      }
                     />
-                  ) : (
-                    <h1 className="matchup-day-header" key={inx}>
-                      {new Date(matchup.event_date).toDateString()}
-                    </h1>
-                  )}
-
-                  <MatchupCard
-                    matchup={matchup}
-                    userPicks={userPicks}
-                    user={user ? true : false}
-                    tiebreak={
-                      tiebreakMatch?.event_id === matchup.event_id
-                        ? true
-                        : false
-                    }
-                  />
-                </span>
-              );
-            })}
+                  </span>
+                );
+              })
+            )
+          }
         </div>
         <div className="page-footer"></div>
       </div>

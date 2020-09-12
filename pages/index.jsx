@@ -24,13 +24,35 @@ const HomePage = () => {
                 alignItems: "center",
               }}
             >
-              <a className="button" name="signup" href="/signup">
+              <a
+                className="button"
+                name="signup"
+                onClick={() => {
+                  router.push("/signup");
+                }}
+              >
                 <span>Sign up for FREE!</span>
               </a>
-              <a className="button" name="login" href="/login">
+              <a
+                className="button"
+                name="login"
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
                 <span>Log In</span>
               </a>
             </div>
+            <p>
+              <a
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  router.push("/weeks");
+                }}
+              >
+                See Demo Account
+              </a>
+            </p>
           </div>
         </header>
         <div className="page-content">
@@ -40,7 +62,7 @@ const HomePage = () => {
               color: "#777",
               textAlign: "center",
               margin: "auto",
-              fontSize:"18px"
+              fontSize: "18px",
             }}
           >
             <b>FOR ENTERTAINMENT USE ONLY.</b> <br />

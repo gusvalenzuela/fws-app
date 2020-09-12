@@ -20,7 +20,7 @@ export default function MyApp({ Component, pageProps }) {
         newestOnTop
         // autoClose={5000}
         role="notification"
-        position="top-center"
+        position="bottom-center"
       />
       <Component {...pageProps} />
       <Footer />
