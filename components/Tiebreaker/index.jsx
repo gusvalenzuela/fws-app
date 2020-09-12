@@ -49,14 +49,16 @@ const Tiebreaker = ({
     }
 
     // initializing the toast
-    tiebreakToast.current = toast.info(`Updating tiebreaker, please wait...`, {
-      containerId: "toast-update-tiebreak",
-      autoClose: false,
-      closeButton: false,
-    });
+    tiebreakToast.current = toast.info(
+      `Updating tiebreaker to ${input}, please wait...`,
+      {
+        autoClose: false,
+        closeButton: false,
+      }
+    );
     setIsUpdating(true);
 
-    // append this tiebreaker to
+    // append this tiebreaker (input param) to
     // event_id of matchup (i.e. MNF)
     let tiePick = {
       event_id: event_id,
@@ -69,18 +71,17 @@ const Tiebreaker = ({
     });
 
     setIsUpdating(false);
-    const pick = await res.json();
-    setTiebreaker(pick.tiebreaker);
     if (res.status === 200) {
+      const pick = await res.json();
+      setTiebreaker(pick.tiebreaker);
       // updating the toast alert and setting the autoclose
       toast.update(tiebreakToast.current, {
         render: (
           <>
-            🎉 Tiebreaker updated to {pick.tiebreaker}!
-            <br />{" "}
-            <span style={{ fontSize: "x-small"}}>
-              total points scored in {pick.matchup.event_name}
-            </span>
+            🎉 Tiebreaker updated to {pick.tiebreaker}!<br />
+            <i style={{ fontSize: "small" }}>
+              Total points scored in {pick.matchup.event_name}
+            </i>
           </>
         ),
         type: toast.TYPE.SUCCESS,
@@ -90,12 +91,12 @@ const Tiebreaker = ({
     } else {
       // check to see to no similar toast is active (prevent dupes)
       let errText = await res.text();
-      if (!toast.isActive(errorToast.current)) {
-        (errorToast.current = toast(errText)),
-          {
-            toastId: "toast-tiebreak-err",
-          };
-      }
+      toast.update(tiebreakToast.current, {
+        render: errText,
+        type: toast.TYPE.ERROR,
+        autoClose: 5000,
+        closeButton: null,
+      });
       return;
     }
   };

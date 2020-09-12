@@ -72,8 +72,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
           <p
             style={{
               margin: 0,
-              marginTop: "-15px",
-              marginBottom: "15px",
+              marginTop: "-5px",
+              marginBottom: "5px",
               fontSize: "2rem",
               color: "red",
               fontWeight: "800",
@@ -98,7 +98,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
   };
 
   const handleTeamSelection = async (event) => {
-    if (isUpdating) return toast.dark("Still updating, please wait");
+    if (isUpdating) return toast.info("Still updating, please wait");
     // if no signed in user, display message about logging in
     if (!user) {
       // check to see to no similar toast is active (prevent dupes)
@@ -110,11 +110,14 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
       return;
     }
     // initializing the toast
-    initToast.current = toast.info(`Updating, please wait...`, {
-      containerId: "toast-update-pick",
-      autoClose: false,
-      closeButton: false,
-    });
+    initToast.current = toast.info(
+      `Updating pick to ${event.currentTarget.dataset.team}, please wait...`,
+      {
+        // toastId: "toast-update-pick",
+        autoClose: false,
+        closeButton: false,
+      }
+    );
     setIsUpdating(true);
 
     let pick = {
@@ -128,13 +131,12 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(pick),
     });
-
     setIsUpdating(false);
+
     if (res.status === 200) {
       const pick = await res.json();
-      // PATCH /api/picks returns the updated pick
-      setSelectedTeam(pick.selected_team);
       // updating the toast alert and setting the autoclose
+
       toast.update(initToast.current, {
         render: (
           <>
@@ -144,11 +146,21 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
           </>
         ),
         type: toast.TYPE.SUCCESS,
-        autoClose: 5000,
+        autoClose: 3000,
         closeButton: null,
       });
+      // PATCH /api/picks returns the updated pick
+      setSelectedTeam(pick.selected_team);
     } else {
-      toast((await res.text()).toUpperCase());
+      let errMsg = (await res.text()).toUpperCase();
+      // updating the toast alert with error and setting the autoclose
+      toast.update(initToast.current, {
+        render: errMsg,
+        type: toast.TYPE.ERROR,
+        autoClose: 6000,
+        hideProgressBar: false,
+        closeButton: null,
+      });
     }
   };
 

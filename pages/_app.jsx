@@ -16,11 +16,11 @@ export default function MyApp({ Component, pageProps }) {
     <>
       <Menubar />
       <ToastContainer
-        limit={3}
+        // limit={3}
         newestOnTop
-        // autoClose={5000}
+        hideProgressBar
         role="notification"
-        position="bottom-center"
+        position="top-center"
       />
       <Component {...pageProps} />
       <Footer />

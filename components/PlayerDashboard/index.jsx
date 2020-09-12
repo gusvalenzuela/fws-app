@@ -34,7 +34,13 @@ const PlayerDashboard = ({ user, msg, otherUser }) => {
         `}
       </style>
       <div className={`player-container${otherUser ? " other-user" : ""}`}>
-        <h1>{user ? `${user?.name}'s picks.` : "Demo Account"}</h1>
+        <h1>
+          {user && otherUser
+            ? `${user.name}'s picks.`
+            : user
+            ? "Your picks."
+            : "Demo Account"}
+        </h1>
         {!otherUser && (
           <p>
             {user?.locked_in

@@ -3,6 +3,7 @@ import MatchupCard from "../components/Matchup/Card";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
 import React, { useState, useEffect } from "react";
+import Loader from "react-loader";
 import { Divider } from "semantic-ui-react";
 import {
   useCurrentUser,
@@ -24,11 +25,11 @@ function Weeks() {
   const week = Store.getState().week;
   // "State store" has selectedUser as undefined
   // on refresh "weeks" page
-  const selectedUser = useUser(Store.getState().selectedUser);
+  const selectedUser = useUser(Store.getState().selectedUser || user?._id);
   const [dbSchedule] = useSchedule(Sport, 2020);
   // const dbSchedule = NFLSchedule;
   const [playerPicks] = getPlayerPicks(
-    Store.getState().selectedUser || (user && user._id)
+    Store.getState().selectedUser || user?._id
   );
 
   const getWeekNumber = (date) => {
@@ -104,100 +105,109 @@ function Weeks() {
         <title>FWS | Weekly Matchups</title>
       </Head>
 
-      <div className="main-content">
-        <div className="page-header">
-          <div className="week-header">
-            {events?.length > 0 &&
-              `${events[0].schedule.season_year} ${events[0].schedule.season_type}:`}
-            <span style={{ color: "#FE9AAC" }}>{` Week ${week.toString()} (${
-              events &&
-              events.length > 0 &&
-              (events[0].schedule?.week_detail ||
-                events[0].schedule?.event_name)
-            })`}</span>
-            <div className="current-time-container">
-              <TimeDisplay />
+      {!events.length ? (
+        <>
+          <Loader />
+        </>
+      ) : (
+        <div className="main-content">
+          <div className="page-header">
+            <div className="week-header">
+              {events?.length > 0 &&
+                `${events[0].schedule.season_year} ${events[0].schedule.season_type}:`}
+              <span style={{ color: "#FE9AAC" }}>{` Week ${week.toString()} (${
+                events?.length > 0 &&
+                (events[0].schedule?.week_detail ||
+                  events[0].schedule?.event_name)
+              })`}</span>
+              <div className="current-time-container">
+                <TimeDisplay />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="page-content">
-          <span style={selectedUser && { background: "#777" }}>
-            <PlayerDashboard
-              user={selectedUser || user}
-              otherUser={selectedUser ? true : false}
-            />
-          </span>
+          <div className="page-content">
+            <span style={selectedUser && { background: "#777" }}>
+              <PlayerDashboard
+                user={selectedUser || user}
+                otherUser={
+                  selectedUser?._id === user?._id ? false : selectedUser
+                }
+              />
+            </span>
 
-          {
-            /* 
+            {
+              /* 
           for each game of the week, make a header or divider and a matchup card component 
           Caveat: -- only displays other user's if Date now is after the lockdate (i.e. after first Sunday Game)
           */
-            events?.length > 0 &&
-            selectedUser &&
-            Date.now() < lockDate ? (
-              <>
-                <p style={{ textAlign: "center", paddingTop: "1rem" }}>
-                  Other users' picks are not viewable until after the start of
-                  the first Sunday game.
-                </p>
-                
-              </>
-            ) : (
-              events?.map((matchup, inx) => {
-                // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
-                // this is for the header of each "matchup day" subsection.
-                let print;
-                // we print the first date in the week every time (i.e. index 0)
-                if (inx > 0) {
-                  // check if the previous day of the week in the mapping is the same as current
-                  if (
-                    new Date(events[inx - 1].event_date).getDay() ===
-                    new Date(matchup.event_date).getDay()
-                  ) {
-                    // if it is the same day as the previous
-                    // do not print, by setting print to false
-                    print = false;
+              !selectedUser ? (
+                <Loader />
+              ) : user?._id === selectedUser?._id ? (
+                // if selected user is same as current user display all picks
+                events.map((matchup, inx) => {
+                  let print;
+                  // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
+                  // this is for the header of each "matchup day" subsection.
+                  // we print the first date in the week every time (i.e. index 0)
+                  if (inx > 0) {
+                    // check if the previous day of the week in the mapping is the same as current
+                    if (
+                      new Date(events[inx - 1].event_date).getDay() ===
+                      new Date(matchup.event_date).getDay()
+                    ) {
+                      // if it is the same day as the previous
+                      // do not print, by setting print to false
+                      print = false;
+                    } else {
+                      //  print it
+                      print = true;
+                    }
                   } else {
-                    //  print it
+                    // when inx = 0, print day
                     print = true;
                   }
-                } else {
-                  // when inx = 0, print day
-                  print = true;
-                }
 
-                return (
-                  <span key={matchup.event_id}>
-                    {!print ? (
-                      <Divider
-                        // content={matchup.schedule?.event_name}
-                        className="container-divider"
+                  return (
+                    <span key={matchup.event_id}>
+                      {!print ? (
+                        <Divider
+                          // content={matchup.schedule?.event_name}
+                          className="container-divider"
+                        />
+                      ) : (
+                        <h1 className="matchup-day-header" key={inx}>
+                          {new Date(matchup.event_date).toDateString()}
+                        </h1>
+                      )}
+
+                      <MatchupCard
+                        matchup={matchup}
+                        userPicks={userPicks}
+                        user={user ? true : false}
+                        tiebreak={
+                          tiebreakMatch?.event_id === matchup.event_id
+                            ? true
+                            : false
+                        }
                       />
-                    ) : (
-                      <h1 className="matchup-day-header" key={inx}>
-                        {new Date(matchup.event_date).toDateString()}
-                      </h1>
-                    )}
-
-                    <MatchupCard
-                      matchup={matchup}
-                      userPicks={userPicks}
-                      user={user ? true : false}
-                      tiebreak={
-                        tiebreakMatch?.event_id === matchup.event_id
-                          ? true
-                          : false
-                      }
-                    />
-                  </span>
-                );
-              })
-            )
-          }
+                    </span>
+                  );
+                })
+              ) : selectedUser && Date.now() < lockDate ? (
+                <>
+                  <p style={{ textAlign: "center", paddingTop: "1rem" }}>
+                    Other users' picks are not viewable until after the start of
+                    the first Sunday game.
+                  </p>
+                </>
+              ) : (
+                ""
+              )
+            }
+          </div>
+          <div className="page-footer"></div>
         </div>
-        <div className="page-footer"></div>
-      </div>
+      )}
     </main>
   );
 }

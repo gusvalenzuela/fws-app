@@ -61,7 +61,11 @@ const Menubar = () => {
             router.push("/");
             // when user clicks home, reset a few globally stored states
             // set "selectedUser" to undefined when clicking home, defaults to current user
-            Store.setState({ selectedUser: undefined, week: 1, season: 2020 });
+            Store.setState({
+              selectedUser: user ? user._id : undefined,
+              week: 1,
+              season: 2020,
+            });
             openMenu(); // this assures the responsive menu is closed when clicked
           }}
         >
@@ -121,7 +125,7 @@ const Menubar = () => {
           {!user ? (
             <>
               <Dropdown.Item
-                as="a"
+                as="button"
                 onClick={() => {
                   router.push("/login");
                   openMenu();
@@ -130,7 +134,7 @@ const Menubar = () => {
                 Log In
               </Dropdown.Item>
               <Dropdown.Item
-                as="a"
+                as="button"
                 onClick={() => {
                   router.push("/signup");
                   openMenu();
@@ -150,7 +154,7 @@ const Menubar = () => {
                 My Account
               </Dropdown.Item>
               <Dropdown.Item
-                as="a"
+                as="button"
                 onClick={() => {
                   router.push("/logout");
                   openMenu();

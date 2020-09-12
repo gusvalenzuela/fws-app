@@ -94,6 +94,11 @@ main {
 .menu .item {
   color: var(--main-white) !important;
 }
+.menubar button {
+  margin: 0.25rem;
+  border: none;
+  background-color: #1b3094 !important;
+}
 .menu.transition.visible {
   overflow: auto;
   max-height: 200px;
@@ -119,7 +124,6 @@ main {
 .menubar a.icon {
   display: none;
 }
-
 @media screen and (max-width: 766px) {
   .menubar a:not(:first-child) {
     display: none;
