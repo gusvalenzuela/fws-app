@@ -3,8 +3,8 @@ import MatchupCard from "../components/Matchup/Card";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
 import React, { useState, useEffect } from "react";
-import Loader, { Code } from "react-content-loader";
-import { Divider } from "semantic-ui-react";
+// import { Code } from "react-content-loader";
+import { Divider, Loader, Dimmer } from "semantic-ui-react";
 import {
   useCurrentUser,
   getPlayerPicks,
@@ -118,9 +118,9 @@ function Weeks() {
       </Head>
 
       {!events.length ? (
-        <div className="loading">
-          <Code />
-        </div>
+        <Dimmer active>
+          <Loader size="massive">Loading, please wait...</Loader>
+        </Dimmer>
       ) : (
         <div className="main-content">
           <div className="page-header">
