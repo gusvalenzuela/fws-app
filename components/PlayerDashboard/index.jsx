@@ -1,7 +1,6 @@
 import React from "react";
 
-const PlayerDashboard = ({ user, msg, otherUser }) => {
-  // console.log(user.picks)
+const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
   return (
     <>
       <style jsx>
@@ -11,13 +10,20 @@ const PlayerDashboard = ({ user, msg, otherUser }) => {
             margin: auto;
             height: fit-content;
             padding: 1.5rem;
-            background-color: #1b3094;
+            background-color: #243EC2;
+          }
+          .player-container.picked {
+            background-color: #ddf5d1;
           }
           .player-container h1 {
             text-align: left;
-            color: #fff;
           }
-          .player-container p {
+          .player-container p.all-picked {
+            text-align: left;
+            font-weight: 900;
+            color: #135813;
+          }
+          .player-container p.picks-remaining {
             text-align: left;
             font-weight: 900;
             color: #fff70f;
@@ -33,8 +39,12 @@ const PlayerDashboard = ({ user, msg, otherUser }) => {
           }
         `}
       </style>
-      <div className={`player-container${otherUser ? " other-user" : ""}`}>
-        <h1>
+      <div
+        className={`player-container ${otherUser ? "other-user" : ""} ${
+          allPicked ? "picked" : ""
+        }`}
+      >
+        <h1 style={{ color: `${allPicked ? "#000" : "#fff"}` }}>
           {user && otherUser
             ? `${user.name}'s picks.`
             : user
@@ -42,11 +52,24 @@ const PlayerDashboard = ({ user, msg, otherUser }) => {
             : "Demo Account"}
         </h1>
         {!otherUser && (
-          <p>
-            {user?.locked_in
-              ? "All GOOD To Go"
-              : `Picks locked at the scheduled time of the first Sunday game`}
-          </p>
+          <>
+            {
+              // find count of all selected teams on screen (i.e. picks made)
+              allPicked ? (
+                <p className="all-picked">
+                  All this week's matchups have been selected. 
+                </p>
+              ) : (
+                <p className="picks-remaining">
+                  Picks locked at the scheduled time of the first Sunday game
+                </p>
+              )
+            }
+
+            {/* // user?.locked_in
+            //   ? "All GOOD To Go"
+            //   : `Picks locked at the scheduled time of the first Sunday game` */}
+          </>
         )}
 
         {/* msg received on count of picks left to make*/}

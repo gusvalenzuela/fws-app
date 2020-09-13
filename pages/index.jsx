@@ -43,9 +43,8 @@ const HomePage = () => {
                 <span>Log In</span>
               </a>
             </div>
-            <p>
+            <p style={{ cursor: "pointer", marginTop: "2rem" }}>
               <a
-                style={{ cursor: "pointer" }}
                 onClick={() => {
                   router.push("/weeks");
                 }}

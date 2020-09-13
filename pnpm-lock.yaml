@@ -2,6 +2,7 @@ dependencies:
   '@sendgrid/mail': 7.2.5
   bcryptjs: 2.4.3
   cloudinary: 1.23.0
+  cloudinary-react: 1.6.6_react@16.13.1
   connect-mongo: 3.2.0
   dotenv: 8.2.0
   express-session: 1.17.1
@@ -2130,6 +2131,12 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-neHB9xuzh/wk0dIHweyAXv2aPGZIVk3pLMe+/RNzINf17fe0OG96QroktYAUm7SM1PBnzTabaLboqqxDyMU+SQ==
+  /cloudinary-core/2.11.2:
+    dev: false
+    peerDependencies:
+      lodash: '>=4.0'
+    resolution:
+      integrity: sha512-Dl545+AzPRGjx58cXB9gznXtA1dol0pmDqTxHos1hRcdbUcpUcuVzPkBnJjNO3F4K6BfZ5kSda9kzD+Qu7Yhgg==
   /cloudinary-core/2.11.2_lodash@4.17.20:
     dependencies:
       lodash: 4.17.20
@@ -2138,6 +2145,16 @@ packages:
       lodash: '>=4.0'
     resolution:
       integrity: sha512-Dl545+AzPRGjx58cXB9gznXtA1dol0pmDqTxHos1hRcdbUcpUcuVzPkBnJjNO3F4K6BfZ5kSda9kzD+Qu7Yhgg==
+  /cloudinary-react/1.6.6_react@16.13.1:
+    dependencies:
+      cloudinary-core: 2.11.2
+      prop-types: 15.7.2
+      react: 16.13.1
+    dev: false
+    peerDependencies:
+      react: ^16.3.3
+    resolution:
+      integrity: sha512-qnNmZCzhN3zsd22wSNtcfKGNl0Dw/6bybYArcX+IF9JHQHHWh0bo1JQXvHdoidhSA6DlJOIi3rOMWSoEShI8Nw==
   /cloudinary/1.23.0:
     dependencies:
       cloudinary-core: 2.11.2_lodash@4.17.20
@@ -7219,6 +7236,7 @@ specifiers:
   babel-eslint: ^10.1.0
   bcryptjs: ^2.4.3
   cloudinary: ^1.20.0
+  cloudinary-react: 1.6.6
   connect-mongo: ^3.2.0
   dotenv: ^8.2.0
   eslint: ^7.2.0

@@ -4,6 +4,7 @@ import MatchupDivider from "../Divider";
 import Tiebreaker from "../../Tiebreaker";
 import Style from "./Card.module.css";
 import { toast } from "react-toastify";
+import { Image, Transformation, CloudinaryContext } from "cloudinary-react";
 
 const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
   const [selectedTeam, setSelectedTeam] = useState(null);
@@ -45,13 +46,25 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
         // width="6"
         stretched
       >
-        <img
+        <CloudinaryContext cloudName="fwscloud">
+          {/* hosting the images on cloudinary */}
+          <Image
+            publicId={`NFL-Team_logos/${
+              sport === 2 ? team.abbreviation : "nfl"
+            }.png`}
+            alt={`${team.abbreviation}'s team logo`}
+            id="team-logo-img"
+          >
+            <Transformation width="250" crop="scale" />
+          </Image>
+        </CloudinaryContext>
+        {/* <img
           src={`/images/teamlogos/${
             sport === 2 ? team.abbreviation : "ufc-fighter"
           }.png`}
           alt={`${team.abbreviation}'s team logo`}
           id="team-logo-img"
-        />
+        /> */}
         <h3>{`${team.name} ${team.mascot}`}</h3>
         <br />
         {sport === 7 ? (

@@ -3,7 +3,7 @@ import MatchupCard from "../components/Matchup/Card";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
 import React, { useState, useEffect } from "react";
-import Loader from "react-content-loader";
+import Loader, { Code } from "react-content-loader";
 import { Divider } from "semantic-ui-react";
 import {
   useCurrentUser,
@@ -22,10 +22,12 @@ function Weeks() {
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
   const [lockDate, setLockDate] = useState(undefined);
+  const [allPicked, setAllPicked] = useState(false);
   const week = Store.getState().week;
+  const selectedUserId = Store.getState().selectedUser;
   // "State store" has selectedUser as undefined
   // on refresh "weeks" page
-  const selectedUser = useUser(Store.getState().selectedUser || user?._id);
+  const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId);
   const [dbSchedule] = useSchedule(Sport, 2020);
   // const dbSchedule = NFLSchedule;
   const [playerPicks] = getPlayerPicks(
@@ -92,10 +94,20 @@ function Weeks() {
     let currentPicks = playerPicks?.filter((p) =>
       p.matchup?.week === week ? p : null
     );
+
     setUserPicks(currentPicks);
     // set tiebreak match to last of the week's events
     setTiebreakMatch(events[events.length - 1]);
   }, [events, playerPicks, Sport, selectedUser]);
+
+  // on userpicks set
+  useEffect(() => {
+    if (userPicks?.length === events?.length) {
+      setAllPicked(true);
+    } else {
+      setAllPicked(false);
+    }
+  }, [userPicks, events]);
 
   // console.log(`events this week ${week}`, events);
 
@@ -106,7 +118,9 @@ function Weeks() {
       </Head>
 
       {!events.length ? (
-        <Loader />
+        <div className="loading">
+          <Code />
+        </div>
       ) : (
         <div className="main-content">
           <div className="page-header">
@@ -126,6 +140,7 @@ function Weeks() {
           <div className="page-content">
             <span style={selectedUser && { background: "#777" }}>
               <PlayerDashboard
+                allPicked={allPicked}
                 user={selectedUser || user}
                 otherUser={
                   selectedUser?._id === user?._id ? false : selectedUser
@@ -138,10 +153,10 @@ function Weeks() {
           for each game of the week, make a header or divider and a matchup card component 
           Caveat: -- only displays other user's if Date now is after the lockdate (i.e. after first Sunday Game)
           */
-              !selectedUser ? (
-                <Loader />
-              ) : user?._id === selectedUser?._id ? (
-                // if selected user is same as current user display all picks
+              // if selected user is same as current user display all picks
+              // or it's past the first Sunday game of the week
+              // render the matchups and the corresponding user's picks
+              user?._id === selectedUser?._id || Date.now() > lockDate ? (
                 events.map((matchup, inx) => {
                   let print;
                   // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
@@ -193,9 +208,9 @@ function Weeks() {
                 })
               ) : selectedUser && Date.now() < lockDate ? (
                 <>
-                  <p style={{ textAlign: "center", paddingTop: "1rem" }}>
-                    Other users' picks are not viewable until after the start of
-                    the first Sunday game.
+                  <p style={{ textAlign: "justify", padding: "1rem" }}>
+                    <b>Note:</b> Other users' picks are not viewable until after
+                    the start of the first Sunday game.
                   </p>
                 </>
               ) : (

@@ -1,6 +1,6 @@
 import nextConnect from "next-connect";
 import multer from "multer";
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary} from "cloudinary";
 import middleware from "../../../middlewares/middleware";
 import { extractUser } from "../../../lib/api-helpers";
 

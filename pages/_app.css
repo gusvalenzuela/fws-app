@@ -48,11 +48,14 @@ main {
 .brand-name {
   font-weight: 700;
   text-shadow: 1px 1px 2px var(--main-black);
-  color: var(--brand-color1);
+  color: var(--brand-color1) #13d40d;
   word-spacing: initial;
   letter-spacing: initial;
   scale: 1.5;
   /* text-decoration: overline underline white; */
+}
+div.loading {
+  padding: 2rem;
 }
 .brand-name::after {
   content: "Fun with Sports‼";
@@ -204,7 +207,7 @@ button.button {
 }
 
 footer.footer {
-  background:#1a1a1a;
+  background: #1a1a1a;
   margin-top: 5px;
   border-top: 4px solid var(--base-warm-light);
   padding: 1rem 1rem 5rem;
