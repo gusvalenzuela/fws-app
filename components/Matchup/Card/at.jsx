@@ -116,7 +116,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
     if (!user) {
       // check to see to no similar toast is active (prevent dupes)
       if (!toast.isActive(loginToPickToast.current)) {
-        loginToPickToast.current = toast("Log in to lock your pick!", {
+        loginToPickToast.current = toast("LOG IN TO LOCK YOUR PICK!", {
           toastId: "toast-not-loggedin",
         });
       }
@@ -181,6 +181,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
     <>
       <div className={Style.matchupContainer}>
         <Segment>
+          {/* <section>INFORMATION</section> */}
           {/* render for each team  */}
           <Grid columns="equal">
             {/* buildTeamCard function returns a grid column for any team fed

@@ -1,5 +1,6 @@
 dependencies:
   '@sendgrid/mail': 7.2.5
+  axios: 0.20.0
   bcryptjs: 2.4.3
   cloudinary: 1.23.0
   cloudinary-react: 1.6.6_react@16.13.1
@@ -1636,6 +1637,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-fjgm5MvRHLhx+osE2xoekY70AhARk3a6hkN+3Io1jc00jtquGvxYlKlsFUhmUET0V5te6CcZI7lcv2Ym61mjHA==
+  /axios/0.20.0:
+    dependencies:
+      follow-redirects: 1.13.0
+    dev: false
+    resolution:
+      integrity: sha512-ANA4rr2BDcmmAQLOKft2fufrtuvlqR+cXNNinUmvfeSNCOF98PZL+7M/v1zIdGo7OLjEA9J2gXJL+j4zGsl0bA==
   /axobject-query/2.2.0:
     dev: true
     resolution:
@@ -3435,6 +3442,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-3Z4XhFZ3992uIq0XOqb9AreonueSYphE6oYbpt5+3u06JWklbsPkNv3ZKkP9Bz/r+1MWCaMoSQ28P85+1Yc77w==
+  /follow-redirects/1.13.0:
+    dev: false
+    engines:
+      node: '>=4.0'
+    resolution:
+      integrity: sha512-aq6gF1BEKje4a9i9+5jimNFIpq4Q1WiwBToeRK5NvZBd/TRsmW8BsJfOEGkr76TbOyPVD3OVDN910EcUNtRYEA==
   /follow-redirects/1.5.10:
     dependencies:
       debug: 3.1.0
@@ -7233,6 +7246,7 @@ packages:
       integrity: sha512-HyIEcOStyTh3GRpomgMCFCjHjjTgaTfdItR4ThXjH8y+gA/xIwU+ay2sL0/47vtmETIHm7j739z2rOeiCSZWlQ==
 specifiers:
   '@sendgrid/mail': ^7.0.0
+  axios: 0.20.0
   babel-eslint: ^10.1.0
   bcryptjs: ^2.4.3
   cloudinary: ^1.20.0

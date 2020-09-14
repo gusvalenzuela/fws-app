@@ -10,7 +10,7 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
             margin: auto;
             height: fit-content;
             padding: 1.5rem;
-            background-color: #243EC2;
+            background-color: #243ec2;
           }
           .player-container.picked {
             background-color: #ddf5d1;
@@ -57,7 +57,7 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
               // find count of all selected teams on screen (i.e. picks made)
               allPicked ? (
                 <p className="all-picked">
-                  All this week's matchups have been selected. 
+                  All this week's matchups have been selected.
                 </p>
               ) : (
                 <p className="picks-remaining">

@@ -102,11 +102,15 @@ function Weeks() {
 
   // on userpicks set
   useEffect(() => {
-    if (userPicks?.length === events?.length) {
+    if (userPicks?.length > 0 && userPicks?.length === events?.length) {
       setAllPicked(true);
     } else {
       setAllPicked(false);
     }
+    console.log(
+      Date.parse(events.find((i) => new Date(i.event_date).getDay() === 0)),
+      lockDate
+    );
   }, [userPicks, events]);
 
   // console.log(`events this week ${week}`, events);
@@ -118,8 +122,8 @@ function Weeks() {
       </Head>
 
       {!events.length ? (
-        <Dimmer active>
-          <Loader size="massive">Loading, please wait...</Loader>
+        <Dimmer inverted active>
+          <Loader size="huge">Loading matchups...</Loader>
         </Dimmer>
       ) : (
         <div className="main-content">
@@ -156,7 +160,11 @@ function Weeks() {
               // if selected user is same as current user display all picks
               // or it's past the first Sunday game of the week
               // render the matchups and the corresponding user's picks
-              user?._id === selectedUser?._id || Date.now() > lockDate ? (
+              user?._id === selectedUser?._id ||
+              Date.parse(
+                events.find((i) => new Date(i.event_date).getDay() === 0)
+                  .event_date
+              ) < lockDate ? (
                 events.map((matchup, inx) => {
                   let print;
                   // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)

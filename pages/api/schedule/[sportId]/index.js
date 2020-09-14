@@ -17,7 +17,7 @@ handler.patch(async (req, res) => {
   //   return res.status(401).send("unauthenticated");
   // }
 
-  let slimSchedule = req.body.events.map((evt) => {
+  let slimSchedule = req.body.events?.map((evt) => {
     let desired = evt.lines["2"]; // affiliate Bovada
     evt.lines = desired;
 
@@ -29,7 +29,7 @@ handler.patch(async (req, res) => {
     {
       $set: {
         RundownSportId: Number(req.query.sportId),
-        events: slimSchedule,
+        events: slimSchedule || [],
         updatedAt: Date.now(),
       },
     },

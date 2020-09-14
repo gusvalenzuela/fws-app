@@ -12,7 +12,6 @@ const Tiebreaker = ({
   const [isUpdating, setIsUpdating] = useState(false);
   const tiebreakToast = React.useRef(null);
   const loginToPickToast = React.useRef(null);
-  const errorToast = React.useRef(null);
 
   const tiebreakerOptions = () => {
     // function that creates the dropdown options needed for tiebreaker
@@ -39,7 +38,7 @@ const Tiebreaker = ({
       // check to see to no similar toast is active (prevent dupes)
       if (!toast.isActive(loginToPickToast.current)) {
         loginToPickToast.current = toast(
-          "Log in to start setting tiebreakers!",
+          "LOG IN TO START SETTING TIEBREAKERS!",
           {
             toastId: "toast-not-loggedin",
           }
