@@ -6,10 +6,17 @@ import Style from "./Card.module.css";
 import { toast } from "react-toastify";
 import { Image, Transformation, CloudinaryContext } from "cloudinary-react";
 
-const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
+const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [sport, setSport] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isPastEvent] = useState(Date.parse(matchup.event_date) < Date.now());
+  let matchupDay = new Date(matchup.event_date);
+  // if the game time is at least 5 days earlier than the lockdate (i.e. already past our first sunday game of the week)
+  // lock the matchup (disable click)
+  const [isLocked] = useState(
+    Date.parse(matchupDay) < lockDate - 1000 * 60 * 60 * 24 * 5
+  );
   const [tiebreaker, setTiebreaker] = useState(null);
   const initToast = React.useRef(null);
   const loginToPickToast = React.useRef(null);
@@ -35,7 +42,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
     return (
       <Grid.Column
         color={selectedTeam === team.abbreviation ? "black" : null}
-        onClick={handleTeamSelection}
+        onClick={!isLocked ? handleTeamSelection : undefined}
         className={`${Style.teamContainer} team-container ${
           selectedTeam === team.abbreviation ? "picked" : ""
         }`}
@@ -65,7 +72,9 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
           alt={`${team.abbreviation}'s team logo`}
           id="team-logo-img"
         /> */}
-        <h3>{`${team.name} ${team.mascot}`}</h3>
+        <h4>{`${team.name} ${
+          team.mascot === "Redskins" ? "Football Team" : team.mascot
+        }`}</h4>
         <br />
         {sport === 7 ? (
           <>
@@ -111,6 +120,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
   };
 
   const handleTeamSelection = async (event) => {
+    console.log(isLocked, Date.parse(matchupDay), lockDate);
     if (isUpdating) return toast.info("Still updating, please wait");
     // if no signed in user, display message about logging in
     if (!user) {
@@ -180,7 +190,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
   return (
     <>
       <div className={Style.matchupContainer}>
-        <Segment>
+        <Segment tertiary={isPastEvent} raised>
           {/* <section>INFORMATION</section> */}
           {/* render for each team  */}
           <Grid columns="equal">
@@ -193,6 +203,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak }) => {
             {/* // this divider has slight changes // varied on the sport type
           (i.e.american football vs mma) */}
             <MatchupDivider
+              isPastEvent={isPastEvent}
               selectedTeam={selectedTeam}
               matchup={matchup}
               sport={sport}

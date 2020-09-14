@@ -17,6 +17,7 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
           }
           .player-container h1 {
             text-align: left;
+            color: #fff;
           }
           .player-container p.all-picked {
             text-align: left;
@@ -35,7 +36,7 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
             content: "YOU ARE VIEWING";
             color: #fff;
             font-weight: 800;
-            text-decoration: underline;
+            // text-decoration: underline;
           }
         `}
       </style>
@@ -44,13 +45,13 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
           allPicked ? "picked" : ""
         }`}
       >
-        <h1 style={{ color: `${allPicked ? "#000" : "#fff"}` }}>
-          {user && otherUser
-            ? `${user.name}'s picks.`
-            : user
-            ? "Your picks."
-            : "Demo Account"}
-        </h1>
+        {user && otherUser ? (
+          <h1>{user.name}'s picks. </h1>
+        ) : user ? (
+          <h1 style={{ color: `${allPicked && "#000"}` }}>Your picks.</h1>
+        ) : (
+          <h1>Demo Account</h1>
+        )}
         {!otherUser && (
           <>
             {

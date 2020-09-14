@@ -1,9 +1,8 @@
 import React from "react";
 import { Grid, Icon } from "semantic-ui-react";
-const MatchupDivider = ({ matchup, selectedTeam, sport }) => {
+const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
   return (
     <Grid.Column
-
       key={"versus"}
       width="3"
       textAlign="center"
@@ -11,7 +10,7 @@ const MatchupDivider = ({ matchup, selectedTeam, sport }) => {
       verticalAlign="middle"
     >
       {/* separating into multiple lines */}
-      <div style={{ fontSize: "1.12rem", marginBottom: "2rem" }}>
+      <div style={{ fontSize: "1.12rem", marginBottom: "1.5rem" }}>
         {/* Date */}
         <p>
           {new Intl.DateTimeFormat("default", {
@@ -21,7 +20,6 @@ const MatchupDivider = ({ matchup, selectedTeam, sport }) => {
             // dayPeriod: "short",
           }).format(new Date(matchup.event_date))}
         </p>
-        {/* <br /> */}
         {/* Time */}
         <p>
           {new Intl.DateTimeFormat("default", {
@@ -34,14 +32,29 @@ const MatchupDivider = ({ matchup, selectedTeam, sport }) => {
       </div>
       {/* versus / at icon */}
       <Icon name={`${sport === 7 ? "handshake" : "at"}`} />
-      {/* make a selection / picked  */}
-      <p className="divider-pick" style={{ marginTop: ".5rem" }}>
-        {selectedTeam
-          ? selectedTeam === matchup.teams_normalized[0].abbreviation
-            ? `◀ ${selectedTeam}  `
-            : `  ${selectedTeam} ▶`
-          : "◀ Pick ▶"}
-      </p>
+      {
+        // if it's not a past event, display the team picked
+        // else display final score
+        !isPastEvent ? (
+          <p className="divider-pick" style={{ marginTop: ".5rem" }}>
+            {selectedTeam
+              ? selectedTeam === matchup.teams_normalized[0].abbreviation
+                ? `◀ ${selectedTeam}  `
+                : `  ${selectedTeam} ▶`
+              : "◀ Pick ▶"}
+          </p>
+        ) : (
+          <h2
+            className="divider-score"
+            style={{ marginTop: ".5rem", color: "#042", fontWeight: "700" }}
+          >
+            Final
+            <br />
+            0-0
+          </h2>
+        )
+      }
+
       {/* <p>Weather: </p> */}
     </Grid.Column>
   );

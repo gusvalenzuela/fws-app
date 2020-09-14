@@ -49,7 +49,12 @@ function Weeks() {
     dbSchedule?.events.sort(
       (a, b) => new Date(a.event_date) - new Date(b.event_date)
     );
-    // find the first sunday game
+    /*
+    find the first sunday game after the latest first Sunday game
+    i.e. if viewing at 11A PDT on Sunday 9/13, 
+    the first Sunday found will be 9/20 
+    (9/13's 10A game has passed) 
+    */
     let sunday = dbSchedule?.events.find(
       (e) =>
         new Date(e.event_date).getDay() === 0 &&
@@ -107,10 +112,6 @@ function Weeks() {
     } else {
       setAllPicked(false);
     }
-    console.log(
-      Date.parse(events.find((i) => new Date(i.event_date).getDay() === 0)),
-      lockDate
-    );
   }, [userPicks, events]);
 
   // console.log(`events this week ${week}`, events);
@@ -159,6 +160,7 @@ function Weeks() {
           */
               // if selected user is same as current user display all picks
               // or it's past the first Sunday game of the week
+              // find the first sunday game from events to be rendered and check if before (<) lockDate (next coming Sunday game)
               // render the matchups and the corresponding user's picks
               user?._id === selectedUser?._id ||
               Date.parse(
@@ -202,6 +204,7 @@ function Weeks() {
                       )}
 
                       <MatchupCard
+                        lockDate={lockDate}
                         matchup={matchup}
                         userPicks={userPicks}
                         user={user ? true : false}
@@ -216,7 +219,14 @@ function Weeks() {
                 })
               ) : selectedUser && Date.now() < lockDate ? (
                 <>
-                  <p style={{ textAlign: "justify", padding: "1rem" }}>
+                  <p
+                    style={{
+                      textAlign: "justify",
+                      padding: "1rem",
+                      maxWidth: "800px",
+                      margin: "auto",
+                    }}
+                  >
                     <b>Note:</b> Other users' picks are not viewable until after
                     the start of the first Sunday game.
                   </p>

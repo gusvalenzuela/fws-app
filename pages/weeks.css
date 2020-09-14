@@ -39,7 +39,7 @@
 }
 .matchup-divider i {
   /* margin: 0 auto 1rem !important; */
-  font-size: 5rem !important;
+  font-size: 3.6rem !important;
 }
 .matchup-divider p {
   margin: 0;
@@ -56,7 +56,7 @@
   }
 } */
 #team-logo-img {
-  max-width: 75%;
+  max-width: 55%;
   margin: auto;
 }
 
