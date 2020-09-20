@@ -10,16 +10,27 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [sport, setSport] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isPastEvent] = useState(Date.parse(matchup.event_date) < Date.now());
-  let matchupDay = new Date(matchup.event_date);
-  // if the game time is at least 5 days earlier than the lockdate (i.e. already past our first sunday game of the week)
+  // is past event when it has a score obj, or 5 hours have passed after event start
+  const [isPastEvent] = useState(
+    matchup.scores ||
+      Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
+  );
+  // let matchupDay = new Date();
+  // if the lock date is at least 5 days earlier than the lockdate (i.e. already past our first sunday game of the week)
   // lock the matchup (disable click)
   const [isLocked] = useState(
-    Date.parse(matchupDay) < lockDate - 1000 * 60 * 60 * 24 * 5
+    Date.parse(matchup.event_date) < Date.now()
+      ? true
+      : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now() + 1000 * 60 * 60 *2
+      ? true
+      : false
   );
   const [tiebreaker, setTiebreaker] = useState(null);
   const initToast = React.useRef(null);
   const loginToPickToast = React.useRef(null);
+  useEffect(() => {
+    console.log(isLocked, new Date(matchup.event_date), new Date(lockDate));
+  }, [isLocked]);
   useEffect(() => {
     setSport(matchup.sport_id);
     setSelectedTeam(null); // clear selected team for refresh
@@ -120,7 +131,6 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   };
 
   const handleTeamSelection = async (event) => {
-    console.log(isLocked, Date.parse(matchupDay), lockDate);
     if (isUpdating) return toast.info("Still updating, please wait");
     // if no signed in user, display message about logging in
     if (!user) {

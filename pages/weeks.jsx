@@ -49,20 +49,7 @@ function Weeks() {
     dbSchedule?.events.sort(
       (a, b) => new Date(a.event_date) - new Date(b.event_date)
     );
-    /*
-    find the first sunday game after the latest first Sunday game
-    i.e. if viewing at 11A PDT on Sunday 9/13, 
-    the first Sunday found will be 9/20 
-    (9/13's 10A game has passed) 
-    */
-    let sunday = dbSchedule?.events.find(
-      (e) =>
-        new Date(e.event_date).getDay() === 0 &&
-        Date.parse(e.event_date) > Date.now()
-    );
-    if (sunday) {
-      setLockDate(Date.parse(sunday.event_date));
-    }
+
     // filter out the desired week
     let filteredEvents = dbSchedule?.events.filter((event) => {
       // switch case to set "weekly events"
@@ -89,6 +76,15 @@ function Weeks() {
 
     if (filteredEvents && filteredEvents.length > 0) {
       setEvents(filteredEvents);
+      /*
+      find the first sunday game of the week
+      */
+      let sunday = filteredEvents?.find(
+        (e) => new Date(e.event_date).getDay() === 0
+      );
+      if (sunday) {
+        setLockDate(Date.parse(sunday.event_date));
+      }
     }
   }, [week, dbSchedule]);
 
