@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Dropdown } from "semantic-ui-react";
 import { toast } from "react-toastify";
 const Tiebreaker = ({
+  isLocked,
   event_id,
   hometeam,
   awayteam,
@@ -112,6 +113,7 @@ const Tiebreaker = ({
       >
         <b>Your Tiebreaker: </b>
         <Dropdown
+          disabled={isLocked}
           closeOnChange
           closeOnBlur
           closeOnEscape
@@ -120,6 +122,7 @@ const Tiebreaker = ({
           selection
           options={tiebreakerOptions()}
           onChange={(e, { value }) => {
+            console.log(isLocked);
             setTiebreaker(value);
             return handleTiebreakerSubmit(value);
           }}

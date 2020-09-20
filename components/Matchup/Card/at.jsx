@@ -18,19 +18,11 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   // let matchupDay = new Date();
   // if the lock date is at least 5 days earlier than the lockdate (i.e. already past our first sunday game of the week)
   // lock the matchup (disable click)
-  const [isLocked] = useState(
-    Date.parse(matchup.event_date) < Date.now()
-      ? true
-      : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now() + 1000 * 60 * 60 *2
-      ? true
-      : false
-  );
+  const [isLocked, setisLocked] = useState(true);
   const [tiebreaker, setTiebreaker] = useState(null);
   const initToast = React.useRef(null);
+  const lockedToast = React.useRef(null);
   const loginToPickToast = React.useRef(null);
-  useEffect(() => {
-    console.log(isLocked, new Date(matchup.event_date), new Date(lockDate));
-  }, [isLocked]);
   useEffect(() => {
     setSport(matchup.sport_id);
     setSelectedTeam(null); // clear selected team for refresh
@@ -47,13 +39,21 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         return;
       }
     }
-  }, [userPicks, matchup, user]);
+    setisLocked(
+      Date.parse(matchup.event_date) < Date.now()
+        ? true
+        : Date.parse(matchup.event_date) >= lockDate &&
+          lockDate < Date.now() + 1000 * 60 * 60 * 2
+        ? true
+        : false
+    );
+  }, [userPicks, matchup, user, lockDate]);
 
   const buildTeamCard = (team) => {
     return (
       <Grid.Column
         color={selectedTeam === team.abbreviation ? "black" : null}
-        onClick={!isLocked ? handleTeamSelection : undefined}
+        onClick={handleTeamSelection}
         className={`${Style.teamContainer} team-container ${
           selectedTeam === team.abbreviation ? "picked" : ""
         }`}
@@ -131,6 +131,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   };
 
   const handleTeamSelection = async (event) => {
+    if (isLocked) return; // if matchup is locked 
     if (isUpdating) return toast.info("Still updating, please wait");
     // if no signed in user, display message about logging in
     if (!user) {
@@ -142,6 +143,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       }
       return;
     }
+
     // initializing the toast
     initToast.current = toast.info(
       `Updating pick to ${event.currentTarget.dataset.team}, please wait...`,
@@ -228,6 +230,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         {/* This displays only on the last matchup or what is the tiebreaker  */}
         {tiebreak && (
           <Tiebreaker
+            isLocked={isLocked}
             tiebreaker={tiebreaker}
             setTiebreaker={setTiebreaker}
             user={user}
