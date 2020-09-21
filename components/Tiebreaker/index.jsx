@@ -73,6 +73,7 @@ const Tiebreaker = ({
     setIsUpdating(false);
     if (res.status === 200) {
       const pick = await res.json();
+      console.log(pick);
       setTiebreaker(pick.tiebreaker);
       // updating the toast alert and setting the autoclose
       toast.update(tiebreakToast.current, {
@@ -80,7 +81,8 @@ const Tiebreaker = ({
           <>
             🎉 Tiebreaker updated to {pick.tiebreaker}!<br />
             <i style={{ fontSize: "small" }}>
-              Total points scored in {pick.matchup.event_name}
+              Total points scored in {awayteam.abbreviation} @{" "}
+              {hometeam.abbreviation} game.
             </i>
           </>
         ),

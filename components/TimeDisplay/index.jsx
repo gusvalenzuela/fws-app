@@ -1,23 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
+import Moment from "react-moment";
 
 const TimeDisplay = () => {
-  const [curTime, setCurTime] = useState(new Date(Date.now()));
-  // update current time every second
-  // setInterval(() => {
-  //   setCurTime(new Date(Date.now()));
-  // }, 1000);
-  let options = {
-    weekday: "long",
-    month: "long",
-    year: "numeric",
-    day: "numeric",
-    // hour: "numeric",
-    // minute: "numeric",
-    // second: "numeric",
-    // time: "numeric",
-    // timeZoneName: "short",
-  };
-  return <span>{`${curTime.toLocaleDateString([], options)}`}</span>;
+  return (
+    <>
+      <Moment
+        className="time"
+        format="dddd, MMMM DD, YYYY - hh:mm:ss A"
+        tz=""
+      />
+    </>
+  );
 };
 
 export default TimeDisplay;

@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import fetcher from './fetch';
+import fetcher from "./fetch";
 
 // const fetcher = (url) => fetch(url).then((r) => r.json());
 
@@ -11,7 +11,9 @@ export function getPlayerPicks(userId) {
   return [picks];
 }
 export function useSchedule(sport, season) {
-  const { data } = useSWR(`/api/schedule/${sport}&${season}`, fetcher);
+  const { data } = useSWR(`/api/schedule/${sport}&${season}`, fetcher, {
+    revalidateOnFocus: false,
+  });
   const schedule = data ? data.schedule : null;
   return [schedule];
 }

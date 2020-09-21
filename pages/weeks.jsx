@@ -12,24 +12,25 @@ import {
   useSchedule,
 } from "../lib/hooks";
 import Store from "../lib/stores/FootballPool";
+import { Dropdown } from "semantic-ui-react";
+import { generateNumbersArray } from "../lib/utils";
 
 // import NFLSchedule from "../lib/schedules/nfl/events.json";
 
 function Weeks() {
   const [user] = useCurrentUser();
-  const [Sport, setSport] = useState(2); //2 =
+  const [Sport] = useState(2); //2 =
   const [userPicks, setUserPicks] = useState([]);
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
   const [lockDate, setLockDate] = useState(undefined);
   const [allPicked, setAllPicked] = useState(false);
-  const week = Store.getState().week;
-  const selectedUserId = Store.getState().selectedUser;
+  const dbSchedule = Store((s) => s.schedule);
+  const week = Store((s) => s.week) || Store.getState().currentWeek;
+  const selectedUserId = Store((s) => s.selectedUser);
   // "State store" has selectedUser as undefined
   // on refresh "weeks" page
   const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId);
-  const [dbSchedule] = useSchedule(Sport, 2020);
-  // const dbSchedule = NFLSchedule;
   const [playerPicks] = getPlayerPicks(
     Store.getState().selectedUser || user?._id
   );
@@ -109,7 +110,6 @@ function Weeks() {
       setAllPicked(false);
     }
   }, [userPicks, events]);
-
   // console.log(`events this week ${week}`, events);
 
   return (
@@ -126,16 +126,38 @@ function Weeks() {
         <div className="main-content">
           <div className="page-header">
             <div className="week-header">
-              {events?.length > 0 &&
-                `${events[0].schedule.season_year} ${events[0].schedule.season_type}:`}
-              <span style={{ color: "#e02847" }}>{` Week ${week.toString()} (${
+              <TimeDisplay />
+              <br />
+              {
+                // "2020 Regular Season"
                 events?.length > 0 &&
-                (events[0].schedule?.week_detail ||
-                  events[0].schedule?.event_name)
-              })`}</span>
-              <div className="current-time-container">
-                <TimeDisplay />
-              </div>
+                  `${events[0].schedule.season_year} ${events[0].schedule.season_type}: `
+              }
+              {
+                // "Week 2" [Dropdown]
+
+                <Dropdown
+                  className="week-dropdown"
+                  onChange={(e, { value }) => Store.setState({ week: value })}
+                  options={generateNumbersArray(1, 17).map(
+                    (num) =>
+                      (num = { key: num, value: num, text: `Week ${num}` })
+                  )}
+                  value={week}
+                  text={`Week ${week.toString()}`}
+                  inline
+                />
+              }
+              {
+                // "(Sep 16-22)"
+                `(${
+                  events?.length > 0 &&
+                  (events[0].schedule?.week_detail ||
+                    events[0].schedule?.event_name)
+                })`
+              }
+              <span style={{ color: "#e02847" }}>{}</span>
+              <div className="current-time-container"></div>
             </div>
           </div>
           <div className="page-content">
@@ -155,14 +177,9 @@ function Weeks() {
           Caveat: -- only displays other user's if Date now is after the lockdate (i.e. after first Sunday Game)
           */
               // if selected user is same as current user display all picks
-              // or it's past the first Sunday game of the week
-              // find the first sunday game from events to be rendered and check if before (<) lockDate (next coming Sunday game)
+              // or it's past the first Sunday game of the week (picks are locked date)
               // render the matchups and the corresponding user's picks
-              user?._id === selectedUser?._id ||
-              Date.parse(
-                events.find((i) => new Date(i.event_date).getDay() === 0)
-                  .event_date
-              ) < lockDate ? (
+              user?._id === selectedUser?._id || Date.now() >= lockDate ? (
                 events.map((matchup, inx) => {
                   let print;
                   // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)

@@ -84,13 +84,13 @@
 .week-dropdown,
 .sport-dropdown {
   background-color: transparent !important ;
-  color: var(--main-white) !important;
+  color: red !important;
 }
 .tiebreaker-dropdown .text {
   color: var(--main-black) !important;
 }
 .tiebreaker-dropdown .menu {
- max-height: 13.3rem !important;
+  max-height: 13.3rem !important;
 }
 @media screen and (max-width: 766px) {
   .week-header {

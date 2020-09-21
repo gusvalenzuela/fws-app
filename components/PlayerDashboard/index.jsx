@@ -1,4 +1,5 @@
 import React from "react";
+import Store from "../../lib/stores/FootballPool";
 
 const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
   return (
@@ -46,7 +47,21 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
         }`}
       >
         {user && otherUser ? (
-          <h1>{user.name}'s picks. </h1>
+          <>
+            <h1 style={{ marginBottom: "0" }}>{user.name}'s picks. </h1>
+            <button
+              style={{
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
+                color: "#fff70f",
+                textDecoration: "underline",
+              }}
+              onClick={() => Store.setState({ selectedUser: undefined })} //
+            >
+              see yours
+            </button>
+          </>
         ) : user ? (
           <h1 style={{ color: `${allPicked && "#000"}` }}>Your picks.</h1>
         ) : (

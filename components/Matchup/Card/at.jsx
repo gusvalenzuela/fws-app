@@ -131,7 +131,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   };
 
   const handleTeamSelection = async (event) => {
-    if (isLocked) return; // if matchup is locked 
+    if (isLocked) return; // if matchup is locked
     if (isUpdating) return toast.info("Still updating, please wait");
     // if no signed in user, display message about logging in
     if (!user) {
@@ -235,8 +235,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             setTiebreaker={setTiebreaker}
             user={user}
             event_id={matchup.event_id}
-            hometeam={matchup.teams_normalized[0]}
-            awayteam={matchup.teams_normalized[1]}
+            hometeam={matchup.teams_normalized[1]}
+            awayteam={matchup.teams_normalized[0]}
           />
         )}
       </div>

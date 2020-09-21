@@ -3,22 +3,12 @@ import { useRouter } from "next/router";
 import { useCurrentUser, getAllUsers } from "../../lib/hooks";
 import { Menu, Dropdown, Icon } from "semantic-ui-react";
 import Store from "../../lib/stores/FootballPool";
+import { generateNumbersArray } from "../../lib/utils";
 
 const Menubar = () => {
   const [user] = useCurrentUser();
   const [users] = getAllUsers();
   const router = useRouter();
-
-  const generateNumbersArray = (count = 1, max = 17) => {
-    let array = [];
-
-    while (count <= max) {
-      array.push(count);
-      count++;
-    }
-
-    return array;
-  };
 
   const handleWeekChange = (e, target) => {
     openMenu(); // to hide menu on mobile when item clicked
@@ -62,7 +52,7 @@ const Menubar = () => {
             // set "selectedUser" to undefined when clicking home, defaults to current user
             Store.setState({
               selectedUser: user ? user._id : undefined,
-              week: 1,
+              week: undefined,
               season: 2020,
             });
             openMenu(); // this assures the responsive menu is closed when clicked

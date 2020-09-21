@@ -7,7 +7,7 @@
   --main-white: #f2f2f2;
   --main-black: #020202;
   --brand-color1: #ab2616;
-  --brand-TEMP: #165802;
+  --TEMP: #165802;
   --base-color: #4c940c;
   --base-cool-light: #6b28e0;
   --base-cool-dark: #421394;
@@ -39,11 +39,37 @@ body {
     #94041D
  
 */
+.top.stackable.menu {
+  border-radius: 0 !important;
+  background-color: #1a1a1a !important;
+}
+/* .menu,
+.menu .item {
+  color: var(--main-white) !important;
+} */
+.right.menu button {
+  margin: 0.25rem;
+  border: none;
+  /* max-width: fit-content; */
+  background-color: #1b3094 !important;
+}
+.menu.transition.visible {
+  overflow: auto;
+  max-height: 200px;
+}
+.menubar-header {
+  padding: 1rem;
+  margin: 0 !important;
+}
 
 main {
   /* display: grid !important; */
   min-height: calc(100vh - 150px);
   grid-template-rows: auto 1fr auto;
+}
+time.time {
+  color: #979797;
+  font-size: 1em;
 }
 .brand-name {
   font-weight: 700;
@@ -88,28 +114,6 @@ div.loading {
 .page-footer {
   padding: 1rem;
   margin: auto;
-}
-.top.stackable.menu {
-  border-radius: 0 !important;
-  background-color: #1a1a1a !important;
-}
-.menu,
-.menu .item {
-  color: var(--main-white) !important;
-}
-.right.menu button {
-  margin: 0.25rem;
-  border: none;
-  /* max-width: fit-content; */
-  background-color: #1b3094 !important;
-}
-.menu.transition.visible {
-  overflow: auto;
-  max-height: 200px;
-}
-.menubar-header {
-  padding: 1rem;
-  margin: 0 !important;
 }
 
 /* when pointer is a mouse (fine) */
