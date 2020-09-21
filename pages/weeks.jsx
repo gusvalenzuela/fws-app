@@ -163,6 +163,7 @@ function Weeks() {
           <div className="page-content">
             <span style={selectedUser && { background: "#777" }}>
               <PlayerDashboard
+                lockDate={lockDate}
                 allPicked={allPicked}
                 user={selectedUser || user}
                 otherUser={

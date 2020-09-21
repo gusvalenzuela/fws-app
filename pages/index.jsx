@@ -17,8 +17,9 @@ const HomePage = () => {
           <div className="hero">
             <h1>
               <span className="brand-name"></span> brings picking sides in major
-              sporting events to your fingertips.
+              sporting events<sup>*</sup> to your fingertips.
             </h1>
+
             <div
               style={{
                 alignItems: "center",
@@ -43,15 +44,17 @@ const HomePage = () => {
                 <span>Log In</span>
               </a>
             </div>
-            <p style={{ cursor: "pointer", marginTop: "2rem" }}>
-              <a
-                onClick={() => {
-                  router.push("/weeks");
-                }}
-              >
-                See Demo Account
-              </a>
-            </p>
+            <i style={{ fontSize: "x-small" }}>
+              <sup>*</sup>Currently only featuring American Football.
+            </i>
+            <a
+              className="demo-link"
+              onClick={() => {
+                router.push("/weeks");
+              }}
+            >
+              See Demo Account
+            </a>
           </div>
         </header>
         <div className="page-content">

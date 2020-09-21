@@ -1,7 +1,7 @@
 import React from "react";
 import Store from "../../lib/stores/FootballPool";
 
-const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
+const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
   return (
     <>
       <style jsx>
@@ -77,7 +77,11 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked }) => {
                 </p>
               ) : (
                 <p className="picks-remaining">
-                  Picks locked at the scheduled time of the first Sunday game
+                  {`${
+                    Date.now() >= lockDate
+                      ? "RECORD: 0-0"
+                      : "Picks locked at the scheduled time of the first Sunday Game"
+                  }`}
                 </p>
               )
             }
