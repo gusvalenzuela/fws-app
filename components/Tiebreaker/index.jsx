@@ -38,7 +38,7 @@ const Tiebreaker = ({
     if (!user) {
       // check to see to no similar toast is active (prevent dupes)
       if (!toast.isActive(loginToPickToast.current)) {
-        loginToPickToast.current = toast(
+        loginToPickToast.current = toast.dark(
           "LOG IN TO START SETTING TIEBREAKERS!",
           {
             toastId: "toast-not-loggedin",
@@ -115,7 +115,7 @@ const Tiebreaker = ({
       >
         <b>Your Tiebreaker: </b>
         <Dropdown
-          disabled={isLocked}
+          disabled={!isLocked ? false : true}
           closeOnChange
           closeOnBlur
           closeOnEscape
@@ -124,7 +124,6 @@ const Tiebreaker = ({
           selection
           options={tiebreakerOptions()}
           onChange={(e, { value }) => {
-            console.log(isLocked);
             setTiebreaker(value);
             return handleTiebreakerSubmit(value);
           }}

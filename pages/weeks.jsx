@@ -3,18 +3,10 @@ import MatchupCard from "../components/Matchup/Card";
 import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
 import React, { useState, useEffect } from "react";
-// import { Code } from "react-content-loader";
-import { Divider, Loader, Dimmer } from "semantic-ui-react";
-import {
-  useCurrentUser,
-  getPlayerPicks,
-  useUser,
-  useSchedule,
-} from "../lib/hooks";
+import { Divider, Loader, Dimmer, Dropdown } from "semantic-ui-react";
+import { useCurrentUser, getPlayerPicks, useUser } from "../lib/hooks";
 import Store from "../lib/stores/FootballPool";
-import { Dropdown } from "semantic-ui-react";
 import { generateNumbersArray } from "../lib/utils";
-
 // import NFLSchedule from "../lib/schedules/nfl/events.json";
 
 function Weeks() {
@@ -26,23 +18,10 @@ function Weeks() {
   const [lockDate, setLockDate] = useState(undefined);
   const [allPicked, setAllPicked] = useState(false);
   const dbSchedule = Store((s) => s.schedule);
-  const week = Store((s) => s.week) || Store.getState().currentWeek;
-  const selectedUserId = Store((s) => s.selectedUser);
-  // "State store" has selectedUser as undefined
-  // on refresh "weeks" page
+  const week = Store((s) => s.week) || Store.getState().currentWeek; // Store.week initializes as undefined
+  const selectedUserId = Store((s) => s.selectedUser); // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId);
-  const [playerPicks] = getPlayerPicks(
-    Store.getState().selectedUser || user?._id
-  );
-
-  const getWeekNumber = (date) => {
-    let datetoCompare = date ? new Date(date) : new Date();
-    let onejan = new Date(datetoCompare.getFullYear(), 0, 1);
-    let week = Math.ceil(
-      ((datetoCompare - onejan) / 86400000 + onejan.getDay() + 1) / 7
-    );
-    return week;
-  };
+  const [playerPicks] = getPlayerPicks(selectedUserId || user?._id);
 
   // on week, dbschedule set
   useEffect(() => {
@@ -57,16 +36,6 @@ function Weeks() {
       switch (event.sport_id) {
         case 2:
           if (event.schedule?.week === week) {
-            return event;
-          }
-          break;
-        case 7:
-          // sport_id = 7 is UFC
-          // does not have weeks in schedule
-          // if (event.schedule.event_name.includes("Fight Night")) {
-          //   return event;
-          // }
-          if (getWeekNumber(event.event_date) === getWeekNumber() + 1) {
             return event;
           }
           break;
@@ -124,8 +93,7 @@ function Weeks() {
         </Dimmer>
       ) : (
         <div className="main-content">
-          <div className="page-header">
-            <div className="week-header">
+          <div className="page-header week-header">
               <TimeDisplay />
               <br />
               {
@@ -156,9 +124,6 @@ function Weeks() {
                     events[0].schedule?.event_name)
                 })`
               }
-              <span style={{ color: "#e02847" }}>{}</span>
-              <div className="current-time-container"></div>
-            </div>
           </div>
           <div className="page-content">
             <span style={selectedUser && { background: "#777" }}>

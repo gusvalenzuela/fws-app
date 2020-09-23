@@ -12,25 +12,25 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   // is past event when it has a score obj, or 5 hours have passed after event start
   const [isPastEvent] = useState(
-    matchup.scores ||
-      Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
+    matchup.scores
+      ? true
+      : Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
+      ? true
+      : false
   );
-  // let matchupDay = new Date();
-  // if the lock date is at least 5 days earlier than the lockdate (i.e. already past our first sunday game of the week)
-  // lock the matchup (disable click)
   const [isLocked, setisLocked] = useState(true);
   const [tiebreaker, setTiebreaker] = useState(null);
   const initToast = React.useRef(null);
   const lockedToast = React.useRef(null);
   const loginToPickToast = React.useRef(null);
+
   useEffect(() => {
     setSport(matchup.sport_id);
     setSelectedTeam(null); // clear selected team for refresh
-    if (!user || !userPicks) return;
     //  look in the user's picks
-    for (let i = 0; i < userPicks.length; i++) {
+    for (let i = 0; i < userPicks?.length; i++) {
       const pick = userPicks[i];
-      if (pick.event_id === matchup.event_id) {
+      if (pick?.event_id === matchup?.event_id) {
         setSelectedTeam(pick.selected_team);
         // if it is also the tiebreak match, set the tiebreaker value used in Tiebreaker component
         if (tiebreak) {
@@ -39,15 +39,18 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         return;
       }
     }
+  }, [userPicks, matchup]);
+  
+  useEffect(() => {
     setisLocked(
       Date.parse(matchup.event_date) < Date.now()
-        ? true
+        ? "past"
         : Date.parse(matchup.event_date) >= lockDate &&
           lockDate < Date.now() + 1000 * 60 * 60 * 2
-        ? true
+        ? "after lock date"
         : false
     );
-  }, [userPicks, matchup, user, lockDate]);
+  }, [matchup, lockDate]);
 
   const buildTeamCard = (team) => {
     return (
@@ -64,6 +67,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         // width="6"
         stretched
       >
+        {/* team logo / image  */}
         <CloudinaryContext cloudName="fwscloud">
           {/* hosting the images on cloudinary */}
           <Image
@@ -76,68 +80,56 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             <Transformation width="250" crop="scale" />
           </Image>
         </CloudinaryContext>
-        {/* <img
-          src={`/images/teamlogos/${
-            sport === 2 ? team.abbreviation : "ufc-fighter"
-          }.png`}
-          alt={`${team.abbreviation}'s team logo`}
-          id="team-logo-img"
-        /> */}
+        {/* team name  */}
         <h4>{`${team.name} ${
           team.mascot === "Redskins" ? "Football Team" : team.mascot
         }`}</h4>
-        <br />
-        {sport === 7 ? (
-          <>
-            <p
-              style={{
-                margin: 0,
-                marginTop: "-10px",
-                marginBottom: "10px",
-                fontWeight: "400",
-              }}
-            >
-              {team.record || "0-0-0"}
-            </p>
-            <br />
-          </>
-        ) : (
-          <p
-            style={{
-              margin: 0,
-              marginTop: "-5px",
-              marginBottom: "5px",
-              fontSize: "2rem",
-              color: "red",
-              fontWeight: "800",
-            }}
-          >
-            {
-              // if point spread is negative display
-              // & only if current rendered team is also fav
-              team.is_home && matchup.lines.spread.point_spread_home < 0 ? (
-                matchup.lines.spread.point_spread_home
-              ) : (team.is_away && matchup.lines.spread.point_spread_away) <
-                0 ? (
-                matchup.lines.spread.point_spread_away
-              ) : (
-                <span style={{ visibility: "hidden" }}>underdog</span> // display and hide an equivalent element to keep balance layout
-              )
-            }
-          </p>
-        )}
+        {/* Line spread */}
+        <p
+          style={{
+            margin: 0,
+            marginTop: "-5px",
+            marginBottom: "5px",
+            fontSize: "2rem",
+            color: "red",
+            fontWeight: "800",
+          }}
+        >
+          {
+            // if point spread is negative display
+            // & only if current rendered team is also fav
+            team.is_home && matchup.lines.spread.point_spread_home < 0 ? (
+              matchup.lines.spread.point_spread_home
+            ) : (team.is_away && matchup.lines.spread.point_spread_away) < 0 ? (
+              matchup.lines.spread.point_spread_away
+            ) : (
+              <span style={{ visibility: "hidden" }}>underdog</span> // display and hide an equivalent element to keep balance layout
+            )
+          }
+        </p>
       </Grid.Column>
     );
   };
 
   const handleTeamSelection = async (event) => {
-    if (isLocked) return; // if matchup is locked
-    if (isUpdating) return toast.info("Still updating, please wait");
+    if (isUpdating) return toast.info("Still updating, please wait"); // wait for Mongo DB to respond
+    if (isLocked) {
+      // check to see to no similar toast is active (prevent dupes)
+      if (!toast.isActive(lockedToast.current)) {
+        lockedToast.current = toast.error(
+          "That match is now locked.\nPlease try another matchup.",
+          {
+            toastId: "toast-locked-pick",
+          }
+        );
+      }
+      return;
+    }
     // if no signed in user, display message about logging in
     if (!user) {
       // check to see to no similar toast is active (prevent dupes)
       if (!toast.isActive(loginToPickToast.current)) {
-        loginToPickToast.current = toast("LOG IN TO LOCK YOUR PICK!", {
+        loginToPickToast.current = toast.dark("LOG IN TO LOCK YOUR PICK!", {
           toastId: "toast-not-loggedin",
         });
       }

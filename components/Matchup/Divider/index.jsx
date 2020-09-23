@@ -12,14 +12,14 @@ const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
       {/* separating into multiple lines */}
       <div style={{ fontSize: "1.12rem", marginBottom: "1.5rem" }}>
         {/* Date */}
-        <p>
+        {/* <p>
           {new Intl.DateTimeFormat("default", {
             // year: "numeric",
             month: "numeric",
             day: "numeric",
             // dayPeriod: "short",
           }).format(new Date(matchup.event_date))}
-        </p>
+        </p> */}
         {/* Time */}
         <p>
           {new Intl.DateTimeFormat("default", {
@@ -44,14 +44,14 @@ const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
               : "◀ Pick ▶"}
           </p>
         ) : (
-          <h2
+          <h4
             className="divider-score"
             style={{ marginTop: ".5rem", color: "#042", fontWeight: "700" }}
           >
             Final
             <br />
             0-0
-          </h2>
+          </h4>
         )
       }
 

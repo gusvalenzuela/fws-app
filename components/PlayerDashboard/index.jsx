@@ -7,7 +7,7 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
       <style jsx>
         {`
           .player-container {
-            max-width: 800px;
+            max-width: 825px;
             margin: auto;
             height: fit-content;
             padding: 1.5rem;
@@ -65,7 +65,7 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
         ) : user ? (
           <h1 style={{ color: `${allPicked && "#000"}` }}>Your picks.</h1>
         ) : (
-          <h1>Demo Account</h1>
+          <h1>Demo</h1>
         )}
         {!otherUser && (
           <>

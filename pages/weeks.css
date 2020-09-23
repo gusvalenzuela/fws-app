@@ -28,6 +28,9 @@
 .matchup-day-header {
   background-color: #000;
   color: #fff;
+  width: 100%;
+  max-width: 825px;
+  margin: 1rem auto;
   padding: 1rem 0.5rem;
   margin-top: 3rem !important;
   text-align: center;
@@ -78,7 +81,7 @@
   font-size: 2rem;
   font-weight: 800;
   line-height: normal;
-  padding: 1rem 0.5rem 0.25rem;
+  /* padding: 2rem 0.5rem; */
   /* background: rgb(0, 204, 255); */
 }
 .week-dropdown,
