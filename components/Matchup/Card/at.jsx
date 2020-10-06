@@ -10,9 +10,9 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [sport, setSport] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  // is past event when it has a score obj, or 5 hours have passed after event start
+  // is past event when it has a score obj with final confirmed, or 5 hours have passed after event start
   const [isPastEvent] = useState(
-    matchup.scores
+    matchup.scores?.final === true
       ? true
       : Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
       ? true
@@ -95,20 +95,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             fontWeight: "800",
           }}
         >
-          {/* {
-            // if point spread is negative display
-            // & only if current rendered team is also fav
-            team.is_home && matchup.lines.spread.point_spread_home < 0 ? (
-              matchup.lines.spread.point_spread_home
-            ) : (team.is_away && matchup.lines.spread.point_spread_away) < 0 ? (
-              matchup.lines.spread.point_spread_away
-            ) : (
-              <span style={{ visibility: "hidden" }}>underdog</span> // display and hide an equivalent element to keep balance layout
-            )
-          } */}
           {
-            // if point spread is negative display
-            // & only if current rendered team is also fav
+            // displays the point spread for favorite (-0.5)
             matchup.line_ && team.abbreviation === matchup.line_.favorite ? (
               matchup.line_.point_spread
             ) : (
