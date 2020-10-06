@@ -1,8 +1,10 @@
 import React from "react";
 import { Grid, Icon } from "semantic-ui-react";
+
 const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
   return (
     <Grid.Column
+      // onClick={() => console.log(matchup)}
       key={"versus"}
       width="3"
       textAlign="center"
@@ -50,9 +52,15 @@ const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
           >
             Final
             <br />
-            0-0
+            {!matchup.scores?.final
+              ? `0 - 0`
+              : `${matchup.scores.away_team} - ${matchup.scores.home_team}`}
           </h4>
         )
+      }
+      {
+        // determine if pick is a winner or not
+        // !isPastEven
       }
 
       {/* <p>Weather: </p> */}

@@ -11,9 +11,7 @@ export function getPlayerPicks(userId) {
   return [picks];
 }
 export function useSchedule(sport, season) {
-  const { data } = useSWR(`/api/schedule/${sport}&${season}`, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data } = useSWR(`/api/schedule/${sport}&${season}`, fetcher);
   const schedule = data ? data.schedule : null;
   return [schedule];
 }

@@ -11,7 +11,7 @@ import { generateNumbersArray } from "../lib/utils";
 
 function Weeks() {
   const [user] = useCurrentUser();
-  const [Sport] = useState(2); //2 =
+  const [Sport] = useState(2); // 2 = NFL, 7 = UFC
   const [userPicks, setUserPicks] = useState([]);
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
@@ -94,36 +94,35 @@ function Weeks() {
       ) : (
         <div className="main-content">
           <div className="page-header week-header">
-              <TimeDisplay />
-              <br />
-              {
-                // "2020 Regular Season"
-                events?.length > 0 &&
-                  `${events[0].schedule.season_year} ${events[0].schedule.season_type}: `
-              }
-              {
-                // "Week 2" [Dropdown]
+            <TimeDisplay />
+            <br />
+            {
+              // "2020 Regular Season"
+              events?.length > 0 &&
+                `${events[0].schedule.season_year} ${events[0].schedule.season_type}: `
+            }
+            {
+              // "Week 2" [Dropdown]
 
-                <Dropdown
-                  className="week-dropdown"
-                  onChange={(e, { value }) => Store.setState({ week: value })}
-                  options={generateNumbersArray(1, 17).map(
-                    (num) =>
-                      (num = { key: num, value: num, text: `Week ${num}` })
-                  )}
-                  value={week}
-                  text={`Week ${week.toString()}`}
-                  inline
-                />
-              }
-              {
-                // "(Sep 16-22)"
-                `(${
-                  events?.length > 0 &&
-                  (events[0].schedule?.week_detail ||
-                    events[0].schedule?.event_name)
-                })`
-              }
+              <Dropdown
+                className="week-dropdown"
+                onChange={(e, { value }) => Store.setState({ week: value })}
+                options={generateNumbersArray(1, 17).map(
+                  (num) => (num = { key: num, value: num, text: `Week ${num}` })
+                )}
+                value={week}
+                text={`Week ${week.toString()}`}
+                inline
+              />
+            }
+            {
+              // "(Sep 16-22)"
+              `(${
+                events?.length > 0 &&
+                (events[0].schedule?.week_detail ||
+                  events[0].schedule?.event_name)
+              })`
+            }
           </div>
           <div className="page-content">
             <span style={selectedUser && { background: "#777" }}>

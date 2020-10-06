@@ -17,13 +17,13 @@ handler.patch(async (req, res) => {
   //   return res.status(401).send("unauthenticated");
   // }
 
+  console.log(req.body, req.user);
   let slimSchedule = req.body.events?.map((evt) => {
     let desired = evt.lines["2"]; // affiliate Bovada
     evt.lines = desired;
 
     return evt;
   });
-  // console.log(req.body, req.user);
   const result = await req.db.collection("schedule").updateOne(
     { RundownSportId: Number(req.query.sportId) },
     {

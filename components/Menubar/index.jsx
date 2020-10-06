@@ -144,6 +144,18 @@ const Menubar = () => {
                   >
                     My Profile
                   </Dropdown.Item>
+                  {
+                    // add dropdown for admin page, if user is an Admin User
+                    user?.isAdmin && (
+                      <Dropdown.Item
+                        text="Admin Page"
+                        onClick={() => {
+                          router.push("/admin");
+                          openMenu();
+                        }}
+                      />
+                    )
+                  }
                   <Dropdown.Item
                     text="Settings"
                     icon="settings"

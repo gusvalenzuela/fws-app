@@ -77,7 +77,9 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
                 </p>
               ) : (
                 <p className="picks-remaining">
-                  {`${
+                  {
+                  // 
+                  `${
                     Date.now() >= lockDate
                       ? "RECORD: 0-0"
                       : "Picks locked at the scheduled time of the first Sunday Game"
@@ -86,14 +88,12 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
               )
             }
 
-            {/* // user?.locked_in
-            //   ? "All GOOD To Go"
-            //   : `Picks locked at the scheduled time of the first Sunday game` */}
+         
           </>
         )}
 
         {/* msg received on count of picks left to make*/}
-        {msg ? (
+        {msg && (
           <p
             style={{
               color: "black",
@@ -101,7 +101,7 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
           >
             {msg}
           </p>
-        ) : null}
+        )}
       </div>
     </>
   );

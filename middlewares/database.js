@@ -11,7 +11,7 @@ export async function setUpDb(db) {
     { expireAfterSeconds: 0 },
   );
   db.collection('picks').createIndex({ createdAt: -1 });
-  db.collection('users').createIndex({ email: 1 }, { unique: true });
+  db.collection('users').createIndex({ email: 1, username: 1 }, { unique: true });
 }
 
 export default async function database(req, res, next) {

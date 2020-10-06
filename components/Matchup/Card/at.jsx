@@ -40,7 +40,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       }
     }
   }, [userPicks, matchup]);
-  
+
   useEffect(() => {
     setisLocked(
       Date.parse(matchup.event_date) < Date.now()
@@ -95,13 +95,22 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             fontWeight: "800",
           }}
         >
-          {
+          {/* {
             // if point spread is negative display
             // & only if current rendered team is also fav
             team.is_home && matchup.lines.spread.point_spread_home < 0 ? (
               matchup.lines.spread.point_spread_home
             ) : (team.is_away && matchup.lines.spread.point_spread_away) < 0 ? (
               matchup.lines.spread.point_spread_away
+            ) : (
+              <span style={{ visibility: "hidden" }}>underdog</span> // display and hide an equivalent element to keep balance layout
+            )
+          } */}
+          {
+            // if point spread is negative display
+            // & only if current rendered team is also fav
+            matchup.line_ && team.abbreviation === matchup.line_.favorite ? (
+              matchup.line_.point_spread
             ) : (
               <span style={{ visibility: "hidden" }}>underdog</span> // display and hide an equivalent element to keep balance layout
             )
