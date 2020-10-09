@@ -19,9 +19,8 @@ const AdminEventSection = ({ event }) => {
     console.log();
   }, []);
 
-  const handleScoreSubmit = async (event, value) => {
+  const handleScoreSubmit = async (event) => {
     event.preventDefault();
-    console.log(value);
     setTimeout(() => {
       setMsg(msgDefault); // clear any displayed messages after 4.2 secs
     }, 4200);
@@ -67,7 +66,6 @@ const AdminEventSection = ({ event }) => {
     });
     setIsUpdating(false);
     if (res.status === 200) {
-      console.log(await res.json());
       setMsg({ message: "Event updated" });
     } else {
       setMsg({ message: await res.text(), isError: true });
@@ -142,8 +140,8 @@ const AdminEventSection = ({ event }) => {
               "Away Team"}{" "}
             <input
               placeholder="Score"
-              // required
-              id="away-team"
+              required
+              id={`score-${event.teams_normalized[0].abbreviation}`}
               min="0"
               name="away-team"
               type="number"
@@ -154,9 +152,9 @@ const AdminEventSection = ({ event }) => {
             {(event.teams && event.teams_normalized[1].abbreviation) ||
               "Home Team"}{" "}
             <input
-              // required
+              required
               placeholder="Score"
-              id="home-team"
+              id={`score-${event.teams_normalized[0].abbreviation}`}
               name="home-team"
               min="0"
               type="number"
@@ -183,7 +181,7 @@ const AdminEventSection = ({ event }) => {
             <label htmlFor={`${event.teams_normalized[0].abbreviation}`}>
               {`${event.teams_normalized[0].abbreviation}`}
               <input
-                id={`${event.teams_normalized[0].abbreviation}`}
+                id={`favteam-${event.teams_normalized[0].abbreviation}`}
                 value={`${event.teams_normalized[0].abbreviation}`}
                 name="favorite-team"
                 type="radio"
@@ -213,7 +211,7 @@ const AdminEventSection = ({ event }) => {
               <input
                 placeholder="ex. 0.5"
                 // required
-                id="point-spread"
+                id={`pointspread-${event.teams_normalized[0].abbreviation}`}
                 name="point-spread"
                 type="number"
                 max={999.5}
