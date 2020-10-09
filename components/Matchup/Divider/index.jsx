@@ -1,10 +1,16 @@
 import React from "react";
 import { Grid, Icon } from "semantic-ui-react";
 
-const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
+const MatchupDivider = ({
+  matchup,
+  selectedTeam,
+  sport,
+  isPastEvent,
+  pickWinner,
+}) => {
   return (
     <Grid.Column
-      // onClick={() => console.log(matchup)}
+      onClick={() => console.log(matchup)}
       key={"versus"}
       width="3"
       textAlign="center"
@@ -33,37 +39,31 @@ const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
         </p>
       </div>
       {/* versus / at icon */}
-      <Icon name={`${sport === 7 ? "handshake" : "at"}`} />
-      {
-        // if it's not a past event, display the team picked
-        // else display final score
-        !isPastEvent ? (
-          <p className="divider-pick" style={{ marginTop: ".5rem" }}>
-            {selectedTeam
-              ? selectedTeam === matchup.teams_normalized[0].abbreviation
-                ? `◀ ${selectedTeam}  `
-                : `  ${selectedTeam} ▶`
-              : "◀ Pick ▶"}
-          </p>
-        ) : (
-          <h4
-            className="divider-score"
-            style={{ marginTop: ".5rem", color: "#042", fontWeight: "700" }}
-          >
-            Final
-            <br />
-            {!matchup.scores?.final
-              ? `0 - 0`
-              : `${matchup.scores.away_team} - ${matchup.scores.home_team}`}
-          </h4>
-        )
-      }
+      <Icon
+        style={{ marginBottom: "1rem" }}
+        size="huge"
+        name={`${sport === 7 ? "handshake" : "at"}`}
+      />
+      {!isPastEvent ? (
+        <p className="divider-pick" style={{ marginTop: ".5rem" }}>
+          {selectedTeam
+            ? selectedTeam === matchup.teams_normalized[0].abbreviation
+              ? `◀ ${selectedTeam}  `
+              : `  ${selectedTeam} ▶`
+            : "◀ Pick ▶"}
+        </p>
+      ) : (
+        <br />
+      )}
+
       {
         // determine if pick is a winner or not
-        // !isPastEven
+        isPastEvent && pickWinner === selectedTeam ? (
+          <Icon name="check" color="green" size="huge" />
+        ) : isPastEvent && matchup.scores?.final ? (
+          <Icon name="close" color="red" size="huge" />
+        ) : null
       }
-
-      {/* <p>Weather: </p> */}
     </Grid.Column>
   );
 };
