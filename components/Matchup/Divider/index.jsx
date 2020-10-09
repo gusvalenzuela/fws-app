@@ -60,7 +60,7 @@ const MatchupDivider = ({
         // determine if pick is a winner or not
         isPastEvent && pickWinner === selectedTeam ? (
           <Icon name="check" color="green" size="huge" />
-        ) : isPastEvent && matchup.scores?.final ? (
+        ) : isPastEvent && matchup.scores?.final && selectedTeam ? (
           <Icon name="close" color="red" size="huge" />
         ) : null
       }
