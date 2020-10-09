@@ -241,24 +241,22 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
           // if a past event, display the final scores
           isPastEvent && matchup.scores?.final && (
             <Segment
-              tertiary
-              raised
+              color="grey"
+              inverted
+              secondary
               attached="bottom"
-              style={{
-                textAlign: "center",
-                // fontSize: "large",
-                // padding: ".5rem 0",
-              }}
+              textAlign="center"
+              size="mini"
             >
               <Grid columns="equal">
                 <Grid.Column>
-                  <h1>{matchup.scores.away_team}</h1>
+                  <h3>{matchup.scores.away_team}</h3>
                 </Grid.Column>
                 <Grid.Column width={3}>
-                  <h4>FINAL</h4>
+                  <span style={{ fontSize: "medium" }}>FINAL</span>
                 </Grid.Column>
                 <Grid.Column>
-                  <h1>{matchup.scores.home_team}</h1>
+                  <h3>{matchup.scores.home_team}</h3>
                 </Grid.Column>
               </Grid>
             </Segment>
