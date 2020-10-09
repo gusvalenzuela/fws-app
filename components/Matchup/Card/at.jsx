@@ -12,11 +12,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   // is past event when it has a score obj with final confirmed, or 5 hours have passed after event start
   const [isPastEvent] = useState(
-    matchup.scores?.final === true
-      ? true
-      : Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
-      ? true
-      : false
+    matchup.scores?.final ||
+      Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   );
   const [isLocked, setisLocked] = useState(true);
   const [tiebreaker, setTiebreaker] = useState(null);
@@ -42,6 +39,11 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   }, [userPicks, matchup]);
 
   useEffect(() => {
+    // determine locked-pick status
+    // if the event date is in the past, then locked is true
+    /* if event date is on or after the first Sunday game start of the viewed week
+    AND it's not a past event (i.e. between Sunday Morning + 2 days to cover Monday's game)
+     */
     setisLocked(
       Date.parse(matchup.event_date) < Date.now()
         ? "past"
