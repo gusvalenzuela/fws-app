@@ -12,9 +12,10 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   // is past event when it has a score obj with final confirmed, or 5 hours have passed after event start
   const [isPastEvent] = useState(
-    matchup.scores?.final ||
+    matchup.scores?.final === true ||
       Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   );
+  const [pickWinner, setPickWinner] = useState(undefined);
   const [isLocked, setisLocked] = useState(true);
   const [tiebreaker, setTiebreaker] = useState(null);
   const initToast = React.useRef(null);
@@ -27,6 +28,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     //  look in the user's picks
     for (let i = 0; i < userPicks?.length; i++) {
       const pick = userPicks[i];
+
       if (pick?.event_id === matchup?.event_id) {
         setSelectedTeam(pick.selected_team);
         // if it is also the tiebreak match, set the tiebreaker value used in Tiebreaker component
@@ -52,6 +54,24 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         ? "after lock date"
         : false
     );
+    // find a pick winner (winning team including the spread)
+    if (matchup.scores?.final) {
+      var homeTeam = matchup.teams_normalized[1].abbreviation;
+      var awayTeam = matchup.teams_normalized[0].abbreviation;
+      var homeScore = matchup.scores.home_team;
+      var awayScore = matchup.scores.away_team;
+      if (matchup.line_?.favorite === homeTeam) {
+        // if the home team is the favorite
+        // add the point spread (negative num) to the away_team (underdog)
+        awayScore = awayScore - matchup.line_?.point_spread;
+      } else {
+        // the away team is the favorite
+        // add the point spread (negative num) to the home_team (underdog)
+        homeScore = homeScore - matchup.line_?.point_spread;
+      }
+      // determine who won
+      homeScore > awayScore ? setPickWinner(homeTeam) : setPickWinner(awayTeam);
+    }
   }, [matchup, lockDate]);
 
   const buildTeamCard = (team) => {
@@ -92,7 +112,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             margin: 0,
             marginTop: "-5px",
             marginBottom: "5px",
-            fontSize: "2rem",
+            fontSize: "1.5rem",
             color: "red",
             fontWeight: "800",
           }}
@@ -193,12 +213,11 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   return (
     <>
       <div className={Style.matchupContainer}>
-        <Segment tertiary={isPastEvent} raised>
-          {/* <section>INFORMATION</section> */}
-          {/* render for each team  */}
+        <Segment attached tertiary={isPastEvent} raised>
           <Grid columns="equal">
-            {/* buildTeamCard function returns a grid column for any team fed
-          takes in specific team Obj containing abbr, name, mascot, and more  */}
+            {/* 
+            buildTeamCard function returns a grid column for any team fed.
+            takes in specific team Obj containing abbr, name, mascot, and more  */}
             {
               // away team
               buildTeamCard(matchup.teams_normalized[0])
@@ -210,6 +229,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
               selectedTeam={selectedTeam}
               matchup={matchup}
               sport={sport}
+              pickWinner={pickWinner}
             />
             {
               // home team
@@ -217,6 +237,33 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             }
           </Grid>
         </Segment>
+        {
+          // if a past event, display the final scores
+          isPastEvent && matchup.scores?.final && (
+            <Segment
+              tertiary
+              raised
+              attached="bottom"
+              style={{
+                textAlign: "center",
+                // fontSize: "large",
+                // padding: ".5rem 0",
+              }}
+            >
+              <Grid columns="equal">
+                <Grid.Column>
+                  <h1>{matchup.scores.away_team}</h1>
+                </Grid.Column>
+                <Grid.Column width={3}>
+                  <h4>FINAL</h4>
+                </Grid.Column>
+                <Grid.Column>
+                  <h1>{matchup.scores.home_team}</h1>
+                </Grid.Column>
+              </Grid>
+            </Segment>
+          )
+        }
 
         {/* This displays only on the last matchup or what is the tiebreaker  */}
         {tiebreak && (
