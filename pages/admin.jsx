@@ -6,10 +6,11 @@ import { generateNumbersArray } from "../lib/utils";
 import { Dropdown } from "semantic-ui-react";
 
 const AdminPage = () => {
+  const currentWeek = Store((s) => s.currentWeek);
+  const dbSchedule = Store((s) => s.schedule);
   const [user] = useCurrentUser();
   const [events, setEvents] = useState([]);
-  const [week, setWeek] = useState(1);
-  const dbSchedule = Store((s) => s.schedule);
+  const [week, setWeek] = useState(currentWeek || 1);
   // on week, dbschedule set
   useEffect(() => {
     // sort by event date
@@ -26,6 +27,7 @@ const AdminPage = () => {
       setEvents(filteredEvents);
     }
   }, [week, dbSchedule]);
+
 
   if (!user || !user?.isAdmin) {
     return (
@@ -54,7 +56,9 @@ const AdminPage = () => {
               />
               {events.length > 0 &&
                 events.map((event) => {
-                  return <AdminEventSection key={event?.event_id} event={event} />;
+                  return (
+                    <AdminEventSection key={event?.event_id} event={event} />
+                  );
                 })}
             </div>
 
