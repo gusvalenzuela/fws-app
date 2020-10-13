@@ -73,7 +73,7 @@ const Tiebreaker = ({
     setIsUpdating(false);
     if (res.status === 200) {
       const pick = await res.json();
-      console.log(pick);
+      // console.log(pick);
       setTiebreaker(pick.tiebreaker);
       // updating the toast alert and setting the autoclose
       toast.update(tiebreakToast.current, {
