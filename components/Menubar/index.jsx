@@ -36,12 +36,10 @@ const Menubar = () => {
       <Menu inverted stackable attached="top">
         <Menu.Header onClick={openMenu} as="h3" className="menubar-header">
           <span style={{ color: "#EADFFB" }}>FWS Pool </span>
-          {user ? (
+          {user && (
             <span style={{ color: "#FFF70F", fontWeight: "bolder" }}>
               {` | ${user.name}`}
             </span>
-          ) : (
-            ""
           )}
         </Menu.Header>
         <Dropdown.Item
