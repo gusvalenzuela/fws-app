@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import moment from "moment";
 
 const AdminEventSection = ({ event }) => {
   const msgDefault = { message: "", isError: false };
@@ -10,9 +11,9 @@ const AdminEventSection = ({ event }) => {
   const pointSpreadRef = useRef();
 
   useEffect(() => {
-    pointSpreadRef.current.value = -event.line_?.point_spread;
-    homeTeamScoreRef.current.value = event.scores?.home_team;
-    awayTeamScoreRef.current.value = event.scores?.away_team;
+    pointSpreadRef.current.value = -event?.line_?.point_spread;
+    homeTeamScoreRef.current.value = event?.scores?.home_team;
+    awayTeamScoreRef.current.value = event?.scores?.away_team;
     // console.log(event);
   }, [event]);
   useEffect(() => {
@@ -46,9 +47,12 @@ const AdminEventSection = ({ event }) => {
     }
   };
   const handleLineSubmit = async (evt) => {
+    evt.preventDefault();
+    setTimeout(() => {
+      setMsg(msgDefault); // clear any displayed messages after 4.2 secs
+    }, 4200);
     if (isUpdating) return;
     var formElements = evt.currentTarget.elements;
-    evt.preventDefault();
     setIsUpdating(true);
     const formData = {
       event_id: eventId,
@@ -66,34 +70,57 @@ const AdminEventSection = ({ event }) => {
     });
     setIsUpdating(false);
     if (res.status === 200) {
-      setMsg({ message: "Event updated" });
+      setMsg({ message: "Point Spread updated" });
     } else {
       setMsg({ message: await res.text(), isError: true });
     }
   };
   const handleDateChangeSubmit = async (evt) => {
     if (isUpdating) return;
+    setTimeout(() => {
+      setMsg(msgDefault); // clear any displayed messages after 4.2 secs
+    }, 4200);
     var formElements = evt.currentTarget.elements;
     evt.preventDefault();
-    setIsUpdating(true);
-    const formData = {
-      event_id: eventId,
-      sport_id: 2,
-      event_date: new Date(formElements["event-date"].value),
-    };
+    var dateInput = formElements["event-date"].value;
+    var timeInput = formElements["event-time"].value;
+    // convert the input Date & Time to UTC for updating event (using moment)
+    // format: 2020-10-14T01:00:00Z
+    if (dateInput === "") {
+      setMsg({ message: `Date cannot be null`, isError: true });
+    }
+    if (timeInput === "") {
+      setMsg({ message: `Time cannot be null`, isError: true });
+    }
 
-    console.log(event.event_date);
-    // const res = await fetch("/api/lines", {
-    //   method: "PATCH",
-    //   body: JSON.stringify(formData),
-    // });
-    setIsUpdating(false);
-    // if (res.status === 200) {
-    //   console.log(await res.json());
-    //   setMsg({ message: "Event updated" });
-    // } else {
-    //   setMsg({ message: await res.text(), isError: true });
-    // }
+    if (dateInput !== "" && timeInput !== "") {
+      setIsUpdating(true);
+      var eventDateTime = moment(
+        `${formElements["event-date"].value}T${formElements["event-time"].value}`
+      )
+        .utc()
+        .format();
+
+      const formData = {
+        event_id: eventId,
+        sport_id: 22,
+        event_date: eventDateTime,
+      };
+
+      const res = await fetch("/api/dates", {
+        method: "PATCH",
+        body: JSON.stringify(formData),
+      });
+      setIsUpdating(false);
+      if (res.status === 200) {
+        console.log(await res.json());
+        setMsg({ message: "Event updated" });
+      } else {
+        setMsg({ message: await res.text(), isError: true });
+      }
+    }
+
+    // end handleSubmitDateTime
   };
 
   return (
@@ -237,6 +264,13 @@ const AdminEventSection = ({ event }) => {
               id={`date-${event.event_date}`}
               name="event-date"
               type="date"
+              defaultValue={`${moment(event.event_date).format("YYYY-MM-DD")}`}
+            />
+            <input
+              id={`time-${event.event_date}`}
+              name="event-time"
+              type="time"
+              defaultValue={`${moment(event.event_date).format("HH:mm")}`}
             />
           </span>
 
