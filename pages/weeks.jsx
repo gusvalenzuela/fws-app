@@ -35,7 +35,7 @@ function Weeks() {
       // switch case to set "weekly events"
       switch (event.sport_id) {
         case 2:
-          if (event.schedule?.week === week) {
+          if (event.week || event.schedule?.week === week) {
             return event;
           }
           break;
@@ -99,7 +99,9 @@ function Weeks() {
             {
               // "2020 Regular Season"
               events?.length > 0 &&
-                `${events[0].schedule.season_year} ${events[0].schedule.season_type}: `
+                `${events.season_year || events[0].schedule?.season_year} ${
+                  events.season_type || events[0].schedule?.season_type
+                }: `
             }
             {
               // "Week 2" [Dropdown]
