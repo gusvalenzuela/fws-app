@@ -19,8 +19,10 @@ handler.patch(async (req, res) => {
 
   console.log(req.body, req.user);
   let slimSchedule = req.body.events?.map((evt) => {
-    let desired = evt.lines["2"]; // affiliate Bovada
-    evt.lines = desired;
+    if (evt.lines && evt.lines["2"]) {
+      let desired = evt.lines["2"]; // affiliate Bovada
+      evt.lines = desired;
+    }
 
     return evt;
   });
