@@ -30,7 +30,7 @@ const AdminEventSection = ({ event }) => {
     setIsUpdating(true);
     const formData = {
       event_id: eventId,
-      sport_id: 2,
+      sport_id: 22,
       home_team_score: homeTeamScoreRef.current.value,
       away_team_score: awayTeamScoreRef.current.value,
       final: document.getElementById(`final-${eventId}`).checked,
