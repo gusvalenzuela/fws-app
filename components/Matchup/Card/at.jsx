@@ -32,7 +32,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       const pick = userPicks[i];
 
       if (pick?.event_id === matchup?.event_id) {
-        setSelectedTeam(Number(pick.selected_team_id));
+        setSelectedTeam(pick.selected_team);
         // if it is also the tiebreak match, set the tiebreaker value used in Tiebreaker component
         if (tiebreak) {
           setTiebreaker(pick.tiebreaker);
@@ -80,10 +80,10 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     let team = nflTeams.find((t) => t.team_id === val);
     return (
       <Grid.Column
-        color={selectedTeam === team.team_id ? "black" : null}
+        color={selectedTeam?.team_id === team.team_id ? "black" : null}
         onClick={handleTeamSelection}
         className={`${Style.teamContainer} team-container ${
-          selectedTeam === team.team_id ? "picked" : ""
+          selectedTeam?.team_id === team.team_id ? "picked" : ""
         }`}
         verticalAlign="middle"
         data-team_id={team.team_id}
@@ -190,7 +190,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     if (res.status === 200) {
       const pick = await res.json();
       // PATCH /api/picks returns the updated pick
-      setSelectedTeam(pick.selected_team_id);
+      setSelectedTeam(pick.selected_team);
       // updating the toast alert and setting the autoclose
 
       toast.update(initToast.current, {
@@ -238,7 +238,6 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
               selectedTeam={selectedTeam}
               matchup={matchup}
               sport={sport}
-              nflTeams={nflTeams}
               pickWinner={pickWinner}
             />
             {
