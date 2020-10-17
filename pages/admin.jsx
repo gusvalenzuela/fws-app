@@ -20,7 +20,7 @@ const AdminPage = () => {
 
     // filter out the desired week
     let filteredEvents = dbSchedule?.events.filter(
-      (event) => event.schedule?.week === week
+      (event) => event.week === week
     );
 
     if (filteredEvents && filteredEvents.length > 0) {

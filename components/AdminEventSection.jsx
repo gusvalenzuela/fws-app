@@ -30,7 +30,7 @@ const AdminEventSection = ({ event }) => {
     setIsUpdating(true);
     const formData = {
       event_id: eventId,
-      sport_id: 22,
+      sport_id: 2,
       home_team_score: homeTeamScoreRef.current.value,
       away_team_score: awayTeamScoreRef.current.value,
       final: document.getElementById(`final-${eventId}`).checked,
@@ -59,7 +59,7 @@ const AdminEventSection = ({ event }) => {
       sport_id: 2,
       line_: {
         point_spread: Number(-pointSpreadRef.current.value),
-        favorite: formElements["favorite-team"].value,
+        favorite: Number(formElements["favorite-team"].value),
       },
     };
 
@@ -103,7 +103,7 @@ const AdminEventSection = ({ event }) => {
 
       const formData = {
         event_id: eventId,
-        sport_id: 22,
+        sport_id: 2,
         event_date: eventDateTime,
       };
 
@@ -149,7 +149,7 @@ const AdminEventSection = ({ event }) => {
         }
       `}</style>
       <section>
-        <h3>{event.schedule?.event_name || "Event Name"}</h3>
+        <h3>{event.event_name || "Event Name"}</h3>
         {msg.message ? (
           <p
             style={{
@@ -163,12 +163,11 @@ const AdminEventSection = ({ event }) => {
 
         <form id={`score-form-${event.event_id}`} onSubmit={handleScoreSubmit}>
           <span>
-            {(event.teams && event.teams_normalized[0].abbreviation) ||
-              "Away Team"}{" "}
+            {event.away_team || "Away Team"}{" "}
             <input
               placeholder="Score"
               required
-              id={`score-${event.teams_normalized[0].abbreviation}`}
+              id={`score-${event.away_team}`}
               min="0"
               name="away-team"
               type="number"
@@ -176,12 +175,11 @@ const AdminEventSection = ({ event }) => {
             />
           </span>
           <span>
-            {(event.teams && event.teams_normalized[1].abbreviation) ||
-              "Home Team"}{" "}
+            {event.home_team || "Home Team"}{" "}
             <input
               required
               placeholder="Score"
-              id={`score-${event.teams_normalized[0].abbreviation}`}
+              id={`score-${event.away_team}`}
               name="home-team"
               min="0"
               type="number"
@@ -205,30 +203,24 @@ const AdminEventSection = ({ event }) => {
         <form id={`line-form-${event.event_id}`} onSubmit={handleLineSubmit}>
           <p>Set Favorite:</p>
           <span>
-            <label htmlFor={`${event.teams_normalized[0].abbreviation}`}>
-              {`${event.teams_normalized[0].abbreviation}`}
+            <label htmlFor={`${event.away_team}`}>
+              {`${event.away_team}`}
               <input
-                id={`favteam-${event.teams_normalized[0].abbreviation}`}
-                value={`${event.teams_normalized[0].abbreviation}`}
+                id={`favteam-${event.away_team}`}
+                value={`${event.away_team_id}`}
                 name="favorite-team"
                 type="radio"
-                defaultChecked={
-                  event.line_?.favorite ===
-                  event.teams_normalized[0].abbreviation
-                }
+                defaultChecked={event.line_?.favorite === event.away_team_id}
               />
             </label>
-            <label htmlFor={`${event.teams_normalized[1].abbreviation}`}>
-              {`${event.teams_normalized[1].abbreviation}`}
+            <label htmlFor={`${event.home_team}`}>
+              {`${event.home_team}`}
               <input
-                id={`${event.teams_normalized[1].abbreviation}`}
-                value={`${event.teams_normalized[1].abbreviation}`}
+                id={`${event.home_team}`}
+                value={`${event.home_team_id}`}
                 name="favorite-team"
                 type="radio"
-                defaultChecked={
-                  event.line_?.favorite ===
-                  event.teams_normalized[1].abbreviation
-                }
+                defaultChecked={event.line_?.favorite === event.home_team_id}
               />
             </label>
           </span>
@@ -238,7 +230,7 @@ const AdminEventSection = ({ event }) => {
               <input
                 placeholder="ex. 0.5"
                 // required
-                id={`pointspread-${event.teams_normalized[0].abbreviation}`}
+                id={`pointspread-${event.away_team}`}
                 name="point-spread"
                 type="number"
                 max={999.5}
