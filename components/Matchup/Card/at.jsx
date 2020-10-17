@@ -3,6 +3,7 @@ import { Grid, Segment } from "semantic-ui-react";
 import MatchupDivider from "../Divider";
 import Tiebreaker from "../../Tiebreaker";
 import Style from "./Card.module.css";
+import Store from "../../../lib/stores/FootballPool";
 import { toast } from "react-toastify";
 import { Image, Transformation, CloudinaryContext } from "cloudinary-react";
 
@@ -21,6 +22,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const initToast = React.useRef(null);
   const lockedToast = React.useRef(null);
   const loginToPickToast = React.useRef(null);
+  const nflTeams = Store((s) => s.teams);
 
   useEffect(() => {
     setSport(matchup.sport_id);
@@ -30,7 +32,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       const pick = userPicks[i];
 
       if (pick?.event_id === matchup?.event_id) {
-        setSelectedTeam(pick.selected_team);
+        setSelectedTeam(Number(pick.selected_team_id));
         // if it is also the tiebreak match, set the tiebreaker value used in Tiebreaker component
         if (tiebreak) {
           setTiebreaker(pick.tiebreaker);
@@ -55,11 +57,11 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         : false
     );
     // find a pick winner (winning team including the spread)
-    if (matchup.scores?.final) {
-      var homeTeam = matchup.teams_normalized[1].abbreviation;
-      var awayTeam = matchup.teams_normalized[0].abbreviation;
-      var homeScore = matchup.scores.home_team;
-      var awayScore = matchup.scores.away_team;
+    if (matchup.event_status === "STATUS_FINAL") {
+      var homeTeam = matchup.home_team_id;
+      var awayTeam = matchup.away_team_id;
+      var homeScore = matchup.home_score;
+      var awayScore = matchup.away_score;
       if (matchup.line_?.favorite === homeTeam) {
         // if the home team is the favorite
         // add the point spread (negative num) to the away_team (underdog)
@@ -74,16 +76,18 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     }
   }, [matchup, lockDate]);
 
-  const buildTeamCard = (team) => {
+  const buildTeamCard = (val) => {
+    let team = nflTeams.find((t) => t.team_id === val);
     return (
       <Grid.Column
-        color={selectedTeam === team.abbreviation ? "black" : null}
+        color={selectedTeam === team.team_id ? "black" : null}
         onClick={handleTeamSelection}
         className={`${Style.teamContainer} team-container ${
-          selectedTeam === team.abbreviation ? "picked" : ""
+          selectedTeam === team.team_id ? "picked" : ""
         }`}
         verticalAlign="middle"
-        data-team={team.abbreviation}
+        data-team_id={team.team_id}
+        data-team_name={team.abbreviation}
         data-event={matchup.event_id}
         id={team.abbreviation}
         // width="6"
@@ -119,7 +123,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         >
           {
             // displays the point spread for favorite (-0.5)
-            matchup.line_ && team.abbreviation === matchup.line_.favorite ? (
+            matchup.line_ && team.team_id === matchup.line_.favorite ? (
               matchup.line_.point_spread
             ) : (
               <span style={{ visibility: "hidden" }}>underdog</span> // display and hide an equivalent element to keep balance layout
@@ -154,10 +158,13 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       }
       return;
     }
+    const teamSelection = nflTeams.find(
+      (t) => t.team_id === Number(event.currentTarget.dataset.team_id)
+    );
 
     // initializing the toast
     initToast.current = toast.info(
-      `Updating pick to ${event.currentTarget.dataset.team}, please wait...`,
+      `Updating pick to ${event.currentTarget.id}, please wait...`,
       {
         // toastId: "toast-update-pick",
         autoClose: false,
@@ -169,8 +176,9 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     let pick = {
       event_id: matchup.event_id,
       event_date: matchup.event_date,
-      selected_team: event.currentTarget.dataset.team,
-      matchup: { ...matchup.schedule, teams: matchup.teams_normalized },
+      selected_team: teamSelection,
+      selected_team_id: Number(event.currentTarget.dataset.team_id),
+      matchup: matchup,
     };
     const res = await fetch("/api/picks", {
       method: "PATCH",
@@ -181,12 +189,15 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
 
     if (res.status === 200) {
       const pick = await res.json();
+      // PATCH /api/picks returns the updated pick
+      setSelectedTeam(pick.selected_team_id);
       // updating the toast alert and setting the autoclose
 
       toast.update(initToast.current, {
         render: (
           <>
-            Week {pick.matchup.week} pick updated to {pick.selected_team}.
+            Week {pick.matchup.week} pick updated to{" "}
+            {pick.selected_team.abbreviation}.
             <br />
             <b style={{ fontSize: "small" }}>Good luck! 🎉</b>
           </>
@@ -195,8 +206,6 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         autoClose: 3000,
         closeButton: null,
       });
-      // PATCH /api/picks returns the updated pick
-      setSelectedTeam(pick.selected_team);
     } else {
       let errMsg = (await res.text()).toUpperCase();
       // updating the toast alert with error and setting the autoclose
@@ -220,7 +229,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             takes in specific team Obj containing abbr, name, mascot, and more  */}
             {
               // away team
-              buildTeamCard(matchup.teams_normalized[0])
+              buildTeamCard(matchup.away_team_id)
             }
             {/* // this divider has slight changes // varied on the sport type
           (i.e.american football vs mma) */}
@@ -229,39 +238,49 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
               selectedTeam={selectedTeam}
               matchup={matchup}
               sport={sport}
+              nflTeams={nflTeams}
               pickWinner={pickWinner}
             />
             {
               // home team
-              buildTeamCard(matchup.teams_normalized[1])
+              buildTeamCard(matchup.home_team_id)
             }
           </Grid>
         </Segment>
-        {
-          // if a past event, display the final scores
-          isPastEvent && matchup.scores?.final && (
-            <Segment
-              color="grey"
-              inverted
-              secondary
-              attached="bottom"
-              textAlign="center"
-              size="mini"
-            >
-              <Grid columns="equal">
-                <Grid.Column>
-                  <h3>{matchup.scores.away_team}</h3>
+        <Segment
+          color="grey"
+          inverted
+          secondary
+          attached="bottom"
+          textAlign="center"
+          size="mini"
+        >
+          <Grid columns="equal">
+            {
+              // if a past event, display the final scores
+              // else any necessary information
+              isPastEvent && matchup.event_status === "STATUS_FINAL" ? (
+                <>
+                  <Grid.Column>
+                    <h3>{matchup.away_score}</h3>
+                  </Grid.Column>
+                  <Grid.Column width={3}>
+                    <span style={{ fontSize: "medium" }}>FINAL</span>
+                  </Grid.Column>
+                  <Grid.Column>
+                    <h3>{matchup.home_score}</h3>
+                  </Grid.Column>
+                </>
+              ) : (
+                <Grid.Column style={{ color: "black" }}>
+                  <h4>
+                    {matchup.broadcast} - {matchup.event_location}
+                  </h4>
                 </Grid.Column>
-                <Grid.Column width={3}>
-                  <span style={{ fontSize: "medium" }}>FINAL</span>
-                </Grid.Column>
-                <Grid.Column>
-                  <h3>{matchup.scores.home_team}</h3>
-                </Grid.Column>
-              </Grid>
-            </Segment>
-          )
-        }
+              )
+            }
+          </Grid>
+        </Segment>
 
         {/* This displays only on the last matchup or what is the tiebreaker  */}
         {tiebreak && (
@@ -271,8 +290,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             setTiebreaker={setTiebreaker}
             user={user}
             event_id={matchup.event_id}
-            hometeam={matchup.teams_normalized[1]}
-            awayteam={matchup.teams_normalized[0]}
+            hometeam={matchup.home_team}
+            awayteam={matchup.away_team}
           />
         )}
       </div>

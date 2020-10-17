@@ -13,13 +13,16 @@ function Weeks() {
   const [user] = useCurrentUser();
   const [Sport] = useState(2); // 2 = NFL, 7 = UFC
   const [userPicks, setUserPicks] = useState([]);
+  const [teamsOnBye, setTeamsOnBye] = useState([]);
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
   const [lockDate, setLockDate] = useState(undefined);
   const [allPicked, setAllPicked] = useState(false);
   const dbSchedule = Store((s) => s.schedule);
+  // const dbSchedule = Store((s) => s.schedule_alt);
   const week = Store((s) => s.week) || Store.getState().currentWeek; // Store.week initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser); // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
+  const nflTeams = Store((s) => s.teams);
   const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId);
   const [playerPicks] = getPlayerPicks(selectedUserId || user?._id);
 
@@ -35,7 +38,10 @@ function Weeks() {
       // switch case to set "weekly events"
       switch (event.sport_id) {
         case 2:
-          if (event.week || event.schedule?.week === week) {
+          if (
+            (event.week === week && event.home_team_id < 100) ||
+            event.schedule?.week === week
+          ) {
             return event;
           }
           break;
@@ -55,6 +61,20 @@ function Weeks() {
       if (sunday) {
         setLockDate(Date.parse(sunday.event_date));
       }
+
+      /*
+        find teams on a bye
+        */
+      var scheduledTeams = [];
+
+      filteredEvents.forEach((e) => {
+        scheduledTeams.push(e.away_team_id, e.home_team_id);
+      });
+      var newNFLTeamsArray = nflTeams.filter(
+        (team) => !scheduledTeams.includes(team.team_id)
+      );
+
+      setTeamsOnBye(newNFLTeamsArray);
     }
   }, [week, dbSchedule]);
 
@@ -79,6 +99,7 @@ function Weeks() {
       setAllPicked(false);
     }
   }, [userPicks, events]);
+
   // console.log(`events this week ${week}`, events);
 
   return (
@@ -99,8 +120,8 @@ function Weeks() {
             {
               // "2020 Regular Season"
               events?.length > 0 &&
-                `${events.season_year || events[0].schedule?.season_year} ${
-                  events.season_type || events[0].schedule?.season_type
+                `${events[0].season_year || events[0].schedule?.season_year} ${
+                  events[0].season_type || events[0].schedule?.season_type
                 }: `
             }
             {
@@ -121,8 +142,7 @@ function Weeks() {
               // "(Sep 16-22)"
               `(${
                 events?.length > 0 &&
-                (events[0].schedule?.week_detail ||
-                  events[0].schedule?.event_name)
+                (events[0].week_detail || events[0].schedule?.event_name)
               })`
             }
           </div>
@@ -216,7 +236,20 @@ function Weeks() {
               )
             }
           </div>
-          <div className="page-footer"></div>
+          <div className="page-footer">
+            {teamsOnBye.length > 0 && <b>BYE WEEK:</b>}
+            {
+              // from the complete list of nflTeams
+              // if the team is not included in the currently scheduled teams (depending on week being viewed)
+              // add it to display of "bye-week" teams
+              teamsOnBye.map((team) => (
+                <span key={`bye-${team.abbreviation}`}>
+                  {" "}
+                  {team.abbreviation}{" "}
+                </span>
+              ))
+            }
+          </div>
         </div>
       )}
     </main>

@@ -29,7 +29,7 @@ const generateWeekStartDatesFrom = (sDate = Date.now(), dL = 17) => {
 
 // This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
-  const [dbSchedule] = useSchedule(22, 2020); // args = (sport_id, season_year)
+  const [dbSchedule] = useSchedule(2, 2020); // args = (sport_id, season_year)
   const [schedule, setSchedule] = useState(undefined);
 
   // on mount
@@ -47,14 +47,15 @@ export default function MyApp({ Component, pageProps }) {
     Store.setState({ currentWeek: startDateIndex + 1 });
     Store.setState({ Moment: Moment });
 
-    fetchData();
+    // fetchData();
     async function fetchData() {
       try {
         const resp = await fetch(
           "https://rqrdtx8vy3.execute-api.us-west-2.amazonaws.com/default/fwsGetSchedule?TableName=fws-schedule"
         );
         const { Items } = await resp.json();
-        setSchedule(Items[0]);
+        var nflSchedule = Items.find((i) => i.sportId === 2);
+        setSchedule(nflSchedule);
       } catch (error) {
         console.log(error);
       }
