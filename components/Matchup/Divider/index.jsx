@@ -7,7 +7,6 @@ const MatchupDivider = ({
   sport,
   isPastEvent,
   pickWinner,
-  nflTeams,
 }) => {
   return (
     <Grid.Column
@@ -48,14 +47,9 @@ const MatchupDivider = ({
       {!isPastEvent ? (
         <p className="divider-pick" style={{ marginTop: ".5rem" }}>
           {selectedTeam
-            ? selectedTeam ==
-              nflTeams.find((t) => t.team_id === matchup.away_team_id).team_id
-              ? `◀ ${
-                  nflTeams.find((t) => t.team_id === selectedTeam)?.abbreviation
-                }  `
-              : `  ${
-                  nflTeams.find((t) => t.team_id === selectedTeam)?.abbreviation
-                } ▶`
+            ? selectedTeam.team_id == matchup.away_team_id
+              ? `◀ ${selectedTeam.abbreviation}  `
+              : `  ${selectedTeam.abbreviation} ▶`
             : "◀ Pick ▶"}
         </p>
       ) : (
@@ -64,9 +58,10 @@ const MatchupDivider = ({
 
       {
         // determine if pick is a winner or not
-        isPastEvent && pickWinner === selectedTeam ? (
+        isPastEvent && pickWinner === selectedTeam?.team_id ? (
           <Icon name="check" color="green" size="huge" />
-        ) : isPastEvent && matchup.scores?.final && selectedTeam ? (
+        ) : isPastEvent &&
+          matchup.event_status === "STATUS_FINAL" ? (
           <Icon name="close" color="red" size="huge" />
         ) : null
       }
