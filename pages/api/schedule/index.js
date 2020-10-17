@@ -17,14 +17,14 @@ handler.patch(async (req, res) => {
     try {
       // query needs to find the correct sport and within it the correct event in its events Array
       const query = {
-        RundownSportId: Number(22),
+        RundownSportId: Number(2),
         "events.event_id": e.event_id,
       };
 
       const updateDocument = {
         $set: {
           "events.$.event_date": e.date_event,
-          "events.$.schedule.week": e.week,
+          "events.$.week": e.week,
         },
       };
       const updateOptions = {
