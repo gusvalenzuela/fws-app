@@ -8,7 +8,7 @@ handler.use(middleware);
 handler.get(async (req, res) => {
   if (!req.user) res.send(null);
   const picks = await req.db
-    .collection("picks")
+    .collection("pickz")
     .find({ userId: req.user._id })
     .toArray();
   res.status(200).json({ picks: picks });
@@ -30,7 +30,7 @@ handler.post(async (req, res) => {
     ...req.body,
   };
 
-  await req.db.collection("picks").insertOne(pick);
+  await req.db.collection("pickz").insertOne(pick);
   return res.send(pick);
 });
 
@@ -38,7 +38,7 @@ handler.patch(async (req, res) => {
   if (!req.user) {
     return res.status(401).send("unauthenticated");
   }
-  await req.db.collection("picks").updateOne(
+  await req.db.collection("pickz").updateOne(
     { $and: [{ event_id: req.body.event_id }, { userId: req.user._id }] },
     {
       $set: {
@@ -50,11 +50,11 @@ handler.patch(async (req, res) => {
     { upsert: true }
   );
 
-  const teamPick = await req.db
-    .collection("picks")
+  const teamPicks = await req.db
+    .collection("pickz")
     .find({ $and: [{ event_id: req.body.event_id }, { userId: req.user._id }] })
     .toArray();
-  return res.status(200).json(teamPick[0]);
+  return res.status(200).json(teamPicks[0]);
 });
 
 export default handler;

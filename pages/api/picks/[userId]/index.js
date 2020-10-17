@@ -1,6 +1,5 @@
 import nextConnect from "next-connect";
 import middleware from "../../../../middlewares/middleware";
-import { getPick } from "../../../../lib/db";
 
 const handler = nextConnect();
 
@@ -10,7 +9,7 @@ handler.get(async (req, res) => {
   if (!req.query.userId) res.send(null);
 
   const picks = await req.db
-    .collection("picks")
+    .collection("pickz")
     .find({
       userId: req.query.userId,
     })
@@ -23,7 +22,7 @@ handler.patch(async (req, res) => {
     return res.status(401).send("unauthenticated");
   }
   // console.log(req.body, req.user);
-  await req.db.collection("picks").updateOne(
+  await req.db.collection("pickz").updateOne(
     { $and: [{ event_id: req.body.event_id }, { userId: req.user._id }] },
     {
       $set: {
@@ -35,7 +34,7 @@ handler.patch(async (req, res) => {
   );
 
   const teamPick = await req.db
-    .collection("picks")
+    .collection("pickz")
     .find({ $and: [{ event_id: req.body.event_id }, { userId: req.user._id }] })
     .toArray();
   return res.status(200).json(teamPick[0]);
