@@ -81,8 +81,7 @@ const Tiebreaker = ({
           <>
             🎉 Tiebreaker updated to {pick.tiebreaker}!<br />
             <i style={{ fontSize: "small" }}>
-              Total points scored in {awayteam.abbreviation} @{" "}
-              {hometeam.abbreviation} game.
+              Total points scored in {awayteam} @ {hometeam} game.
             </i>
           </>
         ),
@@ -132,9 +131,7 @@ const Tiebreaker = ({
           compact
           labeled
         />{" "}
-        (
-        {`Total points scored in ${awayteam.abbreviation} vs. ${hometeam.abbreviation} game`}
-        )
+        ({`Total points scored in ${awayteam} vs. ${hometeam} game`})
         <span
           style={{
             display: `${
