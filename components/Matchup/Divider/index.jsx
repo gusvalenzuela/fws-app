@@ -29,14 +29,14 @@ const MatchupDivider = ({
           }).format(new Date(matchup.event_date))}
         </p> */}
         {/* Time */}
-        <p>
+        {/* <p>
           {new Intl.DateTimeFormat("default", {
             hour: "numeric",
             minute: "2-digit",
             timeZoneName: "short",
             // dayPeriod: "short",
           }).format(new Date(matchup.event_date))}
-        </p>
+        </p> */}
       </div>
       {/* versus / at icon */}
       <Icon

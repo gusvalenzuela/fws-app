@@ -105,22 +105,23 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             <Transformation
               quality="auto"
               fetchFormat="auto"
-              height="225"
-              width="225"
-              crop="scale"
+              height="175"
+              width="175"
+              crop="fit"
             />
           </Image>
         </CloudinaryContext>
         {/* team name  */}
-        <h4>{`${team.name} ${
-          team.mascot === "Redskins" ? "Football Team" : team.mascot
-        }`}</h4>
+        {/* <h4>{`$ $`}</h4> */}
+        <h4>
+          {team.name}
+          <br />
+          {team.mascot === "Redskins" ? "Football Team" : team.mascot}
+        </h4>
         {/* Line spread */}
         <p
           style={{
             margin: 0,
-            marginTop: "-5px",
-            marginBottom: "5px",
             fontSize: "1.5rem",
             color: "red",
             fontWeight: "800",
@@ -253,9 +254,9 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
           </Grid>
         </Segment>
         <Segment
-          color="grey"
-          inverted
-          secondary
+          // color="grey"
+          inverted={isPastEvent}
+          secondary={!isPastEvent}
           attached="bottom"
           textAlign="center"
           size="mini"
@@ -277,9 +278,17 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
                   </Grid.Column>
                 </>
               ) : (
-                <Grid.Column style={{ color: "black" }}>
+                <Grid.Column>
                   <h4>
-                    {matchup.broadcast} - {matchup.event_location}
+                    {new Intl.DateTimeFormat("default", {
+                      month: "numeric",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      timeZoneName: "short",
+                      // weekday: "short",
+                    }).format(new Date(matchup.event_date))}{" "}
+                    - {matchup.broadcast}
                   </h4>
                 </Grid.Column>
               )
