@@ -9,6 +9,7 @@ import {
   getPlayerPicks,
   useUser,
   useTeams,
+  useSchedule,
 } from "../lib/hooks";
 import Store from "../lib/stores/FootballPool";
 import { generateNumbersArray } from "../lib/utils";
@@ -18,22 +19,26 @@ function Weeks() {
   const [user] = useCurrentUser();
   const [Sport] = useState(2); // 2 = NFL, 7 = UFC
   const [nflTeams] = useTeams(2, 2020); // args = (sport_id, season_year)
+  const [dbSchedule] = useSchedule(2, 2020); // args = (sport_id, season_year)
   const [userPicks, setUserPicks] = useState([]);
   const [teamsOnBye, setTeamsOnBye] = useState([]);
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
   const [lockDate, setLockDate] = useState(undefined);
   const [allPicked, setAllPicked] = useState(false);
-  const dbSchedule = Store((s) => s.schedule);
   // const dbSchedule = Store((s) => s.schedule_alt);
   const week = Store((s) => s.week) || Store.getState().currentWeek; // Store.week initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser); // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId);
   const [playerPicks] = getPlayerPicks(selectedUserId || user?._id);
 
+  // load schedule into global store when received from db
+  useEffect(() => {}, [dbSchedule]);
+
   // on week, dbschedule set
   useEffect(() => {
     if (!dbSchedule && !week) return;
+
     var scheduledTeams = [];
     var sunday;
     // filter out the desired week
@@ -57,6 +62,10 @@ function Weeks() {
     });
 
     if (filteredEvents && filteredEvents.length > 0 && nflTeams) {
+      // sort by event date
+      filteredEvents.sort(
+        (a, b) => new Date(a.event_date) - new Date(b.event_date)
+      );
       // find teams on bye
       // when team is NOT in the scheduledteams list put together during week filtering
       const byeteams = nflTeams.filter(
