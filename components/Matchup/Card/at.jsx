@@ -3,7 +3,6 @@ import { Grid, Segment } from "semantic-ui-react";
 import MatchupDivider from "../Divider";
 import Tiebreaker from "../../Tiebreaker";
 import Style from "./Card.module.css";
-import Store from "../../../lib/stores/FootballPool";
 import { toast } from "react-toastify";
 import { Image, Transformation, CloudinaryContext } from "cloudinary-react";
 
@@ -22,7 +21,6 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const initToast = React.useRef(null);
   const lockedToast = React.useRef(null);
   const loginToPickToast = React.useRef(null);
-  const nflTeams = Store((s) => s.teams);
 
   useEffect(() => {
     setSport(matchup.sport_id);
@@ -76,8 +74,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     }
   }, [matchup, lockDate]);
 
-  const buildTeamCard = (val) => {
-    let team = nflTeams.find((t) => t.team_id === val);
+  const buildTeamCard = (team) => {
+    // let team = nflTeams?.find((t) => t.team_id === val);
     return (
       <Grid.Column
         color={selectedTeam?.team_id === team.team_id ? "black" : null}
@@ -97,13 +95,20 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         <CloudinaryContext cloudName="fwscloud">
           {/* hosting the images on cloudinary */}
           <Image
+            loading="lazy"
             publicId={`NFL-Team_logos/${
               sport === 2 ? team.abbreviation : "nfl"
             }.png`}
             alt={`${team.abbreviation}'s team logo`}
             id="team-logo-img"
           >
-            <Transformation width="250" crop="scale" />
+            <Transformation
+              quality="auto"
+              fetchFormat="auto"
+              height="225"
+              width="225"
+              crop="scale"
+            />
           </Image>
         </CloudinaryContext>
         {/* team name  */}
@@ -158,9 +163,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       }
       return;
     }
-    const teamSelection = nflTeams.find(
-      (t) => t.team_id === Number(event.currentTarget.dataset.team_id)
-    );
+    const selectedTeamId = Number(event.currentTarget.dataset.team_id);
 
     // initializing the toast
     initToast.current = toast.info(
@@ -176,8 +179,11 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     let pick = {
       event_id: matchup.event_id,
       event_date: matchup.event_date,
-      selected_team: teamSelection,
-      selected_team_id: Number(event.currentTarget.dataset.team_id),
+      selected_team:
+        selectedTeamId === matchup.away_team_id
+          ? matchup.away_team
+          : matchup.home_team,
+      selected_team_id: selectedTeamId,
       matchup: matchup,
     };
     const res = await fetch("/api/picks", {
@@ -229,7 +235,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             takes in specific team Obj containing abbr, name, mascot, and more  */}
             {
               // away team
-              buildTeamCard(matchup.away_team_id)
+              buildTeamCard(matchup.away_team)
             }
             {/* // this divider has slight changes // varied on the sport type
           (i.e.american football vs mma) */}
@@ -242,7 +248,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             />
             {
               // home team
-              buildTeamCard(matchup.home_team_id)
+              buildTeamCard(matchup.home_team)
             }
           </Grid>
         </Segment>
