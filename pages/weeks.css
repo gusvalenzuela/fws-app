@@ -41,17 +41,20 @@
   padding: 0.5rem !important;
 }
 .matchup-divider i {
-  /* margin: 0 auto 1rem !important; */
-  font-size: 3.6rem !important;
+  margin: 1.1rem 0.1rem !important;
+  font-size: 4rem !important;
+}
+.matchup-divider i.at {
+  font-size: 4.6rem !important;
 }
 .matchup-divider p {
   margin: 0;
 }
 
 .container-divider {
-  /* width: 600px; */
-  max-width: 55%;
-  margin: .5rem auto !important;
+  width: 55%;
+  max-width: 600px;
+  margin: 0.5rem auto !important;
 }
 /* @media screen and (max-width: 768px){
   .container-divider{
@@ -103,7 +106,10 @@
     font-size: 1.4rem !important;
   }
   .matchup-divider i {
-    font-size: 3rem !important;
+    font-size: 3.6rem !important;
+  }
+  .matchup-divider i.at {
+    font-size: 4rem !important;
   }
   .matchup-divider p {
     font-size: 0.9rem !important;
@@ -125,6 +131,9 @@
     font-size: 1.1rem !important;
   }
   .matchup-divider i {
+    font-size: 2.2rem !important;
+  }
+  .matchup-divider i.at {
     font-size: 2.6rem !important;
   }
   .matchup-divider p.divider-pick {
