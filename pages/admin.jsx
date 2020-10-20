@@ -20,14 +20,13 @@ const AdminPage = () => {
 
     // filter out the desired week
     let filteredEvents = dbSchedule?.events.filter(
-      (event) => event.week === week
+      (event) => event.week === week && event.season_type === "Regular Season"
     );
 
     if (filteredEvents && filteredEvents.length > 0) {
       setEvents(filteredEvents);
     }
   }, [week, dbSchedule]);
-
 
   if (!user || !user?.isAdmin) {
     return (
