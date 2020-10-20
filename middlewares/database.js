@@ -1,10 +1,12 @@
-import { MongoClient} from "mongodb";
+import { MongoClient } from "mongodb";
 // import Mongoose from "mongoose";
 // import { scheduleSchema } from "./schemas/index";
 
 const client = new MongoClient(process.env.MONGODB_URX, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  keepAlive: false,
+  keepAliveInitialDelay: 1000,
 });
 
 // const gooseClient = Mongoose.connect("mongodb://localhost:3000/fwsDBTest", {
@@ -31,5 +33,6 @@ export default async function database(req, res, next) {
   req.dbClient = client;
   req.db = client.db(process.env.DB_NAME);
   await setUpDb(req.db);
+
   return next();
 }
