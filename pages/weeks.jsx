@@ -6,7 +6,7 @@ import React, { useState, useEffect } from "react";
 import { Divider, Loader, Dimmer, Dropdown, Header } from "semantic-ui-react";
 import {
   useCurrentUser,
-  getPlayerPicks,
+  // getPlayerPicks,
   useUser,
   // useTeams,
   // useSchedule,
@@ -18,19 +18,19 @@ import { Image, Transformation, CloudinaryContext } from "cloudinary-react";
 function Weeks() {
   const [user] = useCurrentUser();
   const [Sport] = useState(2); // 2 = NFL, 7 = UFC
-
   const [userPicks, setUserPicks] = useState([]);
   const [teamsOnBye, setTeamsOnBye] = useState([]);
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
   const [lockDate, setLockDate] = useState(undefined);
   const [allPicked, setAllPicked] = useState(false);
+  const [weeklyRecord, setWeeklyRecord] = useState("0 - 0");
   const nflTeams = Store((s) => s.teams);
   const dbSchedule = Store((s) => s.schedule);
   const week = Store((s) => s.week) || Store.getState().currentWeek; // Store.week initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser); // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId);
-  const [playerPicks] = getPlayerPicks(selectedUserId || user?._id);
+  // const [playerPicks] = getPlayerPicks(selectedUserId || user?._id);
 
   // load schedule into global store when received from db
   // useEffect(() => {}, [dbSchedule]);
@@ -87,17 +87,30 @@ function Weeks() {
   useEffect(() => {
     // playerPicks default = current user
     // else selected user stored in state store
-    let currentPicks = playerPicks?.filter((p) =>
+    let currentPicks = selectedUser?.picks?.filter((p) =>
       p.matchup?.week === week ? p : null
     );
 
     setUserPicks(currentPicks);
     // set tiebreak match to last of the week's events
     setTiebreakMatch(events[events.length - 1]);
-  }, [events, playerPicks, Sport, selectedUser]);
+  }, [events, Sport, selectedUser]);
 
   // on userpicks set
   useEffect(() => {
+    // find how many of the user's picks (selected_tean) match the events winning team (line_.winner)
+    var wins = userPicks?.filter((p) => {
+      let w = events.findIndex(
+        (e) =>
+          e.event_id === p.event_id &&
+          e.line_?.winner === p.selected_team.team_id
+      );
+
+      return w != -1;
+    });
+    if (wins) {
+      setWeeklyRecord(`${wins.length} - ${userPicks.length - wins.length}`);
+    }
     if (userPicks?.length > 0 && userPicks?.length === events?.length) {
       setAllPicked(true);
     } else {
@@ -153,6 +166,7 @@ function Weeks() {
                   otherUser={
                     selectedUser?._id === user?._id ? false : selectedUser
                   }
+                  weeklyRecord={weeklyRecord}
                 />
               </span>
 

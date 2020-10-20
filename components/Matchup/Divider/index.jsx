@@ -4,7 +4,7 @@ import { Grid, Icon } from "semantic-ui-react";
 const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
   return (
     <Grid.Column
-      onClick={() => console.log(matchup)}
+      // onClick={() => console.log(matchup)}
       key={"versus"}
       width="3"
       textAlign="center"
@@ -62,7 +62,7 @@ const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
           selectedTeam ? (
           <Icon name="close" color="red" />
         ) : (
-          <Icon name="minus" color="grey" />
+          isPastEvent && <Icon name="minus" color="grey" />
         )
       }
     </Grid.Column>

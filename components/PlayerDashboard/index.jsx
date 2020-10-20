@@ -1,7 +1,14 @@
 import React from "react";
 import Store from "../../lib/stores/FootballPool";
 
-const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
+const PlayerDashboard = ({
+  user,
+  msg,
+  otherUser,
+  allPicked,
+  lockDate,
+  weeklyRecord,
+}) => {
   return (
     <>
       <style jsx>
@@ -29,6 +36,12 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
             text-align: left;
             font-weight: 900;
             color: #fff70f;
+          }
+          .player-container.picked p.picks-record {
+            color: #000;
+          }
+          .player-container p.picks-record {
+            color: #fff;
           }
           .player-container.other-user {
             background: #213ab8dd;
@@ -76,20 +89,19 @@ const PlayerDashboard = ({ user, msg, otherUser, allPicked, lockDate }) => {
                   All this week's matchups have been selected.
                 </p>
               ) : (
-                <p className="picks-remaining">
-                  {
-                  // 
-                  `${
-                    Date.now() >= lockDate
-                      ? "RECORD: 0-0"
-                      : "Picks locked at the scheduled time of the first Sunday Game"
-                  }`}
-                </p>
+                Date.now() <= lockDate && (
+                  <p className="picks-remaining">
+                    Picks locked at the scheduled time of the first Sunday Game
+                  </p>
+                )
               )
             }
-
-         
           </>
+        )}
+        {Date.now() >= lockDate && (
+          <p className="picks-record">
+            Record this week: <b>{weeklyRecord}</b>
+          </p>
         )}
 
         {/* msg received on count of picks left to make*/}
