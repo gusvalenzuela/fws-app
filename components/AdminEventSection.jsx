@@ -163,7 +163,7 @@ const AdminEventSection = ({ event }) => {
 
         <form id={`score-form-${event.event_id}`} onSubmit={handleScoreSubmit}>
           <span>
-            {event.away_team || "Away Team"}{" "}
+            {event.away_team?.abbreviation || "Away Team"}{" "}
             <input
               placeholder="Score"
               required
@@ -175,7 +175,7 @@ const AdminEventSection = ({ event }) => {
             />
           </span>
           <span>
-            {event.home_team || "Home Team"}{" "}
+            {event.home_team?.abbreviation || "Home Team"}{" "}
             <input
               required
               placeholder="Score"
@@ -203,20 +203,20 @@ const AdminEventSection = ({ event }) => {
         <form id={`line-form-${event.event_id}`} onSubmit={handleLineSubmit}>
           <p>Set Favorite:</p>
           <span>
-            <label htmlFor={`${event.away_team}`}>
-              {`${event.away_team}`}
+            <label htmlFor={`${event.away_team?.abbreviation}`}>
+              {`${event.away_team?.abbreviation}`}
               <input
-                id={`favteam-${event.away_team}`}
+                id={`favteam-${event.away_team?.abbreviation}`}
                 value={`${event.away_team_id}`}
                 name="favorite-team"
                 type="radio"
                 defaultChecked={event.line_?.favorite === event.away_team_id}
               />
             </label>
-            <label htmlFor={`${event.home_team}`}>
-              {`${event.home_team}`}
+            <label htmlFor={`${event.home_team?.abbreviation}`}>
+              {`${event.home_team?.abbreviation}`}
               <input
-                id={`${event.home_team}`}
+                id={`${event.home_team?.abbreviation}`}
                 value={`${event.home_team_id}`}
                 name="favorite-team"
                 type="radio"
@@ -230,7 +230,7 @@ const AdminEventSection = ({ event }) => {
               <input
                 placeholder="ex. 0.5"
                 // required
-                id={`pointspread-${event.away_team}`}
+                id={`pointspread-${event.away_team?.abbreviation}`}
                 name="point-spread"
                 type="number"
                 max={999.5}
