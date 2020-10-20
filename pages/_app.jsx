@@ -9,7 +9,8 @@ import { ToastContainer } from "react-toastify";
 import Store from "../lib/stores/FootballPool";
 import Menubar from "../components/Menubar";
 import Footer from "../components/Footer";
-import { Loader, Dimmer } from "semantic-ui-react";
+// import { Loader, Dimmer } from "semantic-ui-react";
+import { useTeams, useSchedule } from "../lib/hooks";
 import { week_start_days as weekStartDates } from "../lib/stores/startDays.json";
 import "./_app.css";
 import "semantic-ui-css/semantic.min.css";
@@ -17,6 +18,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 // This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
+  const [nflTeams] = useTeams(2, 2020); // args = (sport_id, season_year)
+  const [dbSchedule] = useSchedule(2, 2020); // args = (sport_id, season_year)
   // on mount
   useEffect(() => {
     // Start the pooled timer which runs every 1 second(s)
@@ -29,9 +32,23 @@ export default function MyApp({ Component, pageProps }) {
       (date) => Date.parse(date) > Date.now()
     );
     // use that startDate to mark the week shown when the user first logs in
-    Store.setState({ currentWeek: startDateIndex + 1 });
-    Store.setState({ Moment: Moment });
+    Store.setState({
+      currentWeek: startDateIndex + 1,
+      Moment: Moment,
+      teams: nflTeams,
+    });
+    // Store.setState({ Moment: Moment });
   }, []);
+  // on nflTeams
+  useEffect(() => {
+    if (!nflTeams) return;
+    Store.setState({ teams: nflTeams });
+  }, [nflTeams]);
+  // on schedule
+  useEffect(() => {
+    if (!dbSchedule) return;
+    Store.setState({ schedule: dbSchedule });
+  }, [dbSchedule]);
 
   return (
     <>

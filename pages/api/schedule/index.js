@@ -6,9 +6,9 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.patch(async (req, res) => {
-  if (!req.user?.isAdmin) {
-    return res.status(401).send("unauthenticated");
-  }
+  // if (!req.user?.isAdmin) {
+  //   return res.status(401).send("unauthenticated");
+  // }
   // req.body = JSON.parse(req.body); // body is Stringified on the PATCH request
   // console.log(req.body);
   let events = req.body;
@@ -25,6 +25,13 @@ handler.patch(async (req, res) => {
         $set: {
           "events.$.event_date": e.date_event,
           "events.$.week": e.week,
+          "events.$.week_name": e.week_name,
+          "events.$.event_name": e.event_name,
+          "events.$.week_detail": e.week_detail,
+          "events.$.away_score": e.away_score,
+          "events.$.home_score": e.home_score,
+          "events.$.event_status": e.event_status,
+          "events.$.event_status_detail": e.event_status_detail,
         },
       };
       const updateOptions = {

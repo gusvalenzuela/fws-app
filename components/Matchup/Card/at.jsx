@@ -110,14 +110,15 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
               crop="fit"
             />
           </Image>
+          <h3>
+            {team.name}
+            <br />
+            {team.mascot === "Redskins" ? "Football Team" : team.mascot}
+          </h3>
         </CloudinaryContext>
         {/* team name  */}
         {/* <h4>{`$ $`}</h4> */}
-        <h4>
-          {team.name}
-          <br />
-          {team.mascot === "Redskins" ? "Football Team" : team.mascot}
-        </h4>
+
         {/* Line spread */}
         <p
           style={{
@@ -254,9 +255,10 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
           </Grid>
         </Segment>
         <Segment
-          // color="grey"
-          inverted={isPastEvent}
-          secondary={!isPastEvent}
+          color="black"
+          inverted
+          // secondary={!isPastEvent}
+          tertiary={isPastEvent}
           attached="bottom"
           textAlign="center"
           size="mini"
@@ -271,7 +273,9 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
                     <h3>{matchup.away_score}</h3>
                   </Grid.Column>
                   <Grid.Column width={3}>
-                    <span style={{ fontSize: "medium" }}>FINAL</span>
+                    <span style={{ fontSize: "medium" }}>
+                      {matchup.event_status_detail.toUpperCase() || "FINAL"}
+                    </span>
                   </Grid.Column>
                   <Grid.Column>
                     <h3>{matchup.home_score}</h3>

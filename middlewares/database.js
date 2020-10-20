@@ -1,18 +1,30 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient} from "mongodb";
+// import Mongoose from "mongoose";
+// import { scheduleSchema } from "./schemas/index";
 
 const client = new MongoClient(process.env.MONGODB_URX, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
+// const gooseClient = Mongoose.connect("mongodb://localhost:3000/fwsDBTest", {
+//   useNewUrlParser: true,
+// });
+
 export async function setUpDb(db) {
-  db.collection('tokens').createIndex(
+  db.collection("tokens").createIndex(
     { expireAt: -1 },
-    { expireAfterSeconds: 0 },
+    { expireAfterSeconds: 0 }
   );
-  db.collection('picks').createIndex({ createdAt: -1 });
-  db.collection('users').createIndex({ email: 1, username: 1 }, { unique: true });
+  db.collection("picks").createIndex({ createdAt: -1 });
+  db.collection("users").createIndex(
+    { email: 1, username: 1 },
+    { unique: true }
+  );
 }
+// export async function setUpMongooseDb(db) {
+//   const Kitten = mongoose.model('Kitten', kittySchema);
+// }
 
 export default async function database(req, res, next) {
   if (!client.isConnected()) await client.connect();

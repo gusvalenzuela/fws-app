@@ -1,24 +1,29 @@
 import useSWR from "swr";
 import fetcher from "./fetch";
 
-// const fetcher = (url) => fetch(url).then((r) => r.json());
+const swrOptions = {
+  revalidateOnFocus: false,
+};
 
 export function getPlayerPicks(userId) {
   const { data, error } = useSWR(`/api/picks/${userId}`, fetcher, {
     shouldRetryOnError: false,
+    revalidateOnFocus: false,
   });
   const picks = data ? data.picks : null;
   return [picks];
 }
 export function useSchedule(sport, season) {
-  const { data } = useSWR(`/api/schedule/${sport}&${season}`, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data } = useSWR(
+    `/api/schedule/${sport}&${season}`,
+    fetcher,
+    swrOptions
+  );
   const schedule = data ? data.schedule : null;
   return [schedule];
 }
 export function useTeams(sport, season) {
-  const { data } = useSWR(`/api/teams/${sport}&${season}`, fetcher);
+  const { data } = useSWR(`/api/teams/${sport}&${season}`, fetcher, swrOptions);
   const teams = data ? data.teams : null;
   return [teams];
 }
@@ -36,8 +41,6 @@ export function getAllUsers() {
 }
 
 export function useUser(id) {
-  const { data } = useSWR(`/api/users/${id}`, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data } = useSWR(`/api/users/${id}`, fetcher, swrOptions);
   return data ? data.user : null;
 }

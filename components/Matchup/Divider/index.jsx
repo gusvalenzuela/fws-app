@@ -45,7 +45,10 @@ const MatchupDivider = ({
         name={`${sport === 7 ? "handshake" : "at"}`}
       />
       {!isPastEvent ? (
-        <p className="divider-pick" style={{ marginTop: ".5rem" }}>
+        <p
+          className="divider-pick"
+          style={{ marginTop: ".5rem", fontSize: "1.12rem" }}
+        >
           {selectedTeam
             ? selectedTeam.team_id == matchup.away_team_id
               ? `◀ ${selectedTeam.abbreviation}  `
@@ -60,8 +63,7 @@ const MatchupDivider = ({
         // determine if pick is a winner or not
         isPastEvent && pickWinner === selectedTeam?.team_id ? (
           <Icon name="check" color="green" size="huge" />
-        ) : isPastEvent &&
-          matchup.event_status === "STATUS_FINAL" ? (
+        ) : isPastEvent && matchup.event_status === "STATUS_FINAL" ? (
           <Icon name="close" color="red" size="huge" />
         ) : null
       }

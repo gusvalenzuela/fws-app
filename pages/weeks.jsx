@@ -8,8 +8,8 @@ import {
   useCurrentUser,
   getPlayerPicks,
   useUser,
-  useTeams,
-  useSchedule,
+  // useTeams,
+  // useSchedule,
 } from "../lib/hooks";
 import Store from "../lib/stores/FootballPool";
 import { generateNumbersArray } from "../lib/utils";
@@ -18,26 +18,26 @@ import { Image, Transformation, CloudinaryContext } from "cloudinary-react";
 function Weeks() {
   const [user] = useCurrentUser();
   const [Sport] = useState(2); // 2 = NFL, 7 = UFC
-  const [nflTeams] = useTeams(2, 2020); // args = (sport_id, season_year)
-  const [dbSchedule] = useSchedule(2, 2020); // args = (sport_id, season_year)
+
   const [userPicks, setUserPicks] = useState([]);
   const [teamsOnBye, setTeamsOnBye] = useState([]);
   const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
   const [lockDate, setLockDate] = useState(undefined);
   const [allPicked, setAllPicked] = useState(false);
-  // const dbSchedule = Store((s) => s.schedule_alt);
+  const nflTeams = Store((s) => s.teams);
+  const dbSchedule = Store((s) => s.schedule);
   const week = Store((s) => s.week) || Store.getState().currentWeek; // Store.week initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser); // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId);
   const [playerPicks] = getPlayerPicks(selectedUserId || user?._id);
 
   // load schedule into global store when received from db
-  useEffect(() => {}, [dbSchedule]);
+  // useEffect(() => {}, [dbSchedule]);
 
   // on week, dbschedule set
   useEffect(() => {
-    if (!dbSchedule && !week) return;
+    // if (!dbSchedule && !week) return;
 
     var scheduledTeams = [];
     var sunday;
@@ -121,12 +121,8 @@ function Weeks() {
               <br />
               {
                 // "2020 Regular Season"
-                events?.length > 0 &&
-                  `${
-                    events[0].season_year || events[0].schedule?.season_year
-                  } ${
-                    events[0].season_type || events[0].schedule?.season_type
-                  }: `
+
+                `${events[0].season_year} ${events[0].season_type}: `
               }
               {
                 // "Week 2" [Dropdown]
