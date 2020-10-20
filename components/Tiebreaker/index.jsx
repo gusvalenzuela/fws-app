@@ -8,6 +8,7 @@ const Tiebreaker = ({
   awayteam,
   tiebreaker,
   setTiebreaker,
+  finalTiebreaker,
   user,
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -135,15 +136,14 @@ const Tiebreaker = ({
         (
         {`Total points scored in ${awayteam.abbreviation} vs. ${hometeam.abbreviation} game`}
         )
-        <span
+        <p
           style={{
-            display: `${
-              "check if MNF || tiebreaker game is finished" ? "none" : "none"
-            }`,
+            display: `${!finalTiebreaker && "none"}`,
+            color: "red",
           }}
         >
-          Actual Tiebreaker{`tiebreakerscore`}
-        </span>
+          Actual Tiebreaker <b>{finalTiebreaker}</b>
+        </p>
         <br />
       </div>
     </>
