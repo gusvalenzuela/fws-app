@@ -15,7 +15,6 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     (matchup.event_status && matchup.event_status === "STATUS_FINAL") ||
       Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   );
-  const [pickWinner, setPickWinner] = useState(undefined);
   const [isLocked, setisLocked] = useState(true);
   const [tiebreaker, setTiebreaker] = useState(null);
   const initToast = React.useRef(null);
@@ -54,24 +53,6 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
         ? "after lock date"
         : false
     );
-    // find a pick winner (winning team including the spread)
-    if (matchup.event_status === "STATUS_FINAL") {
-      var homeTeam = matchup.home_team_id;
-      var awayTeam = matchup.away_team_id;
-      var homeScore = matchup.home_score;
-      var awayScore = matchup.away_score;
-      if (matchup.line_?.favorite === homeTeam) {
-        // if the home team is the favorite
-        // add the point spread (negative num) to the away_team (underdog)
-        awayScore = awayScore - matchup.line_?.point_spread;
-      } else {
-        // the away team is the favorite
-        // add the point spread (negative num) to the home_team (underdog)
-        homeScore = homeScore - matchup.line_?.point_spread;
-      }
-      // determine who won
-      homeScore > awayScore ? setPickWinner(homeTeam) : setPickWinner(awayTeam);
-    }
   }, [matchup, lockDate]);
 
   const buildTeamCard = (team) => {
@@ -246,7 +227,6 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
               selectedTeam={selectedTeam}
               matchup={matchup}
               sport={sport}
-              pickWinner={pickWinner}
             />
             {
               // home team
