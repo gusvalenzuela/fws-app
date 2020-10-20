@@ -12,7 +12,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   // is past event when it has a score obj with final confirmed, or 5 hours have passed after event start
   const [isPastEvent] = useState(
-    matchup.scores?.final === true ||
+    (matchup.event_status && matchup.event_status === "STATUS_FINAL") ||
       Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   );
   const [pickWinner, setPickWinner] = useState(undefined);
@@ -310,6 +310,11 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
             event_id={matchup.event_id}
             hometeam={matchup.home_team}
             awayteam={matchup.away_team}
+            finalTiebreaker={
+              matchup.event_status === "STATUS_FINAL"
+                ? matchup.away_score + matchup.home_score
+                : undefined
+            }
           />
         )}
       </div>
