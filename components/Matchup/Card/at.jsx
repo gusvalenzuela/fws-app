@@ -49,7 +49,7 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       Date.parse(matchup.event_date) < Date.now()
         ? "past"
         : Date.parse(matchup.event_date) >= lockDate &&
-          lockDate < Date.now() + 1000 * 60 * 60 * 2
+          lockDate < Date.now() + 1000 * 60 * 60 * 24 * 2
         ? "after lock date"
         : false
     );
