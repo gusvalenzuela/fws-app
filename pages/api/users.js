@@ -6,6 +6,16 @@ import { nanoid } from "nanoid";
 import middleware from "../../middlewares/middleware";
 import { extractUser } from "../../lib/api-helpers";
 
+const options = {
+  // Include only the `_id`, `name`, and `emailverified` fields in each returned document
+  // (one of, not both), {'a':1, 'b': 1} or {'a': 0, 'b': 0}
+  projection: {
+    _id: 1,
+    name: 1,
+    emailVerified: 1,
+  },
+};
+
 const handler = nextConnect();
 
 handler.use(middleware);
@@ -48,17 +58,26 @@ handler.post(async (req, res) => {
 
 handler.get(async ({ user, db }, res) => {
   // if (!user) res.send({ users: "Unauthenticated" });
-  const options = {
-    // Include only the `_id`, `name`, and `emailverified` fields in each returned document
-    // (one of, not both), {'a':1, 'b': 1} or {'a': 0, 'b': 0}
-    projection: {
-      _id: 1,
-      name: 1,
-      emailVerified: 1,
-    },
-  };
-  const users = await db.collection("users").find({}, options).toArray();
-  const picks = await db.collection("picks").find({}).toArray();
+
+  const users = await db
+    .collection("users")
+    .aggregate([
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "pickz",
+          localField: "_id",
+          foreignField: "userId",
+          as: "picks",
+        },
+      },
+    ])
+    .toArray();
 
   // sort alphabetically by name
   users.sort((a, b) => {
@@ -71,23 +90,7 @@ handler.get(async ({ user, db }, res) => {
     return 0;
   });
 
-  // mapping each picks Array to its respective player
-  const allData = users.map((user) => {
-    // filtering out picks that match the user iD
-    let userPicks = picks.filter((pick) => {
-      if (pick.userId !== user._id) {
-        return null;
-      }
-      return pick;
-    });
-
-    // add userPicks array to the user obj
-    user.picks = userPicks;
-
-    return user;
-  });
-
-  res.status(200).json({ users: allData });
+  res.status(200).json({ users: users });
 });
 
 export default handler;
