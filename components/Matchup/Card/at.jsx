@@ -43,20 +43,18 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     // determine locked-pick status
     // if the event date is in the past, then locked is true
     /* if event date is on or after the first Sunday game start of the viewed week
-    AND it's not a past event (i.e. between Sunday Morning + 2 days to cover Monday's game)
+      AND the lockdate is in the past (changes after first Sunday begins)
      */
     setisLocked(
       Date.parse(matchup.event_date) < Date.now()
         ? "past"
-        : Date.parse(matchup.event_date) >= lockDate &&
-          lockDate < Date.now() + 1000 * 60 * 60 * 24 * 2
+        : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now()
         ? "after lock date"
         : false
     );
   }, [matchup, lockDate]);
 
   const buildTeamCard = (team) => {
-    // let team = nflTeams?.find((t) => t.team_id === val);
     return (
       <Grid.Column
         color={selectedTeam?.team_id === team.team_id ? "black" : null}
@@ -160,14 +158,24 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
     setIsUpdating(true);
 
     let pick = {
+      sport_id: matchup.sport_id,
       event_id: matchup.event_id,
       event_date: matchup.event_date,
+      season_year: matchup.season_year,
+      season_type: matchup.season_type,
+      week: matchup.week,
       selected_team:
         selectedTeamId === matchup.away_team_id
           ? matchup.away_team
           : matchup.home_team,
-      selected_team_id: selectedTeamId,
-      matchup: matchup,
+      matchup: {
+        away_team_id: matchup.away_team_id,
+        home_team_id: matchup.home_team_id,
+        line_: {
+          point_spread: matchup.line_?.point_spread,
+          favorite: matchup.line_?.favorite,
+        },
+      },
     };
     const res = await fetch("/api/picks", {
       method: "PATCH",
@@ -181,11 +189,10 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       // PATCH /api/picks returns the updated pick
       setSelectedTeam(pick.selected_team);
       // updating the toast alert and setting the autoclose
-
       toast.update(initToast.current, {
         render: (
           <>
-            Week {pick.matchup.week} pick updated to{" "}
+            Week {pick.matchup?.week || pick.week} pick updated to{" "}
             {pick.selected_team.abbreviation}.
             <br />
             <b style={{ fontSize: "small" }}>Good luck! 🎉</b>
