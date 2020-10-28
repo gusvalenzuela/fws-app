@@ -22,11 +22,6 @@ export function useSchedule(sport, season) {
   const schedule = data ? data.schedule : null;
   return [schedule];
 }
-export function useTeams(sport, season) {
-  const { data } = useSWR(`/api/teams/${sport}&${season}`, fetcher, swrOptions);
-  const teams = data ? data.teams : null;
-  return [teams];
-}
 
 export function useCurrentUser() {
   const { data, mutate } = useSWR("/api/user", fetcher);
@@ -44,3 +39,9 @@ export function useUser(id) {
   const { data } = useSWR(`/api/users/${id}`, fetcher, swrOptions);
   return data ? data.user : null;
 }
+
+// export function useTeams(sport, season) {
+//   const { data } = useSWR(`/api/teams/${sport}&${season}`, fetcher, swrOptions);
+//   const teams = data ? data.teams : null;
+//   return [teams];
+// }
