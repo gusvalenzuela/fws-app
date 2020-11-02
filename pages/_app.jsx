@@ -10,7 +10,6 @@ import Store from "../lib/stores/FootballPool";
 import Menubar from "../components/Menubar";
 import Footer from "../components/Footer";
 // import { Loader, Dimmer } from "semantic-ui-react";
-import { useSchedule } from "../lib/hooks";
 import { week_start_days as weekStartDates } from "../lib/stores/startDays.json";
 import "./_app.css";
 import "semantic-ui-css/semantic.min.css";
@@ -18,7 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
-  const [dbSchedule] = useSchedule(2, 2020); // args = (sport_id, season_year)
+ 
   // on mount
   useEffect(() => {
     // Start the pooled timer which runs every 1 second(s)
@@ -38,14 +37,6 @@ export default function MyApp({ Component, pageProps }) {
     // Store.setState({ Moment: Moment });
   }, []);
 
-  // on schedule
-  useEffect(() => {
-    if (!dbSchedule) return;
-    Store.setState({
-      schedule: { events: dbSchedule.events },
-      teams: dbSchedule.teams && dbSchedule.teams[0].teams,
-    });
-  }, [dbSchedule]);
 
   return (
     <>

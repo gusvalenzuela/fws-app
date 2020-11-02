@@ -4,41 +4,43 @@ import TimeDisplay from "../components/TimeDisplay";
 import PlayerDashboard from "../components/PlayerDashboard";
 import React, { useState, useEffect } from "react";
 import { Divider, Loader, Dimmer, Dropdown, Header } from "semantic-ui-react";
-import {
-  useCurrentUser,
-  // getPlayerPicks,
-  useUser,
-  // useTeams,
-  // useSchedule,
-} from "../lib/hooks";
+import { useCurrentUser, useUser } from "../lib/hooks";
 import Store from "../lib/stores/FootballPool";
 import { generateNumbersArray } from "../lib/utils";
 import { Image, Transformation, CloudinaryContext } from "cloudinary-react";
+import { getSchedule } from "../lib/db";
+import middleware from "../middlewares/middleware";
 
-function Weeks() {
+function Weeks({ sched }) {
   const [user] = useCurrentUser();
   const [Sport] = useState(2); // 2 = NFL, 7 = UFC
   const [userPicks, setUserPicks] = useState([]);
   const [teamsOnBye, setTeamsOnBye] = useState([]);
-  const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [events, setEvents] = useState([]);
+  const [tiebreakMatch, setTiebreakMatch] = useState(false);
   const [lockDate, setLockDate] = useState(undefined);
   const [allPicked, setAllPicked] = useState(false);
   const [weeklyRecord, setWeeklyRecord] = useState("0 - 0");
+  // Stored variables
   const nflTeams = Store((s) => s.teams);
   const dbSchedule = Store((s) => s.schedule);
   const week = Store((s) => s.week) || Store.getState().currentWeek; // Store.week initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser); // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
-  const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId);
-  // const [playerPicks] = getPlayerPicks(selectedUserId || user?._id);
-
-  // load schedule into global store when received from db
-  // useEffect(() => {}, [dbSchedule]);
-
+  // LAST
+  const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId); // place last as it looks for user._id when no selected user found
+  const cleanup = (stuff) => stuff;
+  // on mount
+  useEffect(() => {
+    var preloadedSchedule = JSON.parse(sched); // 
+    Store.setState({
+      schedule: { events: preloadedSchedule.events },
+      teams: preloadedSchedule.teams && preloadedSchedule.teams[0].teams,
+    });
+    return cleanup;
+  }, []);
   // on week, dbschedule set
   useEffect(() => {
-    // if (!dbSchedule && !week) return;
-
+    if (!dbSchedule && !week) return;
     var scheduledTeams = [];
     var sunday;
     // filter out the desired week
@@ -62,10 +64,6 @@ function Weeks() {
     });
 
     if (filteredEvents && filteredEvents.length > 0 && nflTeams) {
-      // sort by event date
-      filteredEvents.sort(
-        (a, b) => new Date(a.event_date) - new Date(b.event_date)
-      );
       // find teams on bye
       // when team is NOT in the scheduledteams list put together during week filtering
       const byeteams = nflTeams.filter(
@@ -79,25 +77,29 @@ function Weeks() {
         setLockDate(sunday);
       }
 
-      setEvents(filteredEvents);
+      return cleanup(setEvents(filteredEvents));
     }
-  }, [week, dbSchedule, nflTeams]);
+  }, [week, dbSchedule, nflTeams, Sport]);
 
   // on events set
   useEffect(() => {
     // playerPicks default = current user
     // else selected user stored in state store
-    let currentPicks = selectedUser?.picks?.filter((p) =>
-      p.matchup?.week === week ? p : null
+    let currentPicks = selectedUser?.picks?.filter(
+      (p) => p.matchup?.week === week || p.week === week
     );
+
+    console.log(currentPicks)
 
     setUserPicks(currentPicks);
     // set tiebreak match to last of the week's events
     setTiebreakMatch(events[events.length - 1]);
-  }, [events, Sport, selectedUser]);
+    return cleanup;
+  }, [events, selectedUser]);
 
   // on userpicks set
   useEffect(() => {
+    if (!userPicks) return;
     // find how many of the user's picks (selected_tean) match the events winning team (line_.winner)
     var wins = userPicks?.filter((p) => {
       let w = events.findIndex(
@@ -111,12 +113,21 @@ function Weeks() {
     if (wins) {
       setWeeklyRecord(`${wins.length} - ${userPicks.length - wins.length}`);
     }
-    if (userPicks?.length > 0 && userPicks?.length === events?.length) {
+    // find pick associated with each event in week
+    // return the index
+    var eventsPicked = events.map((e) =>
+      userPicks.findIndex((p) => p.event_id === e.event_id)
+    );
+    // if no pick found for an event (i.e. user has not picked for the event yet) findIndex return -1
+    // see if the above return each event with a pick association
+    let allPicked = eventsPicked.every((p) => p >= 0);
+    if (userPicks?.length > 0 && allPicked) {
       setAllPicked(true);
     } else {
       setAllPicked(false);
     }
-  }, [userPicks, events]);
+    return cleanup;
+  }, [userPicks]);
 
   // console.log(`events this week ${week}`, events);
 
@@ -297,3 +308,16 @@ function Weeks() {
 }
 
 export default Weeks;
+
+export async function getServerSideProps(context) {
+  await middleware.apply(context.req, context.res);
+  const sched = JSON.stringify(await getSchedule(context.req, `2&2020`));
+  if (!sched) {
+    context.res.statusCode = 404;
+  }
+  return {
+    props: {
+      sched,
+    }, // will be passed to the page component as props
+  };
+}

@@ -86,7 +86,7 @@ const PlayerDashboard = ({
               // find count of all selected teams on screen (i.e. picks made)
               allPicked ? (
                 <p className="all-picked">
-                  All this week's matchups have been selected.
+                  All this week's matchups have been selected. Good luck!
                 </p>
               ) : (
                 Date.now() <= lockDate && (
