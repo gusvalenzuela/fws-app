@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from "react";
 import { Grid, Segment } from "semantic-ui-react";
 import MatchupDivider from "../Divider";
@@ -121,6 +122,8 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
   };
 
   const handleTeamSelection = async (event) => {
+    const selectedTeamId = Number(event.currentTarget.dataset.team_id);
+
     if (isUpdating) return toast.info("Still updating, please wait"); // wait for Mongo DB to respond
     if (isLocked) {
       // check to see to no similar toast is active (prevent dupes)
@@ -134,6 +137,13 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       }
       return;
     }
+    // set selected team even if no user logged in
+    // it is confirmed if pick is updated successfully
+    setSelectedTeam(
+      selectedTeamId === matchup.away_team_id
+        ? matchup.away_team
+        : matchup.home_team
+    );
     // if no signed in user, display message about logging in
     if (!user) {
       // check to see to no similar toast is active (prevent dupes)
@@ -144,7 +154,6 @@ const MatchupCardAt = ({ matchup, userPicks, user, tiebreak, lockDate }) => {
       }
       return;
     }
-    const selectedTeamId = Number(event.currentTarget.dataset.team_id);
 
     // initializing the toast
     initToast.current = toast.info(
