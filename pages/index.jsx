@@ -53,7 +53,7 @@ const HomePage = () => {
                 router.push("/weeks");
               }}
             >
-              See Demo Account
+              Use Demo Account
             </a>
           </div>
         </header>
