@@ -4,13 +4,20 @@ import { useCurrentUser } from "../lib/hooks";
 import Store from "../lib/stores/FootballPool";
 import { generateNumbersArray } from "../lib/utils";
 import { Dropdown } from "semantic-ui-react";
-
+const RUNDOWN_KEY = process.env.NEXT_PUBLIC_RUNDOWN_KEY;
 const AdminPage = () => {
-  const currentWeek = Store((s) => s.currentWeek);
+  // message, updating, error
+  const msgDefault = { message: "", isError: false };
+  const [msg, setMsg] = useState(msgDefault);
+  // const [isUpdating, setIsUpdating] = useState(false);
+  // Stored variables
   const dbSchedule = Store((s) => s.schedule);
+  // Fetches
   const [user] = useCurrentUser();
-  const [events, setEvents] = useState([]);
-  const [week, setWeek] = useState(currentWeek || 1);
+  // Other state
+  const [events, setEvents] = useState([]); // events held in state
+  const week = Store((s) => s.week || s.currentWeek); //
+
   // on week, dbschedule set
   useEffect(() => {
     // sort by event date
@@ -28,6 +35,53 @@ const AdminPage = () => {
     }
   }, [week, dbSchedule]);
 
+  const handlePickWinnerRefresh = async (evt) => {
+    evt.preventDefault();
+    setMsg({ ...msg, message: "disabled" });
+    let fromDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 3)
+      .toISOString()
+      .split("T")[0]; // date, 3 days ago
+    const rundownQuery = `https://therundown-therundown-v1.p.rapidapi.com/sports/2/schedule?from=${fromDate}&limit=${32}`;
+    const rundownHeaders = new Headers({
+      "x-rapidapi-host": "therundown-therundown-v1.p.rapidapi.com",
+      "x-rapidapi-key": RUNDOWN_KEY,
+    });
+    const rundownFetchOptions = {
+      headers: rundownHeaders,
+    };
+
+    try {
+      // grab events from the Rundown API
+      const rundownEvents = await fetch(rundownQuery, rundownFetchOptions).then(
+        async (r) => ({
+          events: await r.json(),
+          reqRemaining: r.headers.get("X-RateLimit-requests-Remaining"),
+        })
+      );
+
+      // patch the incoming rundown events into our DB
+      // don't need to return  anything
+      await fetch("/api/schedule", {
+        method: "PATCH",
+        body: JSON.stringify(rundownEvents.events.schedules),
+      }).then((r) => r);
+
+      // grab events from the DB
+      // (trick: while it retrieves FINAL events, it also determines a winner)
+      // [warning: make sure there's a betting line on the matchup!]
+      const savedEvents = await fetch("/api/schedule").then((r) => r.json());
+
+      // // then patch again, with newly determined winners
+      const results = await fetch("/api/schedule", {
+        method: "PATCH",
+        body: JSON.stringify(savedEvents),
+      });
+      setMsg({ ...msg, message: results.statusText });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (!user || !user?.isAdmin) {
     return (
       <>
@@ -43,9 +97,14 @@ const AdminPage = () => {
               <h1>Game scores:</h1>
             </header>
             <div className="page-content">
+              <form id="mark-winner" onClick={handlePickWinnerRefresh}>
+                <button type="submit" disabled={msg.message === "disabled"}>
+                  Update Pick Winners
+                </button>
+              </form>
               <Dropdown
                 className="week-dropdown"
-                onChange={(e, { value }) => setWeek(value)}
+                onChange={(e, { value }) => Store.setState({ week: value })}
                 options={generateNumbersArray(1, 17).map(
                   (num) => (num = { key: num, value: num, text: `Week ${num}` })
                 )}

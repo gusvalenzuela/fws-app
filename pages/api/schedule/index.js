@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import nextConnect from "next-connect";
 import middleware from "../../../middlewares/middleware";
 
@@ -82,9 +83,9 @@ handler.put(async (req, res) => {
   return res.status(200).json(addedWinner);
 });
 handler.get(async (req, res) => {
-  // if (!req.user?.isAdmin) {
-  //   return res.status(401).send("unauthenticated");
-  // }
+  if (!req.user?.isAdmin) {
+    return res.status(401).send("unauthenticated");
+  }
   // find events
   const schedule = await req.db.collection("schedule").findOne({
     RundownSportId: Number(2),
@@ -132,11 +133,11 @@ handler.patch(async (req, res) => {
   if (!req.user?.isAdmin) {
     return res.status(401).send("unauthenticated");
   }
-  // req.body = JSON.parse(req.body); // body is Stringified on the PATCH request
+  req.body = JSON.parse(req.body); // body is Stringified on the PATCH request
   // console.log(req.body);
   let events = req.body;
   let results = [];
-  await events.forEach(async (e) => {
+  events.forEach(async (e) => {
     try {
       // query needs to find the correct sport and within it the correct event in its events Array
       const query = {
