@@ -1,64 +1,74 @@
-import React from "react";
-import { Grid, Icon } from "semantic-ui-react";
+import React from 'react'
+import { Grid, Icon } from 'semantic-ui-react'
 
-const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
+const MatchupDivider = ({
+  matchup,
+  selectedTeam,
+  sport,
+  isPastEvent,
+  compactCards,
+}) => {
   return (
     <Grid.Column
       // onClick={() => console.log(matchup)}
-      key={"versus"}
+      key="versus"
       width="3"
       textAlign="center"
-      className="matchup-divider"
+      className={`matchup-divider ${compactCards && 'font8'}`}
       verticalAlign="middle"
+      id={compactCards && 'matchup-divider'}
     >
       {/* separating into multiple lines */}
-      <div style={{ fontSize: "1.12rem", marginBottom: "1.5rem" }}>
+      <div
+        style={{ fontSize: '1.12rem', marginBottom: '1.5rem', display: 'none' }}
+      >
         {/* Date */}
-        {/* <p>
-          {new Intl.DateTimeFormat("default", {
+        <p>
+          {new Intl.DateTimeFormat('default', {
             // year: "numeric",
-            month: "numeric",
-            day: "numeric",
+            month: 'numeric',
+            day: 'numeric',
             // dayPeriod: "short",
           }).format(new Date(matchup.event_date))}
-        </p> */}
+        </p>
         {/* Time */}
-        {/* <p>
-          {new Intl.DateTimeFormat("default", {
-            hour: "numeric",
-            minute: "2-digit",
-            timeZoneName: "short",
+        <p>
+          {new Intl.DateTimeFormat('default', {
+            hour: 'numeric',
+            minute: '2-digit',
+            timeZoneName: 'short',
             // dayPeriod: "short",
           }).format(new Date(matchup.event_date))}
-        </p> */}
+        </p>
       </div>
       {/* versus / at icon */}
       <Icon
-        style={{ marginBottom: "1rem" }}
+        style={{ marginBottom: '1rem' }}
         size="huge"
-        name={`${sport === 7 ? "handshake" : "at"}`}
+        name={`${sport === 7 ? 'handshake' : 'at'}`}
       />
       {!isPastEvent ? (
         <p
           className="divider-pick"
-          style={{ marginTop: ".5rem", fontSize: "1.12rem" }}
+          style={{ marginTop: '.5rem', fontSize: '1.12rem' }}
         >
           {selectedTeam
-            ? selectedTeam.team_id == matchup.away_team_id
+            ? selectedTeam.team_id === matchup.away_team_id
               ? `◀ ${selectedTeam.abbreviation}  `
               : `  ${selectedTeam.abbreviation} ▶`
-            : "◀ Pick ▶"}
+            : '◀ Pick ▶'}
         </p>
       ) : (
         <br />
       )}
 
       {
-        // determine if pick is a winner or not
+        // determine if user's pick is a winner
+        // eslint-disable-next-line no-underscore-dangle
         isPastEvent && matchup.line_?.winner === selectedTeam?.team_id ? (
           <Icon name="checkmark" color="green" />
         ) : isPastEvent &&
-          matchup.event_status === "STATUS_FINAL" &&
+          matchup.event_status === 'STATUS_FINAL' &&
           selectedTeam ? (
           <Icon name="close" color="red" />
         ) : (
@@ -66,7 +76,7 @@ const MatchupDivider = ({ matchup, selectedTeam, sport, isPastEvent }) => {
         )
       }
     </Grid.Column>
-  );
-};
+  )
+}
 
-export default MatchupDivider;
+export default MatchupDivider

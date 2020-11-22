@@ -9,6 +9,10 @@
   margin-top: -8px;
   margin-bottom: 8px;
 }
+.finalColumn {
+  color: #000;
+  font-weight: 900;
+}
 
 .teamContainer {
   text-align: center;
@@ -22,6 +26,14 @@
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   -webkit-animation-iteration-count: infinite;
+}
+.teamContainer img {
+  max-width: 100%;
+}
+.teamContainer > h3,
+.teamContainer > img,
+.teamContainer > p {
+  margin: auto;
 }
 /* animations  */
 @keyframes bounce {
