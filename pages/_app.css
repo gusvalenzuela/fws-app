@@ -1,8 +1,8 @@
 /* load any page css */
-@import "./index.css";
-@import "./weeks.css";
-@import "./info.css";
-@import "./signup.css";
+@import './index.css';
+@import './weeks.css';
+@import './info.css';
+@import './signup.css';
 :root {
   --main-white: #f2f2f2;
   --main-black: #020202;
@@ -22,33 +22,10 @@
 }
 html,
 body {
-  font-size: 14px;
+  font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   /* background: url(../images/what-the-hex-dark.png); */
-}
-
-.top.stackable.menu {
-  border-radius: 0 !important;
-  background-color: #1a1a1a !important;
-}
-/* .menu,
-.menu .item {
-  color: var(--main-white) !important;
-} */
-.right.menu button {
-  margin: 0.25rem;
-  border: none;
-  /* max-width: fit-content; */
-  background-color: #1b3094 !important;
-}
-.menu.transition.visible {
-  overflow: auto;
-  max-height: 200px;
-}
-.menubar-header {
-  padding: 1rem;
-  margin: 0 !important;
 }
 
 main {
@@ -73,7 +50,7 @@ div.loading {
   padding: 2rem;
 }
 .brand-name::after {
-  content: "Fun with Sports‼";
+  content: 'Fun with Sports‼';
 }
 .page-header,
 .page-content,
@@ -101,52 +78,6 @@ div.loading {
 .page-footer {
   padding: 1rem;
   margin: auto;
-}
-
-/* when pointer is a mouse (fine) */
-@media (hover: hover) and (pointer: fine) {
-  .menubar a:hover {
-    background-color: #ddd;
-    color: black;
-  }
-}
-
-.menubar a.active {
-  background-color: var(--base-warm-light);
-  color: white;
-}
-
-.menubar a.icon {
-  display: none;
-}
-@media screen and (max-width: 766px) {
-  .menubar a:not(:first-child) {
-    display: none;
-  }
-  .menubar a.icon {
-    position: absolute;
-    right: 7px;
-    top: 7px;
-    display: block;
-  }
-  .menubar.responsive {
-    position: relative;
-  }
-  .menubar.responsive .menu > a,
-  .menubar.responsive .menu > div {
-    float: none !important;
-    display: none !important;
-    text-align: left !important;
-  }
-
-  /* when collapsed the buttons need to have max-width: ; */
-  .right.menu button {
-    max-width: max-content !important;
-  }
-  .right.menu {
-    flex-direction: initial !important;
-    justify-content: center !important;
-  }
 }
 
 #signup .page-header {
