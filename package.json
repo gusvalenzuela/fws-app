@@ -20,7 +20,7 @@
   "homepage": "https://github.com/gusvalenzuela/#readme",
   "dependencies": {
     "@sendgrid/mail": "^7.2.6",
-    "axios": "0.20.0",
+    "axios": "0.21.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.23.0",
     "cloudinary-react": "1.6.8",
