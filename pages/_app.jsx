@@ -17,7 +17,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 // This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
- 
   // on mount
   useEffect(() => {
     // Start the pooled timer which runs every 1 second(s)
@@ -31,12 +30,12 @@ export default function MyApp({ Component, pageProps }) {
     );
     // use that startDate to mark the week shown when the user first logs in
     Store.setState({
-      currentWeek: startDateIndex + 1,
+      currentWeek:
+        startDateIndex < 0 ? weekStartDates.length : startDateIndex + 1,
       Moment: Moment,
     });
     // Store.setState({ Moment: Moment });
   }, []);
-
 
   return (
     <>
