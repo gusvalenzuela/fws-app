@@ -52,28 +52,32 @@ function Weeks({ sched }) {
   useEffect(() => {
     if (!dbSchedule && !week) return
     const scheduledTeams = []
+
     let sunday
     // filter out the desired week
-    const filteredEvents = dbSchedule?.events.filter((event) => {
-      // switch case to set "weekly events"
-      switch (event.sport_id) {
-        case 2:
-          if (event.week === week && event.home_team_id < 100) {
-            // push teams that are scheduled for the chosen week into an array
-            scheduledTeams.push(event.home_team_id, event.away_team_id)
-            // find the first sunday
-            if (!sunday && new Date(event.event_date).getDay() === 0) {
-              sunday = Date.parse(event.event_date)
-            }
+    const filteredEvents = dbSchedule?.events
+      .filter((event) => {
+        // switch case to set "weekly events"
 
-            return true
-          }
-          break
-        default:
-          break
-      }
-      return false
-    })
+        switch (event.sport_id) {
+          case 2:
+            if (event.week === week && event.season_type === 'Regular Season') {
+              // push teams that are scheduled for the chosen week into an array
+              scheduledTeams.push(event.home_team_id, event.away_team_id)
+              // find the first sunday
+              if (!sunday && new Date(event.event_date).getDay() === 0) {
+                sunday = Date.parse(event.event_date)
+              }
+
+              return true
+            }
+            break
+          default:
+            break
+        }
+        return false
+      })
+      .sort((a, b) => Date.parse(a.event_date) - Date.parse(b.event_date))
 
     if (filteredEvents && filteredEvents.length > 0 && nflTeams) {
       // find teams on bye
@@ -88,9 +92,8 @@ function Weeks({ sched }) {
       if (sunday) {
         setLockDate(sunday)
       }
-
-      cleanup(setEvents(filteredEvents))
     }
+    cleanup(setEvents(filteredEvents || []))
   }, [week, dbSchedule, nflTeams, Sport])
 
   // on events set
@@ -210,6 +213,11 @@ function Weeks({ sched }) {
                 // render the matchups and the corresponding user's picks
                 user?._id === selectedUser?._id || Date.now() >= lockDate ? (
                   events.map((matchup, inx) => {
+                    const currentMatchupEventDate = new Date(matchup.event_date)
+                    const previousMatchupEventDate = new Date(
+                      events[inx - 1]?.event_date
+                    )
+
                     let print = true
                     // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
                     // this is for the header of each "matchup day" subsection.
@@ -217,8 +225,8 @@ function Weeks({ sched }) {
                     if (inx > 0) {
                       // check if the previous day of the week in the mapping is the same as current
                       if (
-                        new Date(events[inx - 1].event_date).getDay() ===
-                        new Date(matchup.event_date).getDay()
+                        previousMatchupEventDate.getDay() ===
+                        currentMatchupEventDate.getDay()
                       ) {
                         // if it is the same day as the previous
                         // do not print, by setting print to false
@@ -241,7 +249,7 @@ function Weeks({ sched }) {
                             className="matchup-day-header"
                             key={`header-${matchup.event_date}`}
                           >
-                            {new Date(matchup.event_date).toDateString()}
+                            {currentMatchupEventDate.toDateString()}
                           </h1>
                         )}
 
