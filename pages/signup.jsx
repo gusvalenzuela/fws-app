@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
-import Head from "next/head";
-import Router from "next/router";
-import SignupForm from "../components/SignupForm";
-import { useCurrentUser } from "../lib/hooks";
+import React, { useEffect } from 'react'
+import Head from 'next/head'
+import Router from 'next/router'
+import SignupForm from '../components/SignupForm'
+import { useCurrentUser } from '../lib/hooks'
 
 function SignupPage() {
-  const [user, { mutate }] = useCurrentUser();
-  const [errorMsg, setErrorMsg] = useState("");
+  const [user, { mutate }] = useCurrentUser()
 
   useEffect(() => {
     // redirect to home if user is authenticated
-    if (user) Router.replace("/");
-  }, [user]);
+    if (user) Router.replace('/')
+  }, [user])
 
   return (
     <main id="signup">
@@ -23,13 +22,13 @@ function SignupPage() {
           <h1 className="hero">Sign Up!</h1>
         </header>
         <div className="page-content">
-          <SignupForm />
+          <SignupForm mutate={mutate} />
           <p
             style={{
-              color: "#777",
-              textAlign: "center",
-              width: "80%",
-              margin: "auto",
+              color: '#777',
+              textAlign: 'center',
+              width: '80%',
+              margin: 'auto',
             }}
           >
             Note: The database is public. For your privacy, please avoid using
@@ -39,7 +38,7 @@ function SignupPage() {
         <div className="page-footer">ℹ Page</div>
       </div>
     </main>
-  );
+  )
 }
 
-export default SignupPage;
+export default SignupPage
