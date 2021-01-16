@@ -1,0 +1,12 @@
+trailingComma: 'es5'
+tabWidth: 2
+semi: false
+singleQuote: true
+endOfLine: 'lf'
+# proseWrap: 'always'
+overrides:
+  - files:
+      - '*.test.js*'
+      # - '*.test.jsx'
+    options:
+      semi: true
