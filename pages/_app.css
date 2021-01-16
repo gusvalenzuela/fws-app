@@ -2,7 +2,6 @@
 @import './index.css';
 @import './weeks.css';
 @import './info.css';
-@import './signup.css';
 :root {
   --main-white: #f2f2f2;
   --main-black: #020202;
