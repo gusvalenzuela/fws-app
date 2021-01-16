@@ -56,25 +56,28 @@ const LoginForm = ({ mutate }) => {
       <div className="form">
         <form className="login" onSubmit={onSubmit}>
           {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
-          <Icon name="envelope" aria-label="Email" />{' '}
-          <input
-            required
-            id="email"
-            type="email"
-            name="email"
-            autoComplete="true"
-            placeholder="Email"
-          />
-          {/* <label htmlFor="password">Password: </label> */}
-          <Icon name="lock" aria-label="Password" />{' '}
-          <input
-            required
-            id="password"
-            type="password"
-            autoComplete="true"
-            name="current-password"
-            placeholder="Password"
-          />
+          <div>
+            <Icon name="envelope" aria-label="Email" />{' '}
+            <input
+              required
+              id="email"
+              type="email"
+              name="email"
+              autoComplete="true"
+              placeholder="Email"
+            />
+          </div>
+          <div>
+            <Icon name="lock" aria-label="Password" />{' '}
+            <input
+              required
+              id="password"
+              type="password"
+              autoComplete="true"
+              name="current-password"
+              placeholder="Password"
+            />
+          </div>
           <button className="button" type="submit">
             <span>LOG IN</span>
           </button>
