@@ -191,7 +191,7 @@ const MatchupCardAt = ({
         data-team_id={team.team_id}
         data-team_name={team.abbreviation}
         data-event={matchup.event_id}
-        id={compactCards && 'team-container'}
+        id={!compactCards ? undefined : 'team-container'}
         stretched
         // width="6"
       >
