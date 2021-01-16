@@ -16,7 +16,7 @@ const MatchupDivider = ({
       textAlign="center"
       className={`matchup-divider ${compactCards && 'font8'}`}
       verticalAlign="middle"
-      id={compactCards && 'matchup-divider'}
+      id={compactCards ? 'matchup-divider' : undefined}
     >
       {/* separating into multiple lines */}
       <div
