@@ -33,6 +33,10 @@ function Weeks({ sched }) {
   const nflTeams = Store((s) => s.teams)
   const dbSchedule = Store((s) => s.schedule)
   const week = Store((s) => s.week) || Store.getState().currentWeek // Store.week initializes as undefined
+  const seasonType =
+    Store((s) => s.seasonType) || Store.getState().currentSeasonType // Store.seasonType initializes as undefined
+  const seasonYear =
+    Store((s) => s.seasonYear) || Store.getState().currentSeasonYear // Store.seasonYear initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser) // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   // LAST
   const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId) // place last as it looks for user._id when no selected user found
@@ -58,10 +62,13 @@ function Weeks({ sched }) {
     const filteredEvents = dbSchedule?.events
       .filter((event) => {
         // switch case to set "weekly events"
-
         switch (event.sport_id) {
           case 2:
-            if (event.week === week && event.season_type === 'Regular Season') {
+            if (
+              event.week === week &&
+              event.season_year === seasonYear &&
+              event.season_type === 'Regular Season'
+            ) {
               // push teams that are scheduled for the chosen week into an array
               scheduledTeams.push(event.home_team_id, event.away_team_id)
               // find the first sunday
@@ -80,12 +87,14 @@ function Weeks({ sched }) {
       .sort((a, b) => Date.parse(a.event_date) - Date.parse(b.event_date))
 
     if (filteredEvents && filteredEvents.length > 0 && nflTeams) {
-      // find teams on bye
-      // when team is NOT in the scheduledteams list put together during week filtering
-      const byeteams = nflTeams.filter(
-        (team) => !scheduledTeams.includes(team.team_id)
-      )
-      setTeamsOnBye(byeteams)
+      if (seasonType === 'Regular Season') {
+        // find teams on bye
+        // when team is NOT in the scheduledteams list put together during week filtering
+        const byeteams = nflTeams.filter(
+          (team) => !scheduledTeams.includes(team.team_id)
+        )
+        setTeamsOnBye(byeteams)
+      }
 
       // when a sunday has been found
       // set as lockdate
@@ -94,7 +103,7 @@ function Weeks({ sched }) {
       }
     }
     cleanup(setEvents(filteredEvents || []))
-  }, [week, dbSchedule, nflTeams, Sport])
+  }, [week, dbSchedule, nflTeams, Sport, seasonType, seasonYear])
 
   // on events set
   useEffect(() => {
