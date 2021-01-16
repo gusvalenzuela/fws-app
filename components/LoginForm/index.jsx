@@ -1,33 +1,34 @@
-import React, { useState } from "react";
-import { useCurrentUser } from "../../lib/hooks";
-import { Icon } from "semantic-ui-react";
+import React, { useState } from 'react'
+import Link from 'next/link'
+import { Icon } from 'semantic-ui-react'
 
-const LoginForm = () => {
-  const [u, { mutate }] = useCurrentUser();
-
-  const [errorMsg, setErrorMsg] = useState(null);
+const LoginForm = ({ mutate }) => {
+  const [errorMsg, setErrorMsg] = useState(null)
 
   async function onSubmit(e) {
+    e.preventDefault()
+    // clear any error msg after 3sec
     setTimeout(() => {
-      setErrorMsg(null);
-    }, 3000);
-    e.preventDefault();
+      setErrorMsg(null)
+    }, 3000)
+
     const body = {
       email: e.currentTarget.email.value.trim(),
       password: e.currentTarget.password.value.trim(),
-    };
-    const res = await fetch("/api/auth", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    }
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    });
+    })
     if (res.status === 200) {
-      const userObj = await res.json();
-      mutate(userObj);
+      const userObj = await res.json()
+      mutate(userObj)
     } else {
-      setErrorMsg("Incorrect username or password. Try again!");
+      setErrorMsg('Incorrect username or password. Try again!')
     }
   }
+
   return (
     <>
       <style jsx>
@@ -54,8 +55,8 @@ const LoginForm = () => {
       </style>
       <div className="form">
         <form className="login" onSubmit={onSubmit}>
-          {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
-          <Icon name="envelope" aria-label="Email" />{" "}
+          {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
+          <Icon name="envelope" aria-label="Email" />{' '}
           <input
             required
             id="email"
@@ -65,7 +66,7 @@ const LoginForm = () => {
             placeholder="Email"
           />
           {/* <label htmlFor="password">Password: </label> */}
-          <Icon name="lock" aria-label="Password" />{" "}
+          <Icon name="lock" aria-label="Password" />{' '}
           <input
             required
             id="password"
@@ -78,12 +79,16 @@ const LoginForm = () => {
             <span>LOG IN</span>
           </button>
         </form>
-        <a href="/forget-password">Forgot password?</a>
+        <Link href="/forget-password">
+          <a>Forgot password?</a>
+        </Link>
         <br />
-        <a href="/signup">Don't have an account?</a>
+        <Link href="/signup">
+          <a>Don&apos;t have an account?</a>
+        </Link>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

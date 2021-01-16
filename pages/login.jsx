@@ -1,16 +1,18 @@
-import React, { useEffect } from "react";
-import Head from "next/head";
-import LoginForm from "../components/LoginForm";
-import { useRouter } from "next/router";
-import { useCurrentUser } from "../lib/hooks";
+import React, { useEffect } from 'react'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import LoginForm from '../components/LoginForm'
+import { useCurrentUser } from '../lib/hooks'
 
 const LoginPage = () => {
-  const router = useRouter();
-  const [user] = useCurrentUser();
+  const router = useRouter()
+  const [user, { mutate }] = useCurrentUser()
+
   useEffect(() => {
+    if (!user) return
     // redirect to home if user is authenticated
-    if (user) router.push("/");
-  }, [user]);
+    router.push('/')
+  }, [user, router])
 
   return (
     <main id="login">
@@ -22,11 +24,11 @@ const LoginPage = () => {
           <h1 className="hero">Log In!</h1>
         </header>
         <div className="page-content">
-          <LoginForm />
+          <LoginForm mutate={mutate} />
           <p
             style={{
-              color: "#777",
-              textAlign: "center",
+              color: '#777',
+              textAlign: 'center',
             }}
           >
             <b>Disclaimer: </b>This app is for ENTERTAINMENT USE ONLY. Very much
@@ -35,7 +37,7 @@ const LoginPage = () => {
         </div>
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage
