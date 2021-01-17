@@ -33,6 +33,7 @@ export default function MyApp({ Component, pageProps }) {
     Store.setState({
       currentWeek:
         startDateIndex < 0 ? weekStartDates.length : startDateIndex + 1,
+      currentSeasonYear: 2020,
       Moment,
     })
     // Store.setState({ Moment: Moment });
