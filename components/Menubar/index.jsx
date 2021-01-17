@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef } from 'react'
 import { useRouter } from 'next/router'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { useCurrentUser, getAllUsers } from '../../lib/hooks'
@@ -9,25 +9,26 @@ const Menubar = () => {
   const [user] = useCurrentUser()
   const [users] = getAllUsers()
   const router = useRouter()
-  // const seasonRef = createRef()
-  const openMenu = () => {
-    return document.getElementById('menubar').classList.toggle('responsive')
+  const menubar = createRef()
+
+  const toggleResponsiveMenu = () => {
+    return menubar.current.classList.toggle('responsive')
   }
 
-  const handleWeekChange = (e, target) => {
-    openMenu() // to hide menu on mobile when item clicked
-    Store.setState({ week: target.value })
+  const handleWeekChange = (e, { value }) => {
+    toggleResponsiveMenu() // to hide menu on mobile when item clicked
+    Store.setState({ week: value })
     router.push('/weeks')
   }
 
-  const handleSeasonChange = (e, target) => {
-    openMenu() // to hide menu on mobile when item clicked
-    Store.setState({ season: target.value })
+  const handleSeasonChange = (e, { value }) => {
+    toggleResponsiveMenu() // to hide menu on mobile when item clicked
+    Store.setState({ seasonYear: value })
     router.push('/weeks')
   }
-  const handleUserChange = (e, target) => {
-    openMenu() // to hide menu on mobile when item clicked
-    Store.setState({ selectedUser: target.value })
+  const handleUserChange = (e, { value }) => {
+    toggleResponsiveMenu() // to hide menu on mobile when item clicked
+    Store.setState({ selectedUser: value })
     router.push('/weeks')
   }
 
@@ -108,10 +109,14 @@ const Menubar = () => {
           }
         `}
       </style>
-      <nav className="menubar responsive" id="menubar">
+      <nav className="menubar responsive" id="menubar" ref={menubar}>
         <div className="menubar--menu">
           <Menu inverted stackable attached="top">
-            <Menu.Header onClick={openMenu} as="h3" className="menubar-header">
+            <Menu.Header
+              onClick={toggleResponsiveMenu}
+              as="h3"
+              className="menubar-header"
+            >
               <span style={{ color: '#EADFFB' }}>FWS Pool </span>
               {user && (
                 <span style={{ color: '#FFF70F', fontWeight: 'bolder' }}>
@@ -122,7 +127,7 @@ const Menubar = () => {
             <Dropdown.Item
               as="a"
               onClick={() => {
-                openMenu() // this assures the responsive menu is closed when clicked
+                toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
                 // when user clicks home, reset a few globally stored states
                 // set "selectedUser" to undefined when clicking home, defaults to current user
                 Store.setState({
@@ -140,14 +145,18 @@ const Menubar = () => {
               Home
             </Dropdown.Item>
             <Dropdown
+              // selection
+              selectOnNavigation={false}
+              id="season-year"
               options={generateNumbersArray(2020, 2020).map((num) => {
-                return { key: num, text: num, value: num }
+                return { key: num, text: `Season ${num}`, value: num }
               })}
               item
               text="Seasons"
               onChange={handleSeasonChange}
             />
             <Dropdown
+              selectOnNavigation={false}
               options={generateNumbersArray().map((num) => {
                 return { key: num, text: num, value: num }
               })}
@@ -156,8 +165,9 @@ const Menubar = () => {
               onChange={handleWeekChange}
             />
             <Dropdown
+              selectOnNavigation={false}
               options={
-                // basic users data is pulled from DB and a dropdown made for each
+                // basic users' data is pulled from DB and a dropdown made for each
                 users?.map(({ name, _id }, index) => {
                   return { key: index, text: `${name}`, value: _id }
                 })
@@ -174,7 +184,7 @@ const Menubar = () => {
                     // href="/login"
                     onClick={() => {
                       router.push('/login')
-                      openMenu()
+                      toggleResponsiveMenu()
                     }}
                   >
                     Log In
@@ -183,7 +193,7 @@ const Menubar = () => {
                     as="button"
                     onClick={() => {
                       router.push('/signup')
-                      openMenu()
+                      toggleResponsiveMenu()
                     }}
                   >
                     Sign Up
@@ -207,7 +217,7 @@ const Menubar = () => {
                             text="Admin Page"
                             onClick={() => {
                               router.push('/admin')
-                              openMenu()
+                              toggleResponsiveMenu()
                             }}
                           />
                         )
@@ -217,7 +227,7 @@ const Menubar = () => {
                         icon="settings"
                         onClick={() => {
                           router.push('/settings')
-                          openMenu()
+                          toggleResponsiveMenu()
                         }}
                       />
                       <Dropdown.Item
@@ -225,7 +235,7 @@ const Menubar = () => {
                         text="Log out"
                         onClick={() => {
                           router.push('/logout')
-                          openMenu()
+                          toggleResponsiveMenu()
                         }}
                       />
                     </Dropdown.Menu>
@@ -235,7 +245,12 @@ const Menubar = () => {
             </Menu.Menu>
           </Menu>
         </div>
-        <button type="button" tabIndex={0} onClick={openMenu} className="icon">
+        <button
+          type="button"
+          tabIndex={0}
+          onClick={toggleResponsiveMenu}
+          className="icon"
+        >
           <Icon
             aria-label="Top bar to open menu"
             fitted
