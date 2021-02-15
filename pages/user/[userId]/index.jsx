@@ -1,16 +1,16 @@
-import React from "react";
-import Head from "next/head";
-import Link from "next/link";
-import Error from "next/error";
-import middleware from "../../../middlewares/middleware";
-import { useCurrentUser } from "../../../lib/hooks";
-import { getUser } from "../../../lib/db";
+import React from 'react'
+import Head from 'next/head'
+import Link from 'next/link'
+import Error from 'next/error'
+import middleware from '../../../middlewares/middleware'
+import { useCurrentUser } from '../../../lib/hooks'
+import { getUser, getUserPicks } from '../../../lib/db'
 
-export default function UserPage({ user }) {
-  if (!user) return <Error statusCode={404} />;
-  const { name, email, bio, profilePicture, picks } = user || {};
-  const [currentUser] = useCurrentUser();
-  const isCurrentUser = currentUser?._id === user._id;
+export default function UserPage({ user, picks }) {
+  const [currentUser] = useCurrentUser()
+  if (!user) return <Error statusCode={404} />
+  const { name, email, bio, profilePicture } = user || {}
+  const isCurrentUser = currentUser?._id === user._id
   return (
     <>
       <style jsx>
@@ -80,26 +80,31 @@ export default function UserPage({ user }) {
           </div>
           <div>
             <h3>My Record:</h3>
+            <p>
+              You&apos;ve made {picks.length || 0} picks over your time here.
+            </p>
           </div>
         </div>
 
-        <div className="page-footer"></div>
+        <div className="page-footer">Thank you for playing.</div>
       </main>
     </>
-  );
+  )
 }
 
 export async function getServerSideProps(context) {
-  await middleware.apply(context.req, context.res);
-  const user = await getUser(context.req, context.params.userId);
+  await middleware.run(context.req, context.res)
+  const user = await getUser(context.req, context.params.userId)
+  const picks = await getUserPicks(context.req, context.params.userId)
+
   if (!user) {
-    context.res.statusCode = 404;
-  } else {
-    user.picks = JSON.stringify(user.picks); // Please only return JSON serializable data types.
+    context.res.statusCode = 404
   }
+
   return {
     props: {
       user,
+      picks,
     }, // will be passed to the page component as props
-  };
+  }
 }
