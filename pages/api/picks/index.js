@@ -1,60 +1,68 @@
-import nextConnect from "next-connect";
-import { nanoid } from "nanoid";
-import middleware from "../../../middlewares/middleware";
-const handler = nextConnect();
+/* eslint-disable no-underscore-dangle */
+import nextConnect from 'next-connect'
+import { nanoid } from 'nanoid'
+import middleware from '../../../middlewares/middleware'
 
-handler.use(middleware);
+const handler = nextConnect()
+
+handler.use(middleware)
 
 handler.get(async (req, res) => {
-  if (!req.user) res.send(null);
-  const picks = await req.db
-    .collection("pickz")
-    .find({ userId: req.user._id })
-    .toArray();
-  res.status(200).json({ picks: picks });
-});
-
-// handler.post(async (req, res) => {
-//   if (!req.user) {
-//     return res.status(401).send("unauthenticated");
-//   }
-
-//   // const { selection } = req.body;
-
-//   // if (!selection) return res.status(400).send("You must write something");
-
-//   const pick = {
-//     _id: nanoid(),
-//     createdAt: new Date(),
-//     userId: req.user._id,
-//     ...req.body,
-//   };
-
-//   await req.db.collection("pickz").insertOne(pick);
-//   return res.send(pick);
-// });
+  if (!req.user) res.send(null)
+  const query =
+    '*[_type == "pick"] {...,matchup->, selectedTeam->{ "team_id": _id, name, mascot, abbreviation }}'
+  const dbData = await req.sanityClient.fetch(query)
+  return res.status(200).json({ picks: dbData })
+})
 
 handler.patch(async (req, res) => {
-  if (!req.user) {
-    return res.status(401).send("unauthenticated");
+  const { user, body, sanityClient } = req
+  // if no user
+  if (!user) {
+    return res.status(401).send('unauthenticated')
   }
-  await req.db.collection("pickz").updateOne(
-    { $and: [{ event_id: req.body.event_id }, { userId: req.user._id }] },
-    {
-      $set: {
-        ...req.body,
-        userId: req.user._id,
-        updatedAt: Date.now(),
-      },
-    },
-    { upsert: true }
-  );
+  // See if a document already exists for a given user + matchupId
+  const existingDocQuery =
+    '*[ _type == "pick" && userId == $userId && matchup._ref in *[_type=="matchup" && _id==$matchupId]._id ] { _id, selectedTeam->{ "team_id": _id, name, mascot, abbreviation } }'
+  const existingDocParams = {
+    matchupId: body.matchup._ref,
+    userId: user._id,
+  }
+  const existingDoc = await sanityClient.fetch(
+    existingDocQuery,
+    existingDocParams
+  )
+  let newDoc = {}
+  // if one is found, patch it by the found Id
+  if (existingDoc.length) {
+    await sanityClient
+      .patch(existingDoc[0]._id)
+      .set({
+        selectedTeam: body.selectedTeam,
+      })
+      .commit()
+      .catch((err) => {
+        throw err
+      })
+  } else {
+    // if no document found, create it appropriately
+    newDoc = {
+      ...body,
+      _type: 'pick',
+      _id: nanoid(),
+      userId: user._id,
+    }
+    await sanityClient.createOrReplace(newDoc)
+  }
 
-  const teamPicks = await req.db
-    .collection("pickz")
-    .find({ $and: [{ event_id: req.body.event_id }, { userId: req.user._id }] })
-    .toArray();
-  return res.status(200).json(teamPicks[0]);
-});
+  // finally, retrieve the newly patched/created doc to return in res
+  const docQuery =
+    '*[ _type == "pick" && _id == $pickId ] { selectedTeam->{ "team_id": _id, name, mascot, abbreviation } }'
+  const docParams = { pickId: newDoc._id }
+  const fetchedDoc = await sanityClient
+    .fetch(docQuery, docParams)
+    .then((updatedDoc) => updatedDoc[0])
+  return res.send({ pick: fetchedDoc })
+})
 
-export default handler;
+export default handler
