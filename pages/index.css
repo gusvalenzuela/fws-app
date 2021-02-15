@@ -31,11 +31,19 @@ a.button span {
 
 a.demo-link {
   cursor: pointer;
-  margin: 2.8rem 0 1rem;
   color: var(--base-color);
+  margin: 2.8rem 0 1rem;
   text-shadow: 1px 1px 1px #00000041;
   background: linear-gradient(transparent 35%, #00000077);
   padding: 1rem;
   display: block;
   width: max-content;
+}
+a.demo-link:hover {
+  /* color: #000000; */
+  background: linear-gradient(transparent 35%, #000000ff);
+}
+a.demo-link:active {
+  color: #ffffff59;
+  background: linear-gradient(transparent 35%, #ffffff09);
 }
