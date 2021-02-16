@@ -10,7 +10,7 @@ import {
 import { Image, Transformation, CloudinaryContext } from 'cloudinary-react'
 import Head from 'next/head'
 import middleware from '../middlewares/middleware'
-import { useCurrentUser, useUser } from '../lib/hooks'
+import { useUser } from '../lib/hooks'
 import { getSchedule } from '../lib/db'
 import { generateNumbersArray } from '../lib/utils'
 import Store from '../lib/stores/FootballPool'
@@ -19,7 +19,7 @@ import TimeDisplay from '../components/TimeDisplay'
 import PlayerDashboard from '../components/PlayerDashboard'
 
 function Weeks({ schedule }) {
-  const [currentUser] = useCurrentUser()
+  // const [currentUser] = useCurrentUser()
   const [Sport] = useState(2) // 2 = NFL, 7 = UFC
   const [userPicks, setUserPicks] = useState([])
   const [teamsOnBye, setTeamsOnBye] = useState([])
@@ -31,6 +31,7 @@ function Weeks({ schedule }) {
   const [weeklyRecord, setWeeklyRecord] = useState('0 - 0')
   // Stored variables
   const nflTeams = schedule.teams
+  const currentUser = Store((s) => s.currentUser)
   const week = Store((s) => s.week) || Store.getState().currentWeek // Store.week initializes as undefined
   const seasonType =
     Store((s) => s.seasonType) || Store.getState().currentSeasonType // Store.seasonType initializes as undefined
@@ -132,7 +133,7 @@ function Weeks({ schedule }) {
     // find pick associated with each event in week
     // return the index
     const eventsPicked = events.map((e) =>
-      userPicks.findIndex((p) => p.event_id === e.event_id)
+      userPicks?.findIndex((p) => p.event_id === e.event_id)
     )
     // if no pick found for an event (i.e. user has not picked for the event yet) findIndex returns -1
     // see if the above returns each event with a pick association
