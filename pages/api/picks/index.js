@@ -11,12 +11,12 @@ handler.get(async (req, res) => {
   if (!req.user) res.send(null)
   const query =
     '*[_type == "pick"] {...,matchup->, selectedTeam->{ "team_id": _id, name, mascot, abbreviation }}'
-  const dbData = await req.sanityClient.fetch(query)
+  const dbData = await req.SanityClient.fetch(query)
   return res.status(200).json({ picks: dbData })
 })
 
 handler.patch(async (req, res) => {
-  const { user, body, sanityClient } = req
+  const { user, body, SanityClient } = req
   // if no user
   if (!user) {
     return res.status(401).send('unauthenticated')
@@ -28,15 +28,14 @@ handler.patch(async (req, res) => {
     matchupId: body.matchup._ref,
     userId: user._id,
   }
-  const existingDoc = await sanityClient.fetch(
+  const existingDoc = await SanityClient.fetch(
     existingDocQuery,
     existingDocParams
   )
   let newDoc = {}
   // if one is found, patch it by the found Id
   if (existingDoc.length) {
-    await sanityClient
-      .patch(existingDoc[0]._id)
+    await SanityClient.patch(existingDoc[0]._id)
       .set({
         selectedTeam: body.selectedTeam,
       })
@@ -52,16 +51,16 @@ handler.patch(async (req, res) => {
       _id: nanoid(),
       userId: user._id,
     }
-    await sanityClient.createOrReplace(newDoc)
+    await SanityClient.createOrReplace(newDoc)
   }
 
   // finally, retrieve the newly patched/created doc to return in res
   const docQuery =
     '*[ _type == "pick" && _id == $pickId ] { selectedTeam->{ "team_id": _id, name, mascot, abbreviation } }'
   const docParams = { pickId: newDoc._id }
-  const fetchedDoc = await sanityClient
-    .fetch(docQuery, docParams)
-    .then((updatedDoc) => updatedDoc[0])
+  const fetchedDoc = await SanityClient.fetch(docQuery, docParams).then(
+    (updatedDoc) => updatedDoc[0]
+  )
   return res.send({ pick: fetchedDoc })
 })
 
