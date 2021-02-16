@@ -7,76 +7,74 @@ const MatchupDivider = ({
   sport,
   isPastEvent,
   compactCards,
-}) => {
-  return (
-    <Grid.Column
-      // onClick={() => console.log(matchup)}
-      key="versus"
-      width="3"
-      textAlign="center"
-      className={`matchup-divider ${compactCards && 'font8'}`}
-      verticalAlign="middle"
-      id={compactCards ? 'matchup-divider' : undefined}
+}) => (
+  <Grid.Column
+    // onClick={() => console.log(matchup)}
+    key="versus"
+    width="3"
+    textAlign="center"
+    className={`matchup-divider ${compactCards && 'font8'}`}
+    verticalAlign="middle"
+    id={compactCards ? 'matchup-divider' : undefined}
+  >
+    {/* separating into multiple lines */}
+    <div
+      style={{ fontSize: '1.12rem', marginBottom: '1.5rem', display: 'none' }}
     >
-      {/* separating into multiple lines */}
-      <div
-        style={{ fontSize: '1.12rem', marginBottom: '1.5rem', display: 'none' }}
+      {/* Date */}
+      <p>
+        {new Intl.DateTimeFormat('default', {
+          // year: "numeric",
+          month: 'numeric',
+          day: 'numeric',
+          // dayPeriod: "short",
+        }).format(new Date(matchup.event_date))}
+      </p>
+      {/* Time */}
+      <p>
+        {new Intl.DateTimeFormat('default', {
+          hour: 'numeric',
+          minute: '2-digit',
+          timeZoneName: 'short',
+          // dayPeriod: "short",
+        }).format(new Date(matchup.event_date))}
+      </p>
+    </div>
+    {/* versus / at icon */}
+    <Icon
+      style={{ marginBottom: '1rem' }}
+      size="huge"
+      name={`${sport === 7 ? 'handshake' : 'at'}`}
+    />
+    {!isPastEvent ? (
+      <p
+        className="divider-pick"
+        style={{ marginTop: '.5rem', fontSize: '1.12rem' }}
       >
-        {/* Date */}
-        <p>
-          {new Intl.DateTimeFormat('default', {
-            // year: "numeric",
-            month: 'numeric',
-            day: 'numeric',
-            // dayPeriod: "short",
-          }).format(new Date(matchup.event_date))}
-        </p>
-        {/* Time */}
-        <p>
-          {new Intl.DateTimeFormat('default', {
-            hour: 'numeric',
-            minute: '2-digit',
-            timeZoneName: 'short',
-            // dayPeriod: "short",
-          }).format(new Date(matchup.event_date))}
-        </p>
-      </div>
-      {/* versus / at icon */}
-      <Icon
-        style={{ marginBottom: '1rem' }}
-        size="huge"
-        name={`${sport === 7 ? 'handshake' : 'at'}`}
-      />
-      {!isPastEvent ? (
-        <p
-          className="divider-pick"
-          style={{ marginTop: '.5rem', fontSize: '1.12rem' }}
-        >
-          {selectedTeam
-            ? selectedTeam.team_id === matchup.away_team_id
-              ? `◀ ${selectedTeam.abbreviation}  `
-              : `  ${selectedTeam.abbreviation} ▶`
-            : '◀ Pick ▶'}
-        </p>
-      ) : (
-        <br />
-      )}
+        {selectedTeam
+          ? Number(selectedTeam.team_id) === matchup.away_team_id
+            ? `◀ ${selectedTeam.abbreviation}  `
+            : `  ${selectedTeam.abbreviation} ▶`
+          : '◀ Pick ▶'}
+      </p>
+    ) : (
+      <br />
+    )}
 
-      {
-        // determine if user's pick is a winner
-        // eslint-disable-next-line no-underscore-dangle
-        isPastEvent && matchup.line_?.winner === selectedTeam?.team_id ? (
-          <Icon name="checkmark" color="green" />
-        ) : isPastEvent &&
-          matchup.event_status === 'STATUS_FINAL' &&
-          selectedTeam ? (
-          <Icon name="close" color="red" />
-        ) : (
-          isPastEvent && <Icon name="minus" color="grey" />
-        )
-      }
-    </Grid.Column>
-  )
-}
+    {
+      // determine if user's pick is a winner
+      // eslint-disable-next-line no-underscore-dangle
+      isPastEvent && matchup.line_?.winner === Number(selectedTeam?.team_id) ? (
+        <Icon name="checkmark" color="green" />
+      ) : isPastEvent &&
+        matchup.event_status === 'STATUS_FINAL' &&
+        selectedTeam ? (
+        <Icon name="close" color="red" />
+      ) : (
+        isPastEvent && <Icon name="minus" color="grey" />
+      )
+    }
+  </Grid.Column>
+)
 
 export default MatchupDivider

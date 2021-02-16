@@ -1,43 +1,18 @@
-import nextConnect from "next-connect";
-import middleware from "../../../../middlewares/middleware";
+import nextConnect from 'next-connect'
+import middleware from '../../../../middlewares/middleware'
 
-const handler = nextConnect();
+const handler = nextConnect()
 
-handler.use(middleware);
+handler.use(middleware)
 
 handler.get(async (req, res) => {
-  if (!req.query.userId) res.send(null);
+  const { user, SanityClient } = req
+  if (!user) return res.status(401).send('Please log in')
+  if (!req.query.userId) res.send(null)
+  const pickQuery = `*[_type == "pick" && userId == $reqUserId] {...,matchup->, selectedTeam->{ "team_id": _id, name, mascot, abbreviation }}`
+  const pickParams = { reqUserId: req.query.userId }
+  const dbData = await SanityClient.fetch(pickQuery, pickParams)
+  return res.status(200).json({ picks: dbData })
+})
 
-  const picks = await req.db
-    .collection("pickz")
-    .find({
-      userId: req.query.userId,
-    })
-    .toArray();
-  res.status(200).json({ picks: picks });
-});
-
-handler.patch(async (req, res) => {
-  if (!req.user) {
-    return res.status(401).send("unauthenticated");
-  }
-  // console.log(req.body, req.user);
-  await req.db.collection("pickz").updateOne(
-    { $and: [{ event_id: req.body.event_id }, { userId: req.user._id }] },
-    {
-      $set: {
-        ...req.body,
-        updatedAt: Date.now(),
-      },
-    },
-    { upsert: true }
-  );
-
-  const teamPick = await req.db
-    .collection("pickz")
-    .find({ $and: [{ event_id: req.body.event_id }, { userId: req.user._id }] })
-    .toArray();
-  return res.status(200).json(teamPick[0]);
-});
-
-export default handler;
+export default handler
