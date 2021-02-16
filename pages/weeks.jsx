@@ -112,7 +112,7 @@ function Weeks({ schedule }) {
 
   // on userpicks set
   useEffect(() => {
-    if (!userPicks || !events) return
+    if (!userPicks && !events) return
     setWeeklyRecord('0 - 0')
     // find how many of the user's picks (selected_tean) match the events winning team (line_.winner)
     const wins = userPicks?.filter((p) => {
@@ -120,7 +120,7 @@ function Weeks({ schedule }) {
         (e) =>
           e.event_id === p.matchup?._id &&
           // eslint-disable-next-line no-underscore-dangle
-          e.line_?.winner === Number(p.selectedTeam?._id)
+          e.line_?.winner === Number(p.selectedTeam?.team_id)
       )
 
       return w !== -1
