@@ -1,41 +1,40 @@
-import { MongoClient } from "mongodb";
-// import Mongoose from "mongoose";
-// import { scheduleSchema } from "./schemas/index";
+import { MongoClient } from 'mongodb'
+import SC from '@sanity/client'
+
+const sanityClient = SC({
+  projectId: process.env.SANITY_PROJECT_ID,
+  dataset: process.env.SANITY_DATASET,
+  token: process.env.SANITY_TEAMS_TOKEN, // we need this to get write access
+  useCdn: false, // We can't use the CDN for writing
+})
 
 const client = new MongoClient(process.env.MONGODB_URX, {
-  useNewUrlParser: true,
   useUnifiedTopology: true,
   keepAlive: false,
-  keepAliveInitialDelay: 1000,
-});
-
-// const gooseClient = Mongoose.connect("mongodb://localhost:3000/fwsDBTest", {
-//   useNewUrlParser: true,
-// });
+  keepAliveInitialDelay: 1000 * 60 , // 1minDelay
+})
 
 export async function setUpDb(db) {
-  db.collection("tokens").createIndex(
+  db.collection('tokens').createIndex(
     { expireAt: -1 },
     { expireAfterSeconds: 0 }
-  );
-  db.collection("pickz").createIndex(
+  )
+  db.collection('pickz').createIndex(
     { event_id: 1, userId: 1 },
     { unique: true }
-  );
-  db.collection("users").createIndex(
+  )
+  db.collection('users').createIndex(
     { email: 1, username: 1 },
     { unique: true }
-  );
+  )
 }
-// export async function setUpMongooseDb(db) {
-//   const Kitten = mongoose.model('Kitten', kittySchema);
-// }
 
 export default async function database(req, res, next) {
-  if (!client.isConnected()) await client.connect();
-  req.dbClient = client;
-  req.db = client.db(process.env.DB_NAME);
-  await setUpDb(req.db);
+  if (!client.isConnected()) await client.connect()
+  req.dbClient = client
+  req.db = client.db(process.env.DB_NAME)
+  req.SanityClient = sanityClient
+  await setUpDb(req.db)
 
-  return next();
+  return next()
 }
