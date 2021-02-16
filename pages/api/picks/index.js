@@ -7,14 +7,6 @@ const handler = nextConnect()
 
 handler.use(middleware)
 
-handler.get(async (req, res) => {
-  if (!req.user) res.send(null)
-  const query =
-    '*[_type == "pick"] {...,matchup->, selectedTeam->{ "team_id": _id, name, mascot, abbreviation }}'
-  const dbData = await req.SanityClient.fetch(query)
-  return res.status(200).json({ picks: dbData })
-})
-
 handler.patch(async (req, res) => {
   const { user, body, SanityClient } = req
   // if no user
@@ -23,7 +15,7 @@ handler.patch(async (req, res) => {
   }
   // See if a document already exists for a given user + matchupId
   const existingDocQuery =
-    '*[ _type == "pick" && userId == $userId && matchup._ref in *[_type=="matchup" && _id==$matchupId]._id ] { _id, selectedTeam->{ "team_id": _id, name, mascot, abbreviation } }'
+    '*[ _type == "pick" && userId == $userId && matchup._ref in *[_type=="matchup" && _id==$matchupId]._id ] { _id } }'
   const existingDocParams = {
     matchupId: body.matchup._ref,
     userId: user._id,
@@ -51,7 +43,7 @@ handler.patch(async (req, res) => {
       _id: nanoid(),
       userId: user._id,
     }
-    await SanityClient.createOrReplace(newDoc)
+    await SanityClient.createIfNotExists(newDoc)
   }
 
   // finally, retrieve the newly patched/created doc to return in res
