@@ -34,7 +34,7 @@ export default async function database(req, res, next) {
   req.dbClient = client
   req.db = client.db(process.env.DB_NAME)
   req.SanityClient = sanityClient
-  await setUpDb(req.db)
+  // await setUpDb(req.db)
 
   return next()
 }
