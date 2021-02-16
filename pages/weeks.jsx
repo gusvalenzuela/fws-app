@@ -9,17 +9,17 @@ import {
 } from 'semantic-ui-react'
 import { Image, Transformation, CloudinaryContext } from 'cloudinary-react'
 import Head from 'next/head'
-import { useCurrentUser, useUser } from '../lib/hooks'
-import Store from '../lib/stores/FootballPool'
-import { generateNumbersArray } from '../lib/utils'
-import { getSchedule } from '../lib/db'
 import middleware from '../middlewares/middleware'
+import { useCurrentUser, useUser } from '../lib/hooks'
+import { getSchedule } from '../lib/db'
+import { generateNumbersArray } from '../lib/utils'
+import Store from '../lib/stores/FootballPool'
 import MatchupCard from '../components/Matchup/Card'
 import TimeDisplay from '../components/TimeDisplay'
 import PlayerDashboard from '../components/PlayerDashboard'
 
-function Weeks({ sched }) {
-  const [user] = useCurrentUser()
+function Weeks({ schedule }) {
+  const [currentUser] = useCurrentUser()
   const [Sport] = useState(2) // 2 = NFL, 7 = UFC
   const [userPicks, setUserPicks] = useState([])
   const [teamsOnBye, setTeamsOnBye] = useState([])
@@ -30,8 +30,7 @@ function Weeks({ sched }) {
   const [compactCards, setCompactCards] = useState(false)
   const [weeklyRecord, setWeeklyRecord] = useState('0 - 0')
   // Stored variables
-  const nflTeams = Store((s) => s.teams)
-  const dbSchedule = Store((s) => s.schedule)
+  const nflTeams = schedule.teams
   const week = Store((s) => s.week) || Store.getState().currentWeek // Store.week initializes as undefined
   const seasonType =
     Store((s) => s.seasonType) || Store.getState().currentSeasonType // Store.seasonType initializes as undefined
@@ -39,27 +38,19 @@ function Weeks({ sched }) {
     Store((s) => s.seasonYear) || Store.getState().currentSeasonYear // Store.seasonYear initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser) // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   // LAST
-  const selectedUser = useUser(!selectedUserId ? user?._id : selectedUserId) // place last as it looks for user._id when no selected user found
+  const [selectedUser] = useUser(
+    !selectedUserId ? currentUser?._id : selectedUserId
+  ) // place last as it looks for user._id when no selected user found
   const cleanup = (stuff) => stuff
 
-  // on sched
+  // on week, schedule set
   useEffect(() => {
-    const preloadedSchedule = JSON.parse(sched) //
-    Store.setState({
-      schedule: { events: preloadedSchedule.events },
-      teams: preloadedSchedule.teams && preloadedSchedule.teams[0].teams,
-    })
-    return cleanup
-  }, [sched])
-
-  // on week, dbschedule set
-  useEffect(() => {
-    if (!dbSchedule && !week) return
+    if (!week) return
     const scheduledTeams = []
 
     let sunday
     // filter out the desired week
-    const filteredEvents = dbSchedule?.events
+    const filteredEvents = schedule?.events
       .filter((event) => {
         // switch case to set "weekly events"
         switch (event.sport_id) {
@@ -86,7 +77,7 @@ function Weeks({ sched }) {
       })
       .sort((a, b) => Date.parse(a.event_date) - Date.parse(b.event_date))
 
-    if (filteredEvents && filteredEvents.length > 0 && nflTeams) {
+    if (filteredEvents && filteredEvents.length && nflTeams) {
       if (seasonType === 'Regular Season') {
         // find teams on bye
         // when team is NOT in the scheduledteams list put together during week filtering
@@ -103,14 +94,14 @@ function Weeks({ sched }) {
       }
     }
     cleanup(setEvents(filteredEvents || []))
-  }, [week, dbSchedule, nflTeams, Sport, seasonType, seasonYear])
+  }, [week, nflTeams, Sport, seasonType, seasonYear, schedule.events])
 
   // on events set
   useEffect(() => {
     // playerPicks default = current user
     // else selected user stored in state store
     const currentPicks = selectedUser?.picks?.filter(
-      (p) => p.week === week || p.matchup?.week === week
+      (p) => p.matchup?.week === week
     )
 
     setUserPicks(currentPicks)
@@ -122,17 +113,19 @@ function Weeks({ sched }) {
   // on userpicks set
   useEffect(() => {
     if (!userPicks || !events) return
+    setWeeklyRecord('0 - 0')
     // find how many of the user's picks (selected_tean) match the events winning team (line_.winner)
     const wins = userPicks?.filter((p) => {
       const w = events.findIndex(
         (e) =>
-          e.event_id === p.event_id &&
+          e.event_id === p.matchup?._id &&
           // eslint-disable-next-line no-underscore-dangle
-          e.line_?.winner === p.selected_team.team_id
+          e.line_?.winner === Number(p.selectedTeam?._id)
       )
 
       return w !== -1
     })
+
     if (wins) {
       setWeeklyRecord(`${wins.length} - ${userPicks.length - wins.length}`)
     }
@@ -160,7 +153,7 @@ function Weeks({ sched }) {
       </Head>
 
       <div className="main-content">
-        {events && events?.length > 0 ? (
+        {events && events?.length ? (
           <>
             <div className="page-header week-header">
               <TimeDisplay />
@@ -188,7 +181,7 @@ function Weeks({ sched }) {
 
               {
                 // "(Sep 16-22)"
-                `(${events?.length > 0 && events[0].week_detail})`
+                `(${events[0].week_detail})`
               }
             </div>
             <div className="page-content">
@@ -196,9 +189,11 @@ function Weeks({ sched }) {
                 <PlayerDashboard
                   lockDate={lockDate}
                   allPicked={allPicked}
-                  user={selectedUser || user}
+                  user={selectedUser || currentUser}
                   otherUser={
-                    selectedUser?._id === user?._id ? false : selectedUser
+                    selectedUser?._id === currentUser?._id
+                      ? false
+                      : selectedUser
                   }
                   weeklyRecord={weeklyRecord}
                 />
@@ -220,7 +215,8 @@ function Weeks({ sched }) {
                 // if selected user is same as current user display all picks
                 // or it's past the first Sunday game of the week (picks are locked date)
                 // render the matchups and the corresponding user's picks
-                user?._id === selectedUser?._id || Date.now() >= lockDate ? (
+                currentUser?._id === selectedUser?._id ||
+                Date.now() >= lockDate ? (
                   events.map((matchup, inx) => {
                     const currentMatchupEventDate = new Date(matchup.event_date)
                     const previousMatchupEventDate = new Date(
@@ -267,7 +263,7 @@ function Weeks({ sched }) {
                           lockDate={lockDate}
                           matchup={matchup}
                           userPicks={userPicks}
-                          user={user}
+                          user={currentUser}
                           tiebreak={
                             tiebreakMatch?.event_id === matchup.event_id
                           }
@@ -345,14 +341,26 @@ function Weeks({ sched }) {
 export default Weeks
 
 export async function getServerSideProps(context) {
-  await middleware.apply(context.req, context.res)
-  const sched = JSON.stringify(await getSchedule(context.req, `2&2020`))
-  if (!sched) {
+  const request = context.req
+  await middleware.run(request, context.res)
+  const { sport, yr } = context.query
+
+  const schedule = await getSchedule(
+    request,
+    sport,
+    yr || new Date().getFullYear()
+  )
+
+  if (!schedule) {
     context.res.statusCode = 404
+    return {
+      notFound: true,
+    }
   }
+
   return {
     props: {
-      sched,
+      schedule,
     }, // will be passed to the page component as props
   }
 }
