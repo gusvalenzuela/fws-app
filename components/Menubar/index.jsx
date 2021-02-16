@@ -1,35 +1,33 @@
 import React, { createRef } from 'react'
 import { useRouter } from 'next/router'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
-import { useCurrentUser, getAllUsers } from '../../lib/hooks'
+import { useCurrentUser } from '../../lib/hooks'
 import Store from '../../lib/stores/FootballPool'
 import { generateNumbersArray } from '../../lib/utils'
 
-const Menubar = () => {
+const Menubar = ({ users }) => {
   const [user] = useCurrentUser()
-  const [users] = getAllUsers()
   const router = useRouter()
   const menubar = createRef()
 
-  const toggleResponsiveMenu = () => {
-    return menubar.current.classList.toggle('responsive')
-  }
+  const toggleResponsiveMenu = () =>
+    menubar.current.classList.toggle('responsive')
 
   const handleWeekChange = (e, { value }) => {
     toggleResponsiveMenu() // to hide menu on mobile when item clicked
     Store.setState({ week: value })
-    router.push('/weeks')
+    router.push('/weeks?sport=nfl&yr=2020')
   }
 
   const handleSeasonChange = (e, { value }) => {
     toggleResponsiveMenu() // to hide menu on mobile when item clicked
     Store.setState({ seasonYear: value })
-    router.push('/weeks')
+    router.push('/weeks?sport=nfl&yr=2020')
   }
   const handleUserChange = (e, { value }) => {
     toggleResponsiveMenu() // to hide menu on mobile when item clicked
     Store.setState({ selectedUser: value })
-    router.push('/weeks')
+    router.push('/weeks?sport=nfl&yr=2020')
   }
 
   return (
@@ -132,11 +130,11 @@ const Menubar = () => {
                 // set "selectedUser" to undefined when clicking home, defaults to current user
                 Store.setState({
                   selectedUser: user ? user._id : undefined,
-                  week: undefined,
-                  season: 2020,
+                  week: Store.getState().currentWeek,
+                  season: Store.getState().currentSeasonYear,
                 })
                 if (user) {
-                  router.push('/weeks')
+                  router.push('/weeks?sport=nfl&yr=2020')
                 } else {
                   router.push('/')
                 }
@@ -147,19 +145,22 @@ const Menubar = () => {
             <Dropdown
               // selection
               selectOnNavigation={false}
-              id="season-year"
-              options={generateNumbersArray(2020, 2020).map((num) => {
-                return { key: num, text: `Season ${num}`, value: num }
-              })}
+              options={generateNumbersArray(2020, 2020).map((num) => ({
+                key: num,
+                text: `Season ${num}`,
+                value: num,
+              }))}
               item
               text="Seasons"
               onChange={handleSeasonChange}
             />
             <Dropdown
               selectOnNavigation={false}
-              options={generateNumbersArray().map((num) => {
-                return { key: num, text: num, value: num }
-              })}
+              options={generateNumbersArray().map((num) => ({
+                key: num,
+                text: num,
+                value: num,
+              }))}
               item
               text="Weeks"
               onChange={handleWeekChange}
@@ -168,14 +169,26 @@ const Menubar = () => {
               selectOnNavigation={false}
               options={
                 // basic users' data is pulled from DB and a dropdown made for each
-                users?.map(({ name, _id }, index) => {
-                  return { key: index, text: `${name}`, value: _id }
-                })
+                users?.map(({ name, _id }, index) => ({
+                  key: index,
+                  text: `${name}`,
+                  value: _id,
+                }))
               }
               item
               text="Users"
               onChange={handleUserChange}
             />
+            {/* <Dropdown.Item
+              as="a"
+              onClick={() => {
+                toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
+
+                router.push('/leaderboard')
+              }}
+            >
+              Leaderboards
+            </Dropdown.Item> */}
             <Menu.Menu position="right">
               {!user ? (
                 <>
