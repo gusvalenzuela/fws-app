@@ -17,7 +17,6 @@ extends:
   - plugin:import/warnings
   # - plugin:import/typescript # important bit for when using typescript
   - prettier
-  - prettier/react
 # parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaFeatures:
@@ -33,21 +32,20 @@ settings:
     version: detect # Automatically detect the react version
 rules:
   no-plusplus:
-    - error
+    - 2
     - { allowForLoopAfterthoughts: true }
   no-underscore-dangle:
-    - warn
-    - { allow: ['_id'] }
+    - 1
+    - { allow: ['_id', 'line_'] }
   # no-param-reassign: off
   no-nested-ternary: off
   no-use-before-define: off
   import/extensions:
-    - warn
+    - 1
     - { json: always }
   import/prefer-default-export: off
   jsx-a11y/anchor-is-valid:
-    off
-    # - error
+    - 0
     # - {
     #     components: ['Link'],
     #     specialLink: ['hrefLeft', 'hrefRight'],
