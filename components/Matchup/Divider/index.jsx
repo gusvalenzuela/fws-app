@@ -64,7 +64,7 @@ const MatchupDivider = ({
     {
       // determine if user's pick is a winner
       // eslint-disable-next-line no-underscore-dangle
-      isPastEvent && matchup.line_?.winner === Number(selectedTeam?.team_id) ? (
+      isPastEvent && matchup.winner === Number(selectedTeam?.team_id) ? (
         <Icon name="checkmark" color="green" />
       ) : isPastEvent &&
         matchup.event_status === 'STATUS_FINAL' &&
