@@ -28,7 +28,7 @@ handler.post(async (req, res) => {
   const msg = {
     to: user.email,
     from: process.env.EMAIL_FROM,
-    subject: '[nextjs-mongodb-app] Reset your password.',
+    subject: '[FWS] Reset your password.',
     html: `
       <div>
         <p>Hello, ${user.name}</p>
