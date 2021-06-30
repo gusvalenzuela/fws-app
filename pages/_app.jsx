@@ -6,7 +6,7 @@ Read more: https://err.sh/next.js/css-global
 import React, { useEffect } from 'react'
 import Moment from 'react-moment'
 import { ToastContainer } from 'react-toastify'
-import { week_start_days as weekStartDates } from '../lib/stores/startDays.json'
+import startDates from '../lib/stores/startDays.json'
 import { useAllUsers } from '../lib/hooks'
 import Store from '../lib/stores/FootballPool'
 import Menubar from '../components/Menubar'
@@ -16,6 +16,7 @@ import './_app.css'
 import 'semantic-ui-css/semantic.min.css'
 import 'react-toastify/dist/ReactToastify.css'
 
+const { week_start_days: weekStartDates } = startDates
 // This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
   const [users] = useAllUsers()
