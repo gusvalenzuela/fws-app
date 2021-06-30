@@ -1,40 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import { Dropdown } from 'semantic-ui-react'
 import { generateNumbersArray } from '../lib/utils'
-import { useCurrentUser } from '../lib/hooks'
+import { useCurrentUser, useSchedule } from '../lib/hooks'
 import Store from '../lib/stores/FootballPool'
 import AdminEventSection from '../components/AdminEventSection'
 
 const RUNDOWN_KEY = process.env.NEXT_PUBLIC_RUNDOWN_KEY
 const AdminPage = () => {
+  const { schedule, scheduleIsLoading } = useSchedule('nfl', 2020)
   // message, updating, error
   const msgDefault = { message: '', isError: false }
   const [msg, setMsg] = useState(msgDefault)
   // const [isUpdating, setIsUpdating] = useState(false);
   // Stored variables
-  const dbSchedule = Store((s) => s.schedule)
   // Fetches
   const [user] = useCurrentUser()
   // Other state
   const [events, setEvents] = useState([]) // events held in state
   const week = Store((s) => s.week || s.currentWeek) //
 
-  // on week, dbschedule set
+  // on week, schedule set
   useEffect(() => {
     // sort by event date
-    dbSchedule?.events.sort(
-      (a, b) => new Date(a.event_date) - new Date(b.event_date)
-    )
+    schedule?.sort((a, b) => new Date(a.event_date) - new Date(b.event_date))
 
     // filter out the desired week
-    const filteredEvents = dbSchedule?.events.filter(
+    const filteredEvents = schedule?.filter(
       (event) => event.week === week && event.season_type === 'Regular Season'
     )
 
     if (filteredEvents && filteredEvents.length > 0) {
       setEvents(filteredEvents)
     }
-  }, [week, dbSchedule])
+  }, [week, schedule])
 
   const handlePickWinnerRefresh = async (evt) => {
     evt.preventDefault()
@@ -114,13 +112,18 @@ const AdminPage = () => {
               text={`Week ${week.toString()}`}
               inline
             />
-            {events.length > 0 &&
-              events.map((event) => {
-                return <AdminEventSection key={event?.event_id} event={event} />
-              })}
+            {!scheduleIsLoading &&
+              events.length &&
+              events.map((event) => (
+                <AdminEventSection key={event?.event_id} event={event} />
+              ))}
           </div>
 
-          <div className="page-footer">🎉</div>
+          <div className="page-footer">
+            <span role="img" aria-label="Party popper emoji">
+              🎉
+            </span>
+          </div>
         </div>
       </main>
     </>
