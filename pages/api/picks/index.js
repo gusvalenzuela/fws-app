@@ -1,59 +1,20 @@
-/* eslint-disable no-underscore-dangle */
 import nextConnect from 'next-connect'
-import { nanoid } from 'nanoid'
 import middleware from '../../../middlewares/middleware'
+import { updateUserPicks } from '../../../lib/db'
 
 const handler = nextConnect()
 
 handler.use(middleware)
 
 handler.patch(async (req, res) => {
-  const { user, body, SanityClient } = req
+  const { user, body, dbClient, db } = req
   // if no user
   if (!user) {
     return res.status(401).send('unauthenticated')
   }
-  // See if a document already exists for a given user + matchupId
-  const existingDocQuery =
-    '*[ _type == "pick" && userId == $userId && matchup._ref in *[_type=="matchup" && _id==$matchupId]._id ] { _id } }'
-  const existingDocParams = {
-    matchupId: body.matchup._ref,
-    userId: user._id,
-  }
-  const existingDoc = await SanityClient.fetch(
-    existingDocQuery,
-    existingDocParams
-  )
-  let newDoc
-  // if one is found, patch it by the found Id
-  if (existingDoc.length) {
-    await SanityClient.patch(existingDoc[0]._id)
-      .set({
-        selectedTeam: body.selectedTeam,
-      })
-      .commit()
-      .catch((err) => {
-        throw err
-      })
-  } else {
-    // if no document found, create it appropriately
-    newDoc = {
-      ...body,
-      _type: 'pick',
-      _id: nanoid(),
-      userId: user._id,
-    }
-    await SanityClient.createIfNotExists(newDoc)
-  }
+  const updatedResults = await updateUserPicks(dbClient, db, user, body)
 
-  // finally, retrieve the newly patched/created doc to return in res
-  const docQuery =
-    '*[ _type == "pick" && _id == $pickId ] { selectedTeam->{ "team_id": _id, name, mascot, abbreviation } }'
-  const docParams = { pickId: newDoc ? newDoc?._id : existingDoc[0]?._id }
-  const fetchedDoc = await SanityClient.fetch(docQuery, docParams).then(
-    (updatedDoc) => updatedDoc[0]
-  )
-  return res.send({ pick: fetchedDoc })
+  return res.status(200).json({ updatedResults })
 })
 
 export default handler
