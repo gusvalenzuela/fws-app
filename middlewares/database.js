@@ -9,9 +9,9 @@ const sanityClient = SC({
 })
 
 const client = new MongoClient(process.env.MONGODB_URX, {
+  useNewUrlParser: true,
   useUnifiedTopology: true,
   keepAlive: false,
-  keepAliveInitialDelay: 1000 * 60 , // 1minDelay
 })
 
 export async function setUpDb(db) {
@@ -19,8 +19,8 @@ export async function setUpDb(db) {
     { expireAt: -1 },
     { expireAfterSeconds: 0 }
   )
-  db.collection('pickz').createIndex(
-    { event_id: 1, userId: 1 },
+  db.collection('picks').createIndex(
+    { matchupId: 1, userId: 1 },
     { unique: true }
   )
   db.collection('users').createIndex(
