@@ -1,18 +1,24 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Store from '../lib/stores/FootballPool'
 import LoginForm from '../components/LoginForm'
 import { useCurrentUser } from '../lib/hooks'
 
-const LoginPage = () => {
+const LoginPage = ({ demoAccount }) => {
   const router = useRouter()
   const [user, { mutate }] = useCurrentUser()
+  const season = Store((s) => ({
+    week: s.week || s.currentWeek,
+    year: s.seasonYear || s.currentSeasonYear,
+  }))
+  const sport = 'football'
 
   useEffect(() => {
-    if (!user) return
-    // redirect to home if user is authenticated
-    router.push('/')
-  }, [user, router])
+    if (!user && !season) return null
+    // redirect to home if user is logged in
+    return router.push(`/weeks?sport=${sport}&yr=${season.year}`)
+  }, [user, router, season])
 
   return (
     <main id="login">
@@ -24,15 +30,16 @@ const LoginPage = () => {
           <h1 className="hero">Log In!</h1>
         </header>
         <div className="page-content">
-          <LoginForm mutate={mutate} />
+          <LoginForm demoAccount={demoAccount} mutate={mutate} />
           <p
             style={{
               color: '#777',
               textAlign: 'center',
             }}
           >
-            <b>Disclaimer: </b>This app is for ENTERTAINMENT USE ONLY. Very much
-            in alpha and subject to change without notice.
+            <b>Disclaimer: </b>
+            This app is for ENTERTAINMENT USE ONLY. Very much in alpha and
+            subject to change without notice.
           </p>
         </div>
       </div>
@@ -41,3 +48,12 @@ const LoginPage = () => {
 }
 
 export default LoginPage
+
+export async function getServerSideProps({ query }) {
+  const demoAccount = query.demo || null
+  return {
+    props: {
+      demoAccount,
+    }, // will be passed to the page component as props
+  }
+}
