@@ -57,7 +57,7 @@ const HomePage = () => {
               tabIndex={0}
               className="demo-link"
               onClick={() => {
-                router.push('/weeks?sport=nfl&yr=2020')
+                router.push('/login?demo=7')
               }}
             >
               Use Demo Account
