@@ -7,7 +7,6 @@ import React, { useEffect } from 'react'
 import Moment from 'react-moment'
 import { ToastContainer } from 'react-toastify'
 import startDates from '../lib/stores/startDays.json'
-import { useAllUsers } from '../lib/hooks'
 import Store from '../lib/stores/FootballPool'
 import Menubar from '../components/Menubar'
 import Footer from '../components/Footer'
@@ -19,8 +18,6 @@ import 'react-toastify/dist/ReactToastify.css'
 const { week_start_days: weekStartDates } = startDates
 // This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
-  const [users] = useAllUsers()
-
   // on mount
   useEffect(() => {
     // Start the pooled timer which runs every 1 second(s)
@@ -45,7 +42,7 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <Menubar users={users} />
+      <Menubar />
       <ToastContainer
         // limit={3}
         newestOnTop

@@ -1,11 +1,12 @@
 import React, { createRef } from 'react'
 import { useRouter } from 'next/router'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
-import { useCurrentUser } from '../../lib/hooks'
+import { useCurrentUser, useAllUsers } from '../../lib/hooks'
 import Store from '../../lib/stores/FootballPool'
 import { generateNumbersArray } from '../../lib/utils'
 
-const Menubar = ({ users }) => {
+const Menubar = () => {
+  const [users] = useAllUsers()
   const [user] = useCurrentUser()
   const router = useRouter()
   const menubar = createRef()
