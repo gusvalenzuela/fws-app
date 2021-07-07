@@ -1,16 +1,14 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import Error from 'next/error'
-import middleware from '../../../middlewares/middleware'
-import { useCurrentUser } from '../../../lib/hooks'
-import { getUser, getUserPicks } from '../../../lib/db'
+import { useCurrentUser, useUser } from '../../../lib/hooks'
 
-export default function UserPage({ user, picks }) {
+export default function UserPage({ userId }) {
   const [currentUser] = useCurrentUser()
-  if (!user) return <Error statusCode={404} />
+  const { user, isLoading: userIsLoading } = useUser(userId)
   const { name, email, bio, profilePicture } = user || {}
-  const isCurrentUser = currentUser?._id === user._id
+  const isCurrentUser = currentUser?._id === user?._id
+
   return (
     <>
       <style jsx>
@@ -61,29 +59,36 @@ export default function UserPage({ user, picks }) {
           <h1 className="hero">My Account</h1>
         </header>
         <div className="page-content">
-          <div className="user-info">
-            <img src={profilePicture} width="256" height="256" alt={name} />
-            <section>
-              <div>
-                <h2>{name}</h2>
+          {userIsLoading ? (
+            <div className="user-info">Loading information...</div>
+          ) : (
+            <>
+              <div className="user-info">
+                <img src={profilePicture} width="256" height="256" alt={name} />
+                <section>
+                  <div>
+                    <h2>{name}</h2>
+                  </div>
+                  Bio
+                  <p>{bio}</p>
+                  Email
+                  <p>{email}</p>
+                  {isCurrentUser && (
+                    <Link href="/settings">
+                      <button type="button">Edit Account</button>
+                    </Link>
+                  )}
+                </section>
               </div>
-              Bio
-              <p>{bio}</p>
-              Email
-              <p>{email}</p>
-              {isCurrentUser && (
-                <Link href="/settings">
-                  <button type="button">Edit Account</button>
-                </Link>
-              )}
-            </section>
-          </div>
-          <div>
-            <h3>My Record:</h3>
-            <p>
-              You&apos;ve made {picks.length || 0} picks over your time here.
-            </p>
-          </div>
+              <div>
+                <h3>My Record:</h3>
+                <p>
+                  You&apos;ve made {user.picks?.length || 0} picks over your
+                  time here.
+                </p>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="page-footer">Thank you for playing.</div>
@@ -91,20 +96,14 @@ export default function UserPage({ user, picks }) {
     </>
   )
 }
-
-export async function getServerSideProps(context) {
-  await middleware.run(context.req, context.res)
-  const user = await getUser(context.req, context.params.userId)
-  const picks = await getUserPicks(context.req, context.params.userId)
-
-  if (!user) {
-    context.res.statusCode = 404
+export async function getServerSideProps({ params }) {
+  const { userId } = { ...params }
+  if (!userId) {
+    return {
+      notFound: true,
+    }
   }
-
   return {
-    props: {
-      user,
-      picks,
-    }, // will be passed to the page component as props
+    props: { userId }, // will be passed to the page component as props
   }
 }
