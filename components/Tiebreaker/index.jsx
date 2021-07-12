@@ -1,52 +1,51 @@
-import React, { useState, useEffect } from "react";
-import { Dropdown } from "semantic-ui-react";
-import { toast } from "react-toastify";
+import React from 'react'
+import { Dropdown } from 'semantic-ui-react'
+import { toast } from 'react-toastify'
+
 const Tiebreaker = ({
   isLocked,
-  event_id,
+  eventId,
   hometeam,
   awayteam,
   tiebreaker,
-  setTiebreaker,
   finalTiebreaker,
   user,
 }) => {
-  const [isUpdating, setIsUpdating] = useState(false);
-  const tiebreakToast = React.useRef(null);
-  const loginToPickToast = React.useRef(null);
+  const [isUpdating, setIsUpdating] = React.useState(false)
+  const tiebreakToast = React.useRef(null)
+  const loginToPickToast = React.useRef(null)
 
   const tiebreakerOptions = () => {
     // function that creates the dropdown options needed for tiebreaker
     // min 1 (declared in i), max 192 (declared in max)
-    var max = 192;
-    var optionsArray = [];
+    const max = 192
+    const optionsArray = []
 
     for (let i = 1; i < max + 1; i++) {
       optionsArray.push({
         key: i,
         text: i,
         value: i,
-        // image: { avatar: true, src: "/images/avatar/small/matt.jpg" },
-      });
+      })
     }
-    return optionsArray;
-  };
+    return optionsArray
+  }
 
   const handleTiebreakerSubmit = async (input) => {
-    if (isUpdating) return;
+    if (isUpdating) return
 
     // if no signed in user, display message about logging in
     if (!user) {
       // check to see to no similar toast is active (prevent dupes)
       if (!toast.isActive(loginToPickToast.current)) {
         loginToPickToast.current = toast.dark(
-          "LOG IN TO START SETTING TIEBREAKERS!",
+          'LOG IN TO START SETTING TIEBREAKERS!',
           {
-            toastId: "toast-not-loggedin",
+            toastId: 'toast-not-loggedin',
           }
-        );
+        )
       }
-      return;
+      return
     }
 
     // initializing the toast
@@ -56,33 +55,33 @@ const Tiebreaker = ({
         autoClose: false,
         closeButton: false,
       }
-    );
-    setIsUpdating(true);
+    )
+    setIsUpdating(true)
 
     // append this tiebreaker (input param) to
-    // event_id of matchup (i.e. MNF)
-    let tiePick = {
-      event_id: event_id,
-      tiebreaker: input,
-    };
-    const res = await fetch("/api/picks/" + tiePick.event_id, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(tiePick),
-    });
+    // eventId of matchup (i.e. MNF)
+    const newTiebreakerPick = {
+      matchupId: eventId,
+      tiebreaker: Number(input),
+    }
+    const res = await fetch('/api/picks/', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newTiebreakerPick),
+    })
 
-    setIsUpdating(false);
+    setIsUpdating(false)
     if (res.status === 200) {
-      const pick = await res.json();
+      // TODO: return new pick, or specific message
       // console.log(pick);
-      setTiebreaker(pick.tiebreaker);
+      // setTiebreaker(newTiebreakerPick.tiebreaker)
       // updating the toast alert and setting the autoclose
       toast.update(tiebreakToast.current, {
         render: (
           <>
-            🎉 Tiebreaker updated to {pick.tiebreaker}!<br />
-            <i style={{ fontSize: "small" }}>
-              Total points scored in {awayteam.abbreviation} @{" "}
+            🎉 Tiebreaker updated to {input}!<br />
+            <i style={{ fontSize: 'small' }}>
+              Total points scored in {awayteam.abbreviation} @{' '}
               {hometeam.abbreviation} game.
             </i>
           </>
@@ -90,33 +89,32 @@ const Tiebreaker = ({
         type: toast.TYPE.SUCCESS,
         autoClose: 5000,
         closeButton: null,
-      });
+      })
     } else {
       // check to see to no similar toast is active (prevent dupes)
-      let errText = await res.text();
+      const errText = await res.text()
       toast.update(tiebreakToast.current, {
         render: errText,
         type: toast.TYPE.ERROR,
         autoClose: 5000,
         closeButton: null,
-      });
-      return;
+      })
     }
-  };
+  }
 
   return (
     <>
       {/* <p>(D) = Divisional matchup</p> */}
       <div
         style={{
-          border: "none",
-          padding: ".25rem 1rem 1rem",
-          textAlign: "center",
+          border: 'none',
+          padding: '.25rem 1rem 1rem',
+          textAlign: 'center',
         }}
       >
         <b>Your Tiebreaker: </b>
         <Dropdown
-          disabled={!isLocked ? false : true}
+          disabled={!isLocked}
           closeOnChange
           closeOnBlur
           closeOnEscape
@@ -124,22 +122,18 @@ const Tiebreaker = ({
           // placeholder="Select a week"
           selection
           options={tiebreakerOptions()}
-          onChange={(e, { value }) => {
-            setTiebreaker(value);
-            return handleTiebreakerSubmit(value);
-          }}
-          text={`${!tiebreaker ? 1 : tiebreaker}`}
+          onChange={(e, { value }) => handleTiebreakerSubmit(value)}
           value={tiebreaker}
           compact
           labeled
-        />{" "}
+        />{' '}
         (
         {`Total points scored in ${awayteam.abbreviation} vs. ${hometeam.abbreviation} game`}
         )
         <p
           style={{
-            display: `${!finalTiebreaker && "none"}`,
-            color: "red",
+            display: `${!finalTiebreaker && 'none'}`,
+            color: 'red',
           }}
         >
           Actual Tiebreaker <b>{finalTiebreaker}</b>
@@ -147,7 +141,7 @@ const Tiebreaker = ({
         <br />
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Tiebreaker;
+export default Tiebreaker
