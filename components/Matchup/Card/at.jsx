@@ -1,4 +1,3 @@
-/*  eslint-disable no-underscore-dangle  */
 import React, { useState, useEffect } from 'react'
 import {
   Image,
@@ -14,12 +13,14 @@ import Style from './Card.module.css'
 
 const MatchupCardAt = ({
   matchup,
-  userPicks,
+  userPick,
   user,
   tiebreak,
   lockDate,
   compactCards,
 }) => {
+  const homeTeam = matchup.home_team
+  const awayTeam = matchup.away_team
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [sport, setSport] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -30,7 +31,6 @@ const MatchupCardAt = ({
       Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   )
   const [isLocked, setisLocked] = useState(true)
-  const [tiebreaker, setTiebreaker] = useState(null)
   const initToast = React.useRef(null)
   const lockedToast = React.useRef(null)
   const loginToPickToast = React.useRef(null)
@@ -38,8 +38,8 @@ const MatchupCardAt = ({
   const handleTeamSelection = async (event) => {
     const newlySelectedTeam =
       Number(event.currentTarget.dataset.team_id) === matchup.away_team_id
-        ? matchup.away_team
-        : matchup.home_team
+        ? awayTeam
+        : homeTeam
 
     if (isUpdating) return toast.info('Still updating, please wait') // wait for Mongo DB to respond
     if (!isLocked) {
@@ -80,16 +80,8 @@ const MatchupCardAt = ({
     setIsUpdating(true)
 
     const newPick = {
-      selectedTeam: {
-        _type: 'reference',
-        _ref: `${
-          newlySelectedTeam.team_id || 'ae98d078-2fab-46be-920e-0d152dc38c2d'
-        }`,
-      },
-      matchup: {
-        _type: 'reference',
-        _ref: `${matchup.event_id}`,
-      },
+      selectedTeamId: Number(newlySelectedTeam.team_id) || 2754,
+      matchupId: matchup.event_id,
     }
     const res = await fetch('/api/picks', {
       method: 'PATCH',
@@ -99,9 +91,10 @@ const MatchupCardAt = ({
     setIsUpdating(false)
 
     if (res.status === 200) {
-      const { pick } = await res.json()
-      // update the state of selectedTeam
-      setSelectedTeam(pick.selectedTeam)
+      // const { updatedResults } = await res.json()
+      // console.log(updatedResults)
+      // update the state of selectedTeam as confirmation
+      setSelectedTeam(newlySelectedTeam)
       // updating the toast alert and setting the autoclose
       toast.update(initToast.current, {
         render: (
@@ -137,36 +130,31 @@ const MatchupCardAt = ({
   }
 
   useEffect(() => {
-    setSport(matchup.sport_id)
     setSelectedTeam(null) // clear selected team for refresh
-    //  look in the user's picks
-    for (let i = 0; i < userPicks?.length; i += 1) {
-      const pick = userPicks[i]
+    if (!userPick) return null
 
-      if (pick?.matchup?._id === matchup?.event_id) {
-        setSelectedTeam(pick.selectedTeam)
-        // if it is also the tiebreak match, set the tiebreaker value used in Tiebreaker component
-        if (tiebreak) {
-          setTiebreaker(pick.tiebreaker)
-        }
-        return
-      }
-    }
-  }, [userPicks, matchup, tiebreak])
+    return setSelectedTeam(
+      userPick.selectedTeamId === awayTeam.team_id ? awayTeam : homeTeam
+    )
+  }, [userPick, awayTeam, homeTeam])
 
   useEffect(() => {
+    setSport(matchup.sport_id)
     // determine locked-pick status
     // if the event date is in the past, then locked is true
     /* if event date is on or after the first Sunday game start of the viewed week
       AND the lockdate is in the past (changes after first Sunday begins)
      */
-    setisLocked(
-      Date.parse(matchup.event_date) < Date.now()
-        ? 'past'
-        : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now()
-        ? 'after lock date'
-        : false
-    )
+
+    // console.log(lockDate)
+    return () =>
+      setisLocked(
+        Date.parse(matchup.event_date) < Date.now()
+          ? 'past'
+          : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now()
+          ? 'after lock date'
+          : false
+      )
   }, [matchup, lockDate])
 
   const buildTeamCard = (team) => (
@@ -272,7 +260,7 @@ const MatchupCardAt = ({
             {
               // if a past event, display the final scores
               // else any necessary information
-              isPastEvent && matchup.event_status === 'STATUS_FINAL' ? (
+              matchup.event_status === 'STATUS_FINAL' ? (
                 <>
                   <Grid.Column className={Style.finalColumn}>
                     <h3>{matchup.away_score}</h3>
@@ -309,12 +297,11 @@ const MatchupCardAt = ({
         {tiebreak && (
           <Tiebreaker
             isLocked={isLocked}
-            tiebreaker={tiebreaker}
-            setTiebreaker={setTiebreaker}
             user={user}
             eventId={matchup.event_id}
             hometeam={matchup.home_team}
             awayteam={matchup.away_team}
+            tiebreaker={userPick && userPick?.tiebreaker}
             finalTiebreaker={
               matchup.event_status === 'STATUS_FINAL' &&
               matchup.away_score + matchup.home_score
