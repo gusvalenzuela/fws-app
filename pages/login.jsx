@@ -15,7 +15,7 @@ const LoginPage = ({ demoAccount }) => {
   const sport = 'football'
 
   useEffect(() => {
-    if (!user && !season) return null
+    if (!user || !season) return null
     // redirect to home if user is logged in
     return router.push(`/weeks?sport=${sport}&yr=${season.year}`)
   }, [user, router, season])
