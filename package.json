@@ -1,6 +1,6 @@
 {
   "name": "fws-app",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Full fledged app made with Next.JS and MongoDB where users can pick against the odds in weekly sporting events.",
   "main": "index.js",
   "scripts": {
@@ -23,14 +23,14 @@
     "@sendgrid/mail": "7.4.5",
     "axios": "0.21.1",
     "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.26.1",
+    "cloudinary": "^1.26.2",
     "cloudinary-react": "1.7.0",
     "connect-mongo": "^4.4.1",
     "dotenv": "^10.0.0",
     "express-session": "^1.17.1",
     "lodash": "^4.17.21",
     "moment": "2.29.1",
-    "mongodb": "^3.6.2",
+    "mongodb": "^4.0.0",
     "multer": "^1.4.2",
     "nanoid": "^3.1.12",
     "next": "11.0.1",
@@ -47,10 +47,11 @@
     "swr": "0.5.6",
     "unfetch": "4.2.0",
     "validator": "^13.1.17",
-    "zustand": "3.5.4"
+    "zustand": "3.5.6"
   },
   "devDependencies": {
-    "eslint": "7.29.0",
+    "@types/react": "^17.0.14",
+    "eslint": "7.30.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-next": "^11.0.1",
     "eslint-config-prettier": "8.3.0",
@@ -58,10 +59,11 @@
     "eslint-plugin-jsx-a11y": "6.4.1",
     "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-hooks": "4.2.0",
-    "husky": "6.0.0",
-    "lint-staged": "11.0.0",
-    "prettier": "2.3.1",
-    "react-test-renderer": "17.0.2"
+    "husky": "7.0.1",
+    "lint-staged": "11.0.1",
+    "prettier": "2.3.2",
+    "react-test-renderer": "17.0.2",
+    "typescript": "^4.3.5"
   },
   "husky": {
     "hooks": {
