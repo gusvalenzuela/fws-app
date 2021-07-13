@@ -1,6 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
+import Img from 'next/image'
 import { useCurrentUser, useUser } from '../../../lib/hooks'
 
 export default function UserPage({ userId }) {
@@ -64,7 +65,7 @@ export default function UserPage({ userId }) {
           ) : (
             <>
               <div className="user-info">
-                <img src={profilePicture} width="256" height="256" alt={name} />
+                <Img src={profilePicture} width="256" height="256" alt={name} />
                 <section>
                   <div>
                     <h2>{name}</h2>
@@ -74,7 +75,7 @@ export default function UserPage({ userId }) {
                   Email
                   <p>{email}</p>
                   {isCurrentUser && (
-                    <Link href="/settings">
+                    <Link passHref href="/settings">
                       <button type="button">Edit Account</button>
                     </Link>
                   )}
