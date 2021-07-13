@@ -1,22 +1,23 @@
-import React from "react";
-import Head from "next/head";
-// import Router from "next/router";
+import React from 'react'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 const ForgetPasswordPage = () => {
+  const router = useRouter()
   async function handleSubmit(e) {
-    e.preventDefault(e);
+    e.preventDefault(e)
 
-    let body = {
+    const body = {
       email: e.currentTarget.email.value,
-    };
+    }
 
-    let res = await fetch("/api/user/password/reset", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const res = await fetch('/api/user/password/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
-    });
+    })
 
-    if (res.status === 200) Router.replace("/");
+    if (res.status === 200) router.replace('/')
   }
 
   return (
@@ -33,7 +34,7 @@ const ForgetPasswordPage = () => {
         <button type="submit">Submit</button>
       </form>
     </>
-  );
-};
+  )
+}
 
-export default ForgetPasswordPage;
+export default ForgetPasswordPage
