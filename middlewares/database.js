@@ -10,8 +10,8 @@ import { MongoClient } from 'mongodb'
 // })
 
 const client = new MongoClient(process.env.MONGODB_URX, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
   keepAlive: false,
 })
 
