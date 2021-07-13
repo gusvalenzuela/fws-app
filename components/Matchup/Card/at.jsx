@@ -42,7 +42,7 @@ const MatchupCardAt = ({
         : homeTeam
 
     if (isUpdating) return toast.info('Still updating, please wait') // wait for Mongo DB to respond
-    if (!isLocked) {
+    if (isLocked) {
       // check to see to no similar toast is active (prevent dupes)
       if (!toast.isActive(lockedToast.current)) {
         lockedToast.current = toast.error(
