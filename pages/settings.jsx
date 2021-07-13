@@ -1,4 +1,5 @@
 import React from 'react'
+import Head from 'next/head'
 import ProfileSection from '../components/ProfileSection'
 import { useCurrentUser } from '../lib/hooks'
 
@@ -14,6 +15,9 @@ const SettingPage = () => {
   }
   return (
     <>
+      <Head>
+        <title>FWS | Settings</title>
+      </Head>
       <main id="index" className="index">
         <div className="main-content">
           <header className="page-header">
