@@ -1,6 +1,6 @@
 {
   "name": "fws-app",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Full fledged app made with Next.JS and MongoDB where users can pick against the odds in weekly sporting events.",
   "main": "index.js",
   "scripts": {
@@ -52,6 +52,7 @@
   "devDependencies": {
     "eslint": "7.29.0",
     "eslint-config-airbnb": "18.2.1",
+    "eslint-config-next": "^11.0.1",
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.23.4",
     "eslint-plugin-jsx-a11y": "6.4.1",
