@@ -1,6 +1,6 @@
 {
   "name": "fws-app",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Full fledged app made with Next.JS and MongoDB where users can pick against the odds in weekly sporting events.",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,6 @@
   "license": "MIT",
   "homepage": "https://github.com/gusvalenzuela/#readme",
   "dependencies": {
-    "@sanity/client": "2.11.0",
     "@sendgrid/mail": "7.4.5",
     "axios": "0.21.1",
     "bcryptjs": "^2.4.3",
@@ -50,8 +49,8 @@
     "zustand": "3.5.6"
   },
   "devDependencies": {
-    "@types/react": "^17.0.14",
-    "eslint": "7.30.0",
+    "@types/react": "^17.0.15",
+    "eslint": "7.31.0",
     "eslint-config-airbnb": "18.2.1",
     "eslint-config-next": "^11.0.1",
     "eslint-config-prettier": "8.3.0",
@@ -60,7 +59,7 @@
     "eslint-plugin-react": "7.24.0",
     "eslint-plugin-react-hooks": "4.2.0",
     "husky": "7.0.1",
-    "lint-staged": "11.0.1",
+    "lint-staged": "11.1.1",
     "prettier": "2.3.2",
     "react-test-renderer": "17.0.2",
     "typescript": "^4.3.5"
