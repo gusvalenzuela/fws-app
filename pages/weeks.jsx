@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Divider, Dropdown, Header, Checkbox } from 'semantic-ui-react'
+import { Divider, Header, Checkbox } from 'semantic-ui-react'
 import { Image, Transformation, CloudinaryContext } from 'cloudinary-react'
 import Head from 'next/head'
 import {
@@ -9,9 +9,9 @@ import {
   useSportTeams,
   useUserPicksByWeek,
 } from '../lib/hooks'
-import { generateNumbersArray } from '../lib/utils'
 import Store from '../lib/stores/FootballPool'
 import Loader from '../components/SemanticLoader'
+import Dropdown from '../components/SemanticDropdown'
 import MatchupCard from '../components/Matchup/Card'
 import TimeDisplay from '../components/TimeDisplay'
 import PlayerDashboard from '../components/PlayerDashboard'
@@ -136,18 +136,7 @@ function Weeks({ query }) {
               {
                 // "Week 2" [Dropdown]
               }
-              <Dropdown
-                className="week-dropdown"
-                onChange={(e, { value }) => Store.setState({ week: value })}
-                options={generateNumbersArray(1, 17).map((num) => ({
-                  key: num,
-                  value: num,
-                  text: `Week ${num}`,
-                }))}
-                value={week}
-                text={`Week ${week?.toString()}`}
-                inline
-              />
+              <Dropdown />
 
               {
                 // "(Sep 16-22)"
