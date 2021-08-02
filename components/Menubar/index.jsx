@@ -3,28 +3,32 @@ import { useRouter } from 'next/router'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { useCurrentUser, useAllUsers } from '../../lib/hooks'
 import Store from '../../lib/stores/FootballPool'
-import { generateNumbersArray } from '../../lib/utils'
+// import { generateNumbersArray } from '../../lib/utils'
 
 const Menubar = () => {
   const [users] = useAllUsers()
   const [user] = useCurrentUser()
   const router = useRouter()
   const menubar = createRef()
+  // const selectedWeek = Store((s) => s.week) || Store.getState().currentWeek
+  const selectedSport = 'football'
+  const selectedSeasonYear =
+    Store((s) => s.seasonYear) || Store.getState().currentSeasonYear
 
   const toggleResponsiveMenu = () =>
     menubar.current.classList.toggle('responsive')
 
-  const handleWeekChange = (e, { value }) => {
-    toggleResponsiveMenu() // to hide menu on mobile when item clicked
-    Store.setState({ week: value })
-    router.push('/weeks?sport=nfl&yr=2020')
-  }
+  // const handleWeekChange = (e, { value }) => {
+  //   toggleResponsiveMenu() // to hide menu on mobile when item clicked
+  //   Store.setState({ week: value })
+  //   router.push('/weeks?sport=nfl&yr=2020')
+  // }
 
-  const handleSeasonChange = (e, { value }) => {
-    toggleResponsiveMenu() // to hide menu on mobile when item clicked
-    Store.setState({ seasonYear: value })
-    router.push('/weeks?sport=nfl&yr=2020')
-  }
+  // const handleSeasonChange = (e, { value }) => {
+  //   toggleResponsiveMenu() // to hide menu on mobile when item clicked
+  //   Store.setState({ seasonYear: value })
+  //   router.push('/weeks?sport=nfl&yr=2020')
+  // }
   const handleUserChange = (e, { value }) => {
     toggleResponsiveMenu() // to hide menu on mobile when item clicked
     Store.setState({ selectedUser: value })
@@ -40,7 +44,7 @@ const Menubar = () => {
           }
           .menubar--menu {
             width: 100%;
-            max-width: 1074px !important;
+            max-width: 800px !important;
             margin: auto;
           }
 
@@ -135,7 +139,9 @@ const Menubar = () => {
                   season: Store.getState().currentSeasonYear,
                 })
                 if (user) {
-                  router.push('/weeks?sport=nfl&yr=2020')
+                  router.push(
+                    `/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`
+                  )
                 } else {
                   router.push('/')
                 }
@@ -143,7 +149,7 @@ const Menubar = () => {
             >
               Home
             </Dropdown.Item>
-            <Dropdown
+            {/* <Dropdown
               // selection
               selectOnNavigation={false}
               options={generateNumbersArray(2020, 2020).map((num) => ({
@@ -165,7 +171,19 @@ const Menubar = () => {
               item
               text="Weeks"
               onChange={handleWeekChange}
-            />
+            /> */}
+            <Dropdown.Item
+              as="a"
+              onClick={() => {
+                toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
+
+                router.push(
+                  `/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`
+                )
+              }}
+            >
+              Weeks
+            </Dropdown.Item>
             <Dropdown
               selectOnNavigation={false}
               options={
@@ -180,7 +198,7 @@ const Menubar = () => {
               text="Users"
               onChange={handleUserChange}
             />
-            {/* <Dropdown.Item
+            <Dropdown.Item
               as="a"
               onClick={() => {
                 toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
@@ -189,7 +207,7 @@ const Menubar = () => {
               }}
             >
               Leaderboards
-            </Dropdown.Item> */}
+            </Dropdown.Item>
             <Menu.Menu position="right">
               {!user ? (
                 <>

@@ -117,6 +117,9 @@ div.loading {
 .page-content,
 .page-footer {
   background-color: transparent;
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
 }
 .page-header {
   padding: 1rem;

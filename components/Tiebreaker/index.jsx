@@ -114,7 +114,7 @@ const Tiebreaker = ({
       >
         <b>Your Tiebreaker: </b>
         <Dropdown
-          disabled={isLocked}
+          disabled={!!isLocked}
           closeOnChange
           closeOnBlur
           closeOnEscape
