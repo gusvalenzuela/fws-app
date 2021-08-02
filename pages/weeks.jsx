@@ -10,8 +10,8 @@ import {
   useUserPicksByWeek,
 } from '../lib/hooks'
 import Store from '../lib/stores/FootballPool'
-import Loader from '../components/SemanticLoader'
-import Dropdown from '../components/SemanticDropdown'
+import Loader from '../components/DualRingLoader'
+import WeekDropdown from '../components/WeekDropdown'
 import MatchupCard from '../components/Matchup/Card'
 import TimeDisplay from '../components/TimeDisplay'
 import PlayerDashboard from '../components/PlayerDashboard'
@@ -136,7 +136,10 @@ function Weeks({ query }) {
               {
                 // "Week 2" [Dropdown]
               }
-              <Dropdown />
+              <WeekDropdown
+                week={week}
+                setWeek={(val) => Store.setState({ week: val })}
+              />
 
               {
                 // "(Sep 16-22)"
