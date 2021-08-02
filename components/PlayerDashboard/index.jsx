@@ -17,7 +17,7 @@ const PlayerDashboard = ({
           margin: auto;
           height: fit-content;
           padding: 1.5rem;
-          background-color: #243ec2;
+          background-color: var(--main-black, #000);
         }
         .player-container.picked {
           background-color: #ddf5d1;
