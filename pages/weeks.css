@@ -35,8 +35,8 @@
   cursor: pointer;
 } */
 .matchup-day-header {
-  background: linear-gradient(135deg, #daddad 50%, #fff);
-  color: #000;
+  background: linear-gradient(135deg, var(--main-black, #000) 50%, #fff);
+  color: #ddd;
   width: 100%;
   max-width: 825px;
   margin: 1rem auto;
