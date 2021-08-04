@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { useCurrentUser, useAllUsers } from '../../lib/hooks'
 import Store from '../../lib/stores/FootballPool'
-// import { generateNumbersArray } from '../../lib/utils'
+import { generateNumbersArray } from '../../lib/utils'
 
 const Menubar = () => {
   const [users] = useAllUsers()
@@ -18,21 +18,21 @@ const Menubar = () => {
   const toggleResponsiveMenu = () =>
     menubar.current.classList.toggle('responsive')
 
-  // const handleWeekChange = (e, { value }) => {
-  //   toggleResponsiveMenu() // to hide menu on mobile when item clicked
-  //   Store.setState({ week: value })
-  //   router.push('/weeks?sport=nfl&yr=2020')
-  // }
+  const handleWeekChange = (e, { value }) => {
+    toggleResponsiveMenu() // to hide menu on mobile when item clicked
+    Store.setState({ week: value })
+    // router.push('/weeks?sport=nfl&yr=2020')
+  }
 
-  // const handleSeasonChange = (e, { value }) => {
-  //   toggleResponsiveMenu() // to hide menu on mobile when item clicked
-  //   Store.setState({ seasonYear: value })
-  //   router.push('/weeks?sport=nfl&yr=2020')
-  // }
+  const handleSeasonChange = (e, { value }) => {
+    toggleResponsiveMenu() // to hide menu on mobile when item clicked
+    Store.setState({ seasonYear: value })
+    // router.push(`/weeks?sport=${selectedSport}&yr=${value}`)
+  }
   const handleUserChange = (e, { value }) => {
     toggleResponsiveMenu() // to hide menu on mobile when item clicked
     Store.setState({ selectedUser: value })
-    router.push('/weeks?sport=nfl&yr=2020')
+    router.push(`/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`)
   }
 
   return (
@@ -149,10 +149,10 @@ const Menubar = () => {
             >
               Home
             </Dropdown.Item>
-            {/* <Dropdown
+            <Dropdown
               // selection
               selectOnNavigation={false}
-              options={generateNumbersArray(2020, 2020).map((num) => ({
+              options={generateNumbersArray(2020, 2021).map((num) => ({
                 key: num,
                 text: `Season ${num}`,
                 value: num,
@@ -171,8 +171,8 @@ const Menubar = () => {
               item
               text="Weeks"
               onChange={handleWeekChange}
-            /> */}
-            <Dropdown.Item
+            />
+            {/* <Dropdown.Item
               as="a"
               onClick={() => {
                 toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
@@ -183,7 +183,7 @@ const Menubar = () => {
               }}
             >
               Weeks
-            </Dropdown.Item>
+            </Dropdown.Item> */}
             <Dropdown
               selectOnNavigation={false}
               options={
