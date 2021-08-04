@@ -7,7 +7,7 @@ const WeekDropdown = ({ week, setWeek }) => (
     <span>
       Week{' '}
       <Dropdown
-        className="week-dropdown"
+        className="custom-dropdown"
         onChange={(e, { value }) => setWeek(value)}
         options={generateNumbersArray(1, 17).map((num) => ({
           key: num,

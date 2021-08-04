@@ -98,7 +98,7 @@ const PlayerDashboard = ({
           }
         </>
       )}
-      {Date.now() >= lockDate && (
+      {Date.now() >= lockDate && weeklyRecord && (
         <p className="picks-record">
           Record this week: <b>{weeklyRecord}</b>
         </p>

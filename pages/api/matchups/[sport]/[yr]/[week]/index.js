@@ -8,7 +8,7 @@ handler.use(middleware)
 
 handler.get(async (req, res) => {
   const { sport, yr, week } = req.query
-  if (!sport || !yr) return res.json(null)
+  if (!sport && !yr) return res.json([null])
 
   return res.json(await getSchedule(req, sport, Number(yr), Number(week)))
 })
