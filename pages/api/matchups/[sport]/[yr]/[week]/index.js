@@ -20,9 +20,10 @@ handler.patch(async (req, res) => {
     return res.status(401).send('unauthenticated')
   }
   // check to confirm body is array
+  const matchesToUpdate = !body.isArray ? [body] : body
   // ...
 
-  const matchups = await updateMatchups(db, body)
+  const matchups = await updateMatchups(db, matchesToUpdate)
 
   return res.json({ matchups })
 })
