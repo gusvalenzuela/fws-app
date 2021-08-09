@@ -22,7 +22,7 @@ const MatchupCardAt = ({
   const homeTeam = matchup.home_team
   const awayTeam = matchup.away_team
   const [selectedTeam, setSelectedTeam] = useState(null)
-  const [sport, setSport] = useState(null)
+  const [sport] = useState(2)
   const [isUpdating, setIsUpdating] = useState(false)
   // is past event when it has a score obj with final confirmed,
   // or 5 hours have passed after event start
@@ -30,7 +30,12 @@ const MatchupCardAt = ({
     (matchup.event_status && matchup.event_status === 'STATUS_FINAL') ||
       Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   )
-  const [isLocked, setisLocked] = useState(true)
+  const isLocked =
+    Date.parse(matchup.event_date) < Date.now()
+      ? 'past'
+      : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now()
+      ? 'after lock date'
+      : false
   const initToast = React.useRef(null)
   const lockedToast = React.useRef(null)
   const loginToPickToast = React.useRef(null)
@@ -137,25 +142,6 @@ const MatchupCardAt = ({
       userPick.selectedTeamId === awayTeam.team_id ? awayTeam : homeTeam
     )
   }, [userPick, awayTeam, homeTeam])
-
-  useEffect(() => {
-    setSport(matchup.sport_id)
-    // determine locked-pick status
-    // if the event date is in the past, then locked is true
-    /* if event date is on or after the first Sunday game start of the viewed week
-      AND the lockdate is in the past (changes after first Sunday begins)
-     */
-
-    // console.log(lockDate)
-    return () =>
-      setisLocked(
-        Date.parse(matchup.event_date) < Date.now()
-          ? 'past'
-          : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now()
-          ? 'after lock date'
-          : false
-      )
-  }, [matchup, lockDate])
 
   const buildTeamCard = (team) => (
     <Grid.Column
