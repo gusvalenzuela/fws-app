@@ -237,24 +237,24 @@ function Weeks({ query }) {
                   )
                 })
               ) : selectedUser && Date.now() < lockDate ? (
-                <>
-                  <p
-                    style={{
-                      textAlign: 'justify',
-                      padding: '1rem',
-                      maxWidth: '800px',
-                      margin: 'auto',
-                    }}
-                  >
-                    <b>Note:</b> Other users&apos; picks are not viewable until
-                    after the start of the first Sunday game.
-                  </p>
-                </>
+                <p
+                  style={{
+                    textAlign: 'justify',
+                    padding: '1rem',
+                    maxWidth: '800px',
+                    margin: 'auto',
+                  }}
+                >
+                  <b>Note:</b> Other users&apos; picks are not viewable until
+                  after the start of the first Sunday game.
+                </p>
               ) : null
             }
           </>
         ) : (
-          <Loader text="Loading matchups..." />
+          <section>
+            <Loader text="Loading matchups..." />
+          </section>
         )}
       </div>
       <div className="page-footer">
