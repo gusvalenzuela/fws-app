@@ -6,7 +6,7 @@ import { useCurrentUser } from '../lib/hooks'
 const SettingPage = () => {
   const [user] = useCurrentUser()
 
-  if (!user) {
+  if (!user || user.isDemo) {
     return (
       <>
         <p>Please sign in</p>

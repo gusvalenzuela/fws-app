@@ -21,29 +21,37 @@ const LoginPage = ({ demoAccount }) => {
   }, [user, router, season])
 
   return (
-    <main id="login">
-      <Head>
-        <title>FWS | Login</title>
-      </Head>
-      <div className="main-content">
-        <header className="page-header">
-          <h1 className="hero">Log In!</h1>
-        </header>
-        <div className="page-content">
-          <LoginForm demoAccount={demoAccount} mutate={mutate} />
-          <p
-            style={{
-              color: '#777',
-              textAlign: 'center',
-            }}
-          >
-            <b>Disclaimer: </b>
-            This app is for ENTERTAINMENT USE ONLY. Very much in alpha and
-            subject to change without notice.
-          </p>
+    <>
+      <style jsx>{`
+        .page-header {
+          background: no-repeat 50% 40% / cover
+            url(./assets/images/stadium-long-shot.jpg);
+        }
+      `}</style>
+      <main id="login">
+        <Head>
+          <title>FWS | Login</title>
+        </Head>
+        <div className="main-content">
+          <header className="page-header">
+            <h1 className="hero">Log In!</h1>
+          </header>
+          <div className="page-content">
+            <LoginForm demoAccount={demoAccount} mutate={mutate} />
+            <p
+              style={{
+                color: '#777',
+                textAlign: 'center',
+              }}
+            >
+              <b>Disclaimer: </b>
+              This app is for ENTERTAINMENT USE ONLY. Very much in alpha and
+              subject to change without notice.
+            </p>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   )
 }
 

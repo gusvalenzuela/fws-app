@@ -60,15 +60,19 @@ const AdminEventSection = ({ event }) => {
       },
     }
 
-    // console.log(formData);
-    const res = await fetch('/api/lines', {
-      method: 'PATCH',
-      body: JSON.stringify(formData),
-    })
+    const res = await fetch(
+      `/api/matchups/football/${event.season_year}/${event.week}`,
+      {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      }
+    )
     setIsUpdating(false)
     if (res.status === 200) {
       setMsg({ message: 'Point Spread updated' })
     } else {
+      // console.log(`or else`)
       setMsg({ message: await res.text(), isError: true })
     }
   }

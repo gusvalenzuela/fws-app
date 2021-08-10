@@ -8,7 +8,7 @@ handler.use(middleware)
 
 handler.get(async (req, res) => {
   const { sport, yr, week } = req.query
-  if (!sport || !yr) return res.json(null)
+  if (!sport && !yr) return res.json([null])
 
   return res.json(await getSchedule(req, sport, Number(yr), Number(week)))
 })
@@ -20,9 +20,10 @@ handler.patch(async (req, res) => {
     return res.status(401).send('unauthenticated')
   }
   // check to confirm body is array
+  const matchesToUpdate = !body.isArray ? [body] : body
   // ...
 
-  const matchups = await updateMatchups(db, body)
+  const matchups = await updateMatchups(db, matchesToUpdate)
 
   return res.json({ matchups })
 })

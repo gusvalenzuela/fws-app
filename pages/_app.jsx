@@ -10,7 +10,6 @@ import startDates from '../lib/stores/startDays.json'
 import Store from '../lib/stores/FootballPool'
 import Menubar from '../components/Menubar'
 import Footer from '../components/Footer'
-// import { Loader, Dimmer } from "semantic-ui-react";
 import './_app.css'
 import 'semantic-ui-css/semantic.min.css'
 import 'react-toastify/dist/ReactToastify.css'
@@ -35,7 +34,7 @@ export default function MyApp({ Component, pageProps }) {
     Store.setState({
       currentWeek:
         startDateIndex < 0 ? weekStartDates.length : startDateIndex + 1,
-      currentSeasonYear: 2020,
+      currentSeasonYear: 2021,
       Moment,
     })
   }, [])

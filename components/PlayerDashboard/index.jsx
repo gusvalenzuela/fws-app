@@ -54,8 +54,8 @@ const PlayerDashboard = ({
       `}
     </style>
     <div
-      className={`player-container ${otherUser ? 'other-user' : ''} ${
-        allPicked ? 'picked' : ''
+      className={`player-container ${otherUser && 'other-user'} ${
+        allPicked && 'picked'
       }`}
     >
       {user && otherUser ? (
@@ -80,25 +80,21 @@ const PlayerDashboard = ({
       ) : (
         <h1>Demo</h1>
       )}
-      {!otherUser && (
-        <>
-          {
-            // find count of all selected teams on screen (i.e. picks made)
-            allPicked ? (
-              <p className="all-picked">
-                All this week&apos;s matchups have been selected. Good luck!
-              </p>
-            ) : (
-              Date.now() <= lockDate && (
-                <p className="picks-remaining">
-                  Picks locked at the scheduled time of the first Sunday Game
-                </p>
-              )
-            )
-          }
-        </>
-      )}
-      {Date.now() >= lockDate && (
+      {
+        // find count of all selected teams on screen (i.e. picks made)
+        !otherUser && allPicked ? (
+          <p className="all-picked">
+            All this week&apos;s matchups have been selected. Good luck!
+          </p>
+        ) : (
+          Date.now() <= lockDate && (
+            <p className="picks-remaining">
+              Picking is locked at the scheduled time of the first Sunday Game
+            </p>
+          )
+        )
+      }
+      {Date.now() >= lockDate && weeklyRecord && (
         <p className="picks-record">
           Record this week: <b>{weeklyRecord}</b>
         </p>
