@@ -15,10 +15,10 @@ extends:
   - plugin:jsx-a11y/recommended
   - plugin:import/errors
   - plugin:import/warnings
-  # - plugin:import/typescript # important bit for when using typescript
+  - plugin:import/typescript # important bit for when using typescript
   # - next
   - prettier
-# parser: '@typescript-eslint/parser'
+parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaFeatures:
     jsx: true # Enable JSX since we're using React
@@ -27,7 +27,7 @@ parserOptions:
 plugins:
   - import
   - react
-  # - '@typescript-eslint' # important bit for when using typescript
+  - '@typescript-eslint' # important bit for when using typescript
 settings:
   react:
     version: detect # Automatically detect the react version
