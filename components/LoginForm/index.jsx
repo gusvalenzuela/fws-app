@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import Link from 'next/link'
 import { Icon } from 'semantic-ui-react'
 import Loader from '../SemanticLoader'
@@ -17,25 +18,14 @@ const LoginForm = ({ mutate, demoAccount }) => {
   }
 
   async function handleDemoLogin(acct) {
-    const res = await postLogin(acct)
+    const res = await axios.post('/api/auth', acct)
 
     return postPostLogin(res)
   }
 
-  async function postLogin(body) {
-    const response = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
-
-    return response
-  }
-
   async function postPostLogin(res) {
     if (res.status === 200) {
-      const userObj = await res.json()
-      mutate(userObj)
+      mutate(res.data.user)
     } else {
       setErrorMsg('Incorrect username or password. Try again!')
     }
@@ -52,7 +42,7 @@ const LoginForm = ({ mutate, demoAccount }) => {
       email: e.currentTarget.email.value.trim(),
       password: e.currentTarget.password.value.trim(),
     }
-    const res = await postLogin(body)
+    const res = await axios.post('/api/auth', body)
 
     return postPostLogin(res)
   }
