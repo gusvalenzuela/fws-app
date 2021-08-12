@@ -1,6 +1,6 @@
 {
   "name": "fws-app",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Full fledged app made with Next.JS and MongoDB where users can pick against the odds in weekly sporting events.",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,6 @@
   "license": "MIT",
   "homepage": "https://github.com/gusvalenzuela/#readme",
   "dependencies": {
-    "@sendgrid/mail": "7.4.5",
     "axios": "0.21.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.26.2",
@@ -43,6 +42,7 @@
     "react-toastify": "7.0.4",
     "semantic-ui-css": "2.4.1",
     "semantic-ui-react": "2.0.3",
+    "sib-api-v3-sdk": "^8.2.1",
     "swr": "0.5.6",
     "unfetch": "4.2.0",
     "validator": "^13.1.17",

@@ -1,35 +1,70 @@
-import crypto from 'crypto';
-import sgMail from '@sendgrid/mail';
-import nextConnect from 'next-connect';
-import middleware from '../../../../middlewares/middleware';
+import crypto from 'crypto'
+import SibApiV3Sdk from 'sib-api-v3-sdk'
+import nextConnect from 'next-connect'
+import middleware from '../../../../middlewares/middleware'
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const { SIB_API_KEY } = process.env
+let emailClient = SibApiV3Sdk.ApiClient.instance
 
-const handler = nextConnect();
+// Configure API key authorization: api-key
+let apiKey = emailClient.authentications['api-key']
+apiKey.apiKey = SIB_API_KEY
+// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//apiKey.apiKeyPrefix['api-key'] = "Token"
 
-handler.use(middleware);
+const handler = nextConnect()
+
+handler.use(middleware)
 
 handler.post(async (req, res) => {
-  if (!req.user) { res.json(401).send('you need to be authenticated'); return; }
-  const token = crypto.randomBytes(32).toString('hex');
+  if (!req.user) {
+    res.json(401).send('you need to be authenticated')
+    return
+  }
+  const token = crypto.randomBytes(32).toString('hex')
   await req.db.collection('tokens').insertOne({
     token,
     userId: req.user._id,
     type: 'emailVerify',
     expireAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
-  });
-  const msg = {
-    to: req.user.email,
-    from: process.env.EMAIL_FROM,
-    html: `
-      <div>
-        <p>Hello, ${req.user.name}</p>
-        <p>Please follow <a href="${process.env.WEB_URI}/verify-email/${token}">this link</a> to confirm your email.</p>
-      </div>
-      `,
-  };
-  await sgMail.send(msg);
-  res.end('ok');
-});
+  })
+  const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi()
 
-export default handler;
+  let sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail() // SendSmtpEmail | Values to send a transactional email
+
+  sendSmtpEmail = {
+    subject: '[FWS] Verify your email address',
+    htmlContent: `
+    <div>
+      <p>Hello, ${req.user.name}</p>
+      <p>Please follow <a href="${process.env.WEB_URI}/verify-email/${token}">this link</a> to confirm your email.</p>
+    </div>
+    `,
+    sender: { name: 'Gus Valenzuela', email: process.env.EMAIL_FROM },
+    to: [
+      {
+        email: req.user.email,
+        name: req.user.name,
+      },
+    ],
+    headers: {
+      'api-key': SIB_API_KEY,
+      'content-type': 'application/json',
+      accept: 'application/json',
+    },
+  }
+
+  apiInstance.sendTransacEmail(sendSmtpEmail).then(
+    function (data) {
+      console.log(
+        'API called successfully. Returned data: ' + JSON.stringify(data)
+      )
+    },
+    function (error) {
+      console.error(error)
+    },
+    res.end('ok')
+  )
+})
+
+export default handler
