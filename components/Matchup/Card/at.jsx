@@ -287,7 +287,7 @@ const MatchupCardAt = ({
             eventId={matchup.event_id}
             hometeam={matchup.home_team}
             awayteam={matchup.away_team}
-            tiebreaker={userPick && userPick?.tiebreaker}
+            tiebreaker={(userPick && userPick.tiebreaker) || 1}
             finalTiebreaker={
               matchup.event_status === 'STATUS_FINAL' &&
               matchup.away_score + matchup.home_score

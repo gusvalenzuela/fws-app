@@ -24,8 +24,6 @@ const AdminPage = () => {
 
   // on week, schedule set
   useEffect(() => {
-    // sort by event date
-    schedule?.sort((a, b) => new Date(a.event_date) - new Date(b.event_date))
 
     // filter out the desired week
     const filteredEvents = schedule?.filter(

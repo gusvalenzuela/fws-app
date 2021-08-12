@@ -5,13 +5,13 @@ import nextConnect from 'next-connect'
 import database from '../../../../middlewares/database'
 
 const { SIB_API_KEY } = process.env
-let emailClient = SibApiV3Sdk.ApiClient.instance
+const emailClient = SibApiV3Sdk.ApiClient.instance
 
-// Configure API key authorization: api-key
-let apiKey = emailClient.authentications['api-key']
+//  Configure API key authorization: api-key
+const apiKey = emailClient.authentications['api-key']
 apiKey.apiKey = SIB_API_KEY
-// Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
-//apiKey.apiKeyPrefix['api-key'] = "Token"
+//  Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
+//  apiKey.apiKeyPrefix['api-key'] = "Token"
 
 const handler = nextConnect()
 
@@ -59,17 +59,13 @@ handler.post(async (req, res) => {
     },
   }
 
-  apiInstance.sendTransacEmail(sendSmtpEmail).then(
-    function (data) {
-      console.log(
-        'API called successfully. Returned data: ' + JSON.stringify(data)
-      )
-    },
-    function (error) {
-      console.error(error)
-    },
+  apiInstance.sendTransacEmail(sendSmtpEmail).then((data, err) => {
+    console.log(
+      `API called successfully. Returned data: ${JSON.stringify(data)}`
+    )
+    if (err) console.log(err)
     res.end('ok')
-  )
+  })
 })
 
 handler.put(async (req, res) => {

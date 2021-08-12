@@ -36,7 +36,7 @@ function Weeks({ query }) {
   // States
   const [Sport] = useState(2) // 2 = NFL, 7 = UFC
   const [teamsOnBye, setTeamsOnBye] = useState([])
-  const [tiebreakMatch, setTiebreakMatch] = useState(false)
+  const [tiebreakMatch, setTiebreakMatch] = useState({ event_id: null })
   const [allPicked, setAllPicked] = useState(false)
   const [compactCards, setCompactCards] = useState(false)
   const [weeklyRecord, setWeeklyRecord] = useState(null)
@@ -221,6 +221,7 @@ function Weeks({ query }) {
                       )}
 
                       <MatchupCard
+                        version="at"
                         compactCards={compactCards}
                         lockDate={lockDate}
                         matchup={matchup}

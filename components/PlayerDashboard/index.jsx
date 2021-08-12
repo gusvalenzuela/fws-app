@@ -3,7 +3,7 @@ import Store from '../../lib/stores/FootballPool'
 
 const PlayerDashboard = ({
   user,
-  msg,
+  msg = null,
   otherUser,
   allPicked,
   lockDate,
