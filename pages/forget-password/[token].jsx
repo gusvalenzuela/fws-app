@@ -59,7 +59,7 @@ const ResetPasswordTokenPage = ({ valid, token }) => {
 export async function getServerSideProps(ctx) {
   const handler = nextConnect()
   handler.use(database)
-  await handler.apply(ctx.req, ctx.res)
+  await handler.run(ctx.req, ctx.res)
   const { token } = ctx.query || 'yes'
 
   const tokenDoc = await ctx.req.db.collection('tokens').findOne({
