@@ -4,7 +4,7 @@ import LeaderboardTable from '../components/Leaderboard'
 
 const LeaderboardPage = () => (
   <>
-    <style jsx>
+    <style>
       {`
         h1 {
           text-align: center;

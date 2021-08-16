@@ -52,22 +52,35 @@ const LoginForm = ({ mutate, demoAccount }) => {
       <style jsx>
         {`
           div.form {
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.24);
             padding: 1.5rem;
             margin: 2.5rem auto;
             max-width: 300px;
             transition: box-shadow 0.2s ease 0s;
             background: #ffff;
+            text-align: center;
           }
           form {
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+          }
+          label {
+            display: inline-block;
+            width: 100%;
           }
           form.login input {
-            width: 90%;
+            width: 75%;
             border: none;
             border-bottom: 2px solid black;
             padding: 0.5rem 0.1rem;
             margin-bottom: 1.25rem;
+          }
+          .button {
+            border: none;
+            padding: 1rem;
+            width: 50%;
+            margin: auto;
+            margin-top: 0.5rem;
+            background-color: var(--color-light, --main-white, #ddd);
           }
         `}
       </style>
@@ -77,7 +90,7 @@ const LoginForm = ({ mutate, demoAccount }) => {
         <div className="form">
           <form className="login" onSubmit={onSubmit}>
             {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
-            <div>
+            <label htmlFor="#email">
               <Icon name="envelope" aria-label="Email" />{' '}
               <input
                 required
@@ -87,8 +100,8 @@ const LoginForm = ({ mutate, demoAccount }) => {
                 autoComplete="true"
                 placeholder="Email"
               />
-            </div>
-            <div>
+            </label>
+            <label htmlFor="#password">
               <Icon name="lock" aria-label="Password" />{' '}
               <input
                 required
@@ -98,7 +111,7 @@ const LoginForm = ({ mutate, demoAccount }) => {
                 name="current-password"
                 placeholder="Password"
               />
-            </div>
+            </label>
             <button className="button" type="submit">
               <span>LOG IN</span>
             </button>
