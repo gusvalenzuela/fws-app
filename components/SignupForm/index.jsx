@@ -29,29 +29,42 @@ const SignupForm = ({ mutate }) => {
       <style jsx>
         {`
           div.form {
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.24);
             padding: 1.5rem;
             margin: 2.5rem auto;
-            max-width: 350px;
+            max-width: 300px;
             transition: box-shadow 0.2s ease 0s;
             background: #ffff;
+            text-align: center;
           }
           form {
             margin-bottom: 1rem;
           }
+          label {
+            display: inline-block;
+            width: 100%;
+          }
           form.signup input {
-            width: 85%;
+            width: 75%;
             border: none;
             border-bottom: 2px solid black;
             padding: 0.5rem 0.1rem;
             margin-bottom: 1.25rem;
+          }
+          .button {
+            border: none;
+            padding: 1rem;
+            width: 50%;
+            margin: auto;
+            margin-top: 0.5rem;
+            background-color: var(--color-light, --main-white, #ddd);
           }
         `}
       </style>
       <div className="form">
         <form className="signup" onSubmit={handleSubmit}>
           {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
-          <div>
+          <label htmlFor="#name">
             <Icon name="user" size="big" aria-label="Username" />
             <input
               required
@@ -61,8 +74,8 @@ const SignupForm = ({ mutate }) => {
               autoComplete="true"
               placeholder="Username"
             />
-          </div>
-          <div>
+          </label>
+          <label htmlFor="#email">
             <Icon name="envelope" size="big" aria-label="Email" />
             <input
               required
@@ -72,8 +85,8 @@ const SignupForm = ({ mutate }) => {
               autoComplete="true"
               placeholder="Email"
             />
-          </div>
-          <div>
+          </label>
+          <label htmlFor="#password">
             <Icon name="lock" size="big" aria-label="Password" />
             <input
               required
@@ -83,7 +96,7 @@ const SignupForm = ({ mutate }) => {
               autoComplete="true"
               placeholder="Password"
             />
-          </div>
+          </label>
           <button className="button" type="submit">
             Sign up
           </button>
