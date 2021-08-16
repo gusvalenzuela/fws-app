@@ -114,7 +114,7 @@ time.time {
   padding: 1rem;
   max-width: 800px;
   margin: auto;
-  justify-content: center;
+  text-align: center;
 }
 .page-header {
   background: var(--color2);
