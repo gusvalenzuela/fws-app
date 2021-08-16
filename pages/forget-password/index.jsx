@@ -25,14 +25,26 @@ const ForgetPasswordPage = () => {
       <Head>
         <title>Forget password</title>
       </Head>
-      <h2>Forget password</h2>
-      <form onSubmit={handleSubmit}>
-        <p>Do not worry. Simply enter your email address below.</p>
-        <label htmlFor="email">
-          <input id="email" type="email" placeholder="Email" />
-        </label>
-        <button type="submit">Submit</button>
-      </form>
+      <main id="forget-password" className="forget-password">
+        <header className="page-header">
+          <h2>Forget password</h2>
+        </header>
+        <div className="page-content">
+          <form style={{ textAlign: 'center' }} onSubmit={handleSubmit}>
+            <p>Do not worry. Simply enter your email address below.</p>
+            <label htmlFor="email">
+              <input id="email" type="email" placeholder="Email" />
+            </label>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+
+        <footer className="page-footer">
+          <span role="img" aria-label="Party popper emoji">
+            🎉
+          </span>
+        </footer>
+      </main>
     </>
   )
 }
