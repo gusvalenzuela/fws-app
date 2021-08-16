@@ -18,20 +18,18 @@ const SettingPage = () => {
       <Head>
         <title>FWS | Settings</title>
       </Head>
-      <main id="index" className="index">
-        <div className="main-content">
-          <header className="page-header">
-            <h1>Change your account&apos;s settings:</h1>
-          </header>
-          <div className="page-content">
-            <ProfileSection />
-          </div>
+      <main id="settings" className="settings">
+        <header className="page-header">
+          <h1>Change your account&apos;s settings:</h1>
+        </header>
+        <div className="page-content">
+          <ProfileSection />
+        </div>
 
-          <div className="page-footer">
-            <span role="img" aria-label="Party popper emoji">
-              🎉
-            </span>
-          </div>
+        <div className="page-footer">
+          <span role="img" aria-label="Party popper emoji">
+            🎉
+          </span>
         </div>
       </main>
     </>
