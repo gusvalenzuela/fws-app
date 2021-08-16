@@ -35,7 +35,11 @@
   cursor: pointer;
 } */
 .matchup-day-header {
-  background: linear-gradient(135deg, var(--main-black, #000) 50%, #fff);
+  background: linear-gradient(
+    60deg,
+    var(--color-dark, #000) 50%,
+    var(--color1, rgb(110, 110, 255))
+  );
   color: #ddd;
   width: 100%;
   max-width: 825px;
@@ -43,6 +47,7 @@
   padding: 1rem 0.5rem;
   margin-top: 3rem !important;
   text-align: center;
+  border-radius: 2px;
 }
 
 #team-container {
@@ -96,17 +101,13 @@
   filter: grayscale(100%);
 }
 .week-header {
-  font-size: 2rem;
+  font-size: 1.7rem;
   font-weight: 800;
   line-height: normal;
   /* padding: 2rem 0.5rem; */
   /* background: rgb(0, 204, 255); */
 }
-.week-dropdown,
-.sport-dropdown {
-  background-color: transparent !important ;
-  color: red !important;
-}
+
 .tiebreaker-dropdown .text {
   color: var(--main-black) !important;
 }

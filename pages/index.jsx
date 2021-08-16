@@ -14,6 +14,8 @@ const HomePage = () => {
         #index .page-header {
           padding: 0;
           text-align: left;
+        }
+        #index .hero {
           background: no-repeat center/cover
             url(./assets/images/closeup-stadium-seats.jpg);
         }
@@ -28,8 +30,8 @@ const HomePage = () => {
           text-transform: uppercase;
           font-size: 14px;
           font-weight: 700;
-          background: var(--base-color);
-          color: var(--main-black);
+          background: var(--brand-color1);
+          color: var(--color-light);
           padding: 0.5rem 1rem;
           margin-bottom: 8px;
           margin-right: 8px;
@@ -41,7 +43,7 @@ const HomePage = () => {
 
         a.demo-link {
           cursor: pointer;
-          color: var(--base-color);
+          color: var(--color-light);
           margin: 2.8rem 0 1rem;
           text-shadow: 1px 1px 1px #00000041;
           background: linear-gradient(transparent 35%, #00000077);

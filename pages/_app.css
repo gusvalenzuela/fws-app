@@ -3,19 +3,14 @@
 :root {
   --main-white: #f2f2f2;
   --main-black: #020202;
-  --brand-color1: #ab2616;
-  --TEMP: #165802;
-  --base-color: #4c940c;
-  --base-cool-light: #6b28e0;
-  --base-cool-dark: #421394;
-  --base-warm-light: #e02847;
-  --base-warm-dark: #94041d;
-  --base-triad-cool: #1b3094;
-  --base-triad-cool-lighter: #213ab8;
-  --base-triad-warm: #94381b;
-  --base-triad-warm-lighter: #b94622;
-  --text-yellow: #fff70f;
   --text-cool: #eadffb;
+  --brand-color1: #a01d26;
+  --color-dark: #2f2e33;
+  --color-dark-rgb: 47, 46, 51;
+  --color-light: #d5d6d2;
+  --color-light-rgb: 213, 214, 210;
+  --color1: #3a5199;
+  --color-success: #ddf5d1;
 }
 html,
 body {
@@ -37,12 +32,12 @@ MENUBAR RELATED
 }
 .top.stackable.menu {
   border-radius: 0 !important;
-  background-color: #1a1a1a !important;
 }
 .right.menu button {
   margin: 0.25rem;
   border: none;
-  background-color: #1b3094 !important;
+  background-color: var(--color3, blue) !important;
+  color: var(--color-light, --main-white, #fff) !important;
 }
 .menu.transition.visible {
   overflow: auto;
@@ -53,7 +48,7 @@ MENUBAR RELATED
   margin: 0 !important;
 }
 .menubar button.active {
-  background-color: var(--base-warm-light);
+  background-color: var(--color2);
   color: white;
 }
 .menubar button.icon {
@@ -93,7 +88,7 @@ MENUBAR RELATED
 main {
   display: grid !important;
   min-height: calc(100vh - 150px);
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: min-content max-content auto;
 }
 time.time {
   color: #979797;
@@ -122,8 +117,8 @@ time.time {
   justify-content: center;
 }
 .page-header {
-  background: rgb(0, 0, 0);
-  color: #ddd;
+  background: var(--color2);
+  color: var(--color-dark);
   text-align: center;
   max-width: none;
 }
@@ -133,7 +128,8 @@ time.time {
 .hero {
   margin: 0;
   color: white;
-  background-color: #0000008a;
+  background-color: #2f2e337a;
+  background-color: rgba(var(--color-dark-rgb), 0.6);
   padding: 2rem 1.5rem;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
 }
@@ -151,14 +147,29 @@ time.time {
   padding: 8rem 4rem;
 }
 
+.custom-dropdown,
+.week-dropdown,
+.season-dropdown {
+  background-color: transparent !important ;
+  color: var(--brand-color1, #f00) !important;
+}
+
 footer.footer {
-  background: #1a1a1a;
+  position: relative;
+  background: var(--color2, --main-white, #fff);
+  border-top: 4px solid var(--brand-color1, red);
   margin-top: 5px;
-  border-top: 4px solid var(--base-warm-light);
   padding: 1rem 1rem 5rem;
 }
+.footer > div {
+  position: absolute;
+  top: 55%;
+  left: 0;
+  right: 0;
+  justify-content: center;
+}
 .footer div * {
-  color: var(--main-white);
+  /* color: var(--main-white); */
   margin-left: 5px;
 }
 
@@ -171,15 +182,15 @@ by: Toastify-react
 .Toastify__progress-bar--dark {
   background: linear-gradient(
     to right,
-    var(--base-cool-dark),
-    var(--base-warm-dark)
+    var(--color-light),
+    var(--color-dark)
   ) !important;
 }
 .Toastify__progress-bar {
   background: linear-gradient(
     to right,
-    var(--base-cool-light),
-    var(--base-warm-light)
+    var(--color1),
+    var(--color-light)
   ) !important;
 }
 /** Used to define the position of the ToastContainer **/

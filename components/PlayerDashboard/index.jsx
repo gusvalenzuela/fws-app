@@ -17,10 +17,12 @@ const PlayerDashboard = ({
           margin: auto;
           height: fit-content;
           padding: 1.5rem;
-          background-color: var(--main-black, #000);
+          background-color: var(--color-dark, #333);
+          border-radius: 2px;
         }
         .player-container.picked {
           background-color: #ddf5d1;
+          background-color: var(--color-success);
         }
         .player-container h1 {
           text-align: left;
@@ -43,13 +45,12 @@ const PlayerDashboard = ({
           color: #fff;
         }
         .player-container.other-user {
-          background: #213ab8dd;
+          background: var(--color1);
         }
         .player-container.other-user::before {
           content: 'YOU ARE VIEWING';
           color: #fff;
           font-weight: 800;
-          // text-decoration: underline;
         }
       `}
     </style>

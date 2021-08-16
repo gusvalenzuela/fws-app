@@ -39,15 +39,17 @@ const Menubar = () => {
   return (
     <nav className="menubar responsive" id="menubar" ref={menubar}>
       <div>
-        <Menu inverted stackable attached="top">
+        <Menu stackable attached="top">
           <Menu.Header
             onClick={toggleResponsiveMenu}
             as="h3"
             className={Styles.menubarHeader}
           >
-            <span style={{ color: '#EADFFB' }}>FWS Pool </span>
+            <span>FWS Pool </span>
             {user && (
-              <span style={{ color: '#FFF70F', fontWeight: 'bolder' }}>
+              <span
+                style={{ color: 'var(--brand-color1)', fontWeight: 'bolder' }}
+              >
                 {` | ${user.name}`}
               </span>
             )}
