@@ -52,12 +52,30 @@ const SignupForm = ({ mutate }) => {
             margin-bottom: 1.25rem;
           }
           .button {
-            border: none;
+            border: 1px solid transparent;
             padding: 1rem;
             width: 50%;
             margin: auto;
             margin-top: 0.5rem;
             background-color: var(--color-light, --main-white, #ddd);
+            color: var(--color1, --color-dark, --main-black, #000);
+          }
+          .button:hover,
+          .button:active {
+            background-color: var(--color1, --color-dark, lightblue);
+            color: var(--main-white, white);
+          }
+          .button:active {
+            border: 1px solid black;
+            cursor: wait;
+            background-color: var(--color-dark, black);
+          }
+          /* // when pointer is a mouse (fine) */
+          @media (hover: hover) and (pointer: fine) {
+            .button:hover {
+              cursor: pointer;
+              opacity: 0.9;
+            }
           }
         `}
       </style>
