@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Divider, Header, Checkbox } from 'semantic-ui-react'
 import { Image, Transformation, CloudinaryContext } from 'cloudinary-react'
 import Head from 'next/head'
+import type { GetServerSideProps } from 'next/types'
+import type { SportsTeam, SportsMatchup } from '../additional'
 import {
   useUser,
   useCurrentUser,
@@ -41,9 +43,10 @@ function Weeks({ query }) {
   const [compactCards, setCompactCards] = useState(false)
   const [weeklyRecord, setWeeklyRecord] = useState(null)
   // LAST
+  // place last as it looks for user._id when no selected user found
   const { user: selectedUser, isLoading } = useUser(
-    !selectedUserId ? currentUser?._id : selectedUserId
-  ) // place last as it looks for user._id when no selected user found
+    selectedUserId || currentUser?._id
+  )
 
   const { picks: userPicks } = useUserPicksByWeek(
     (Date.now() > lockDate && selectedUserId) || currentUser?._id,
@@ -55,14 +58,16 @@ function Weeks({ query }) {
   useEffect(() => {
     if (!week || !schedule || !sportTeams) return
     setWeeklyRecord(null)
-
     // Determine which teams on Bye Week (i.e. not scheduled)
-    const scheduledTeams = schedule
-      .map((matchup) => [matchup.home_team_id, matchup.away_team_id])
+    const scheduledTeams: Array<number> = schedule
+      .map((matchup: SportsMatchup) => [
+        matchup.home_team_id,
+        matchup.away_team_id,
+      ])
       .flat()
 
-    const byeteams = sportTeams.filter(
-      (team) =>
+    const byeteams: Array<SportsTeam> = sportTeams.filter(
+      (team: SportsTeam) =>
         !scheduledTeams?.includes(team.team_id) &&
         ![1766, 1767, 2754].includes(team.team_id) // TODO: is am. football specific for now
     )
@@ -103,18 +108,16 @@ function Weeks({ query }) {
     } else {
       setAllPicked(false)
     }
-  }, [
-    week,
-    sportTeams,
-    Sport,
-    seasonType,
-    seasonYear,
-    schedule,
-    // selectedUser,
-    userPicks,
-  ])
+  }, [week, sportTeams, Sport, seasonType, seasonYear, schedule, userPicks])
 
   // console.log(`events this week ${week}`, events);
+
+  if (!currentUser)
+    return (
+      <main>
+        <h1 className="page-header">Please log in.</h1>
+      </main>
+    )
 
   return (
     <main id="weeks">
@@ -147,28 +150,28 @@ function Weeks({ query }) {
         }
       </div>
       <div className="page-content">
-        <section>
-          <PlayerDashboard
-            lockDate={lockDate}
-            allPicked={allPicked}
-            user={!isLoading ? selectedUser : currentUser}
-            otherUser={
-              selectedUser?._id === currentUser?._id ? false : selectedUser
-            }
-            weeklyRecord={weeklyRecord}
-          />
-        </section>
-        <section>
-          {/* Toggle compact cards on/off  */}
-          <Checkbox
-            className="compact-cards"
-            label="Compact cards"
-            toggle
-            onChange={() => setCompactCards(!compactCards)}
-          />
-        </section>
         {!scheduleIsLoading && schedule?.length ? (
           <>
+            <section>
+              <PlayerDashboard
+                lockDate={lockDate}
+                allPicked={allPicked}
+                user={!isLoading ? selectedUser : currentUser}
+                otherUser={
+                  selectedUser?._id === currentUser?._id ? false : selectedUser
+                }
+                weeklyRecord={weeklyRecord}
+              />
+            </section>
+            <section>
+              {/* Toggle compact cards on/off  */}
+              <Checkbox
+                className="compact-cards"
+                label="Compact cards"
+                toggle
+                onChange={() => setCompactCards(!compactCards)}
+              />
+            </section>
             {
               /* 
                     for each game of the week, make a header or divider and a matchup card component 
@@ -179,7 +182,7 @@ function Weeks({ query }) {
               // render the matchups and the corresponding user's picks
               currentUser?._id === selectedUser?._id ||
               Date.now() >= lockDate ? (
-                schedule.map((matchup, inx) => {
+                schedule.map((matchup: SportsMatchup, inx: number) => {
                   const currentMatchupEventDate = new Date(matchup.event_date)
                   const previousMatchupEventDate = new Date(
                     schedule[inx - 1]?.event_date
@@ -301,12 +304,15 @@ function Weeks({ query }) {
 
 export default React.memo(Weeks)
 
-export async function getServerSideProps(context) {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const { sport, yr } = context.query
 
   if (!sport) {
     return {
-      notFound: true,
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
     }
   }
   return {
