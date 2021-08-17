@@ -6,17 +6,20 @@ import { useCurrentUser } from '../lib/hooks'
 
 const LogoutPage = () => {
   const router = useRouter()
-  const currentUser = useCurrentUser()
-  const { mutate } = currentUser[1]
+  const [currentUser, { mutate }] = useCurrentUser()
 
   React.useEffect(() => {
-    axios.delete('/api/auth').then((res) => {
+    if (!currentUser) return router.push('/')
+    const logUserOut = async () => {
+      const res = await axios.delete('/api/auth')
       if (res.status === 204) {
         mutate({})
       }
       router.push('/')
-    })
-  }, [mutate, router])
+    }
+
+    return logUserOut()
+  }, [mutate, router, currentUser])
 
   return (
     <>
