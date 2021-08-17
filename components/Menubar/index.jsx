@@ -76,30 +76,33 @@ const Menubar = () => {
           >
             Home
           </Dropdown.Item>
-          <Dropdown
-            // selection
-            selectOnNavigation={false}
-            options={generateNumbersArray(2020, 2021).map((num) => ({
-              key: num,
-              text: `Season ${num}`,
-              value: num,
-            }))}
-            item
-            text="Seasons"
-            onChange={handleSeasonChange}
-          />
-          <Dropdown
-            selectOnNavigation={false}
-            options={generateNumbersArray().map((num) => ({
-              key: num,
-              text: num,
-              value: num,
-            }))}
-            item
-            text="Weeks"
-            onChange={handleWeekChange}
-          />
-          {/* <Dropdown.Item
+          {user && (
+            <>
+              {' '}
+              <Dropdown
+                // selection
+                selectOnNavigation={false}
+                options={generateNumbersArray(2020, 2021).map((num) => ({
+                  key: num,
+                  text: `Season ${num}`,
+                  value: num,
+                }))}
+                item
+                text="Seasons"
+                onChange={handleSeasonChange}
+              />
+              <Dropdown
+                selectOnNavigation={false}
+                options={generateNumbersArray().map((num) => ({
+                  key: num,
+                  text: num,
+                  value: num,
+                }))}
+                item
+                text="Weeks"
+                onChange={handleWeekChange}
+              />
+              {/* <Dropdown.Item
               as="a"
               onClick={() => {
                 toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
@@ -111,20 +114,22 @@ const Menubar = () => {
             >
               Weeks
             </Dropdown.Item> */}
-          <Dropdown
-            selectOnNavigation={false}
-            options={
-              // basic users' data is pulled from DB and a dropdown made for each
-              users?.map(({ name, _id }, index) => ({
-                key: index,
-                text: `${name}`,
-                value: _id,
-              }))
-            }
-            item
-            text="Users"
-            onChange={handleUserChange}
-          />
+              <Dropdown
+                selectOnNavigation={false}
+                options={
+                  // basic users' data is pulled from DB and a dropdown made for each
+                  users?.map(({ name, _id }, index) => ({
+                    key: index,
+                    text: `${name}`,
+                    value: _id,
+                  }))
+                }
+                item
+                text="Users"
+                onChange={handleUserChange}
+              />
+            </>
+          )}
           <Dropdown.Item
             as="a"
             onClick={() => {
