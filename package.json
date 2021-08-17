@@ -1,6 +1,6 @@
 {
   "name": "fws-app",
-  "version": "1.5.6",
+  "version": "1.5.7",
   "description": "Full fledged app made with Next.JS and MongoDB where users can pick against the odds in weekly sporting events.",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.26.3",
     "cloudinary-react": "1.7.0",
-    "connect-mongo": "^4.4.1",
+    "connect-mongo": "^4.5.0",
     "dotenv": "^10.0.0",
     "express-session": "^1.17.1",
     "lodash": "^4.17.21",
