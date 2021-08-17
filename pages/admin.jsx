@@ -24,7 +24,6 @@ const AdminPage = () => {
 
   // on week, schedule set
   useEffect(() => {
-
     // filter out the desired week
     const filteredEvents = schedule?.filter(
       (event) => event.week === week && event.season_type === 'Regular Season'
@@ -35,40 +34,38 @@ const AdminPage = () => {
     }
   }, [week, schedule])
 
-  if (!user || !user?.isAdmin) {
+  if (!user?.isAdmin || !user) {
     return (
-      <>
-        <p>Please sign in as an Administrator.</p>
-      </>
+      <main>
+        <h2 className="page-header">
+          Please sign in as an Administrator to view this page
+        </h2>
+      </main>
     )
   }
   return (
-    <>
-      <main id="index" className="index">
-        <div className="main-content">
-          <header className="page-header">
-            <h1>Game scores:</h1>
-          </header>
-          <div className="page-content">
-            <SeasonDropdown season={season} setSeasonYear={setSeason} />
-            <WeekDropdown week={week} setWeek={setWeek} />
-            {!scheduleIsLoading && events.length ? (
-              events.map((event) => (
-                <AdminEventSection key={event?.event_id} event={event} />
-              ))
-            ) : (
-              <DualRingLoader />
-            )}
-          </div>
+    <main id="admin" className="admin">
+      <header className="page-header">
+        <h1>Game scores:</h1>
+      </header>
+      <div className="page-content">
+        <SeasonDropdown season={season} setSeasonYear={setSeason} />
+        <WeekDropdown week={week} setWeek={setWeek} />
+        {!scheduleIsLoading && events.length ? (
+          events.map((event) => (
+            <AdminEventSection key={event?.event_id} event={event} />
+          ))
+        ) : (
+          <DualRingLoader />
+        )}
+      </div>
 
-          <div className="page-footer">
-            <span role="img" aria-label="Party popper emoji">
-              🎉
-            </span>
-          </div>
-        </div>
-      </main>
-    </>
+      <div className="page-footer">
+        <span role="img" aria-label="Party popper emoji">
+          🎉
+        </span>
+      </div>
+    </main>
   )
 }
 

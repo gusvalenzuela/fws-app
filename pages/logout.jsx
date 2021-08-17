@@ -9,25 +9,32 @@ const LogoutPage = () => {
   const currentUser = useCurrentUser()
   const { mutate } = currentUser[1]
 
-  axios.delete('/api/auth').then((res) => {
-    if (res.status === 204) {
-      mutate({})
-    }
-    router.push('/')
-  })
+  React.useEffect(() => {
+    axios.delete('/api/auth').then((res) => {
+      if (res.status === 204) {
+        mutate({})
+      }
+      router.push('/')
+    })
+  }, [mutate, router])
 
   return (
-    <main id="logout">
+    <>
       <Head>
         <title>FWS | Logout</title>
       </Head>
-      <div className="main-content">
+      <main id="logout" className="logout">
         <header className="page-header">Come back soon!</header>
         <div className="page-content">
-          <h2>You are being logged out</h2>
+          <h2>
+            {currentUser
+              ? 'You are being logged out'
+              : 'You have been logged out'}
+          </h2>
         </div>
-      </div>
-    </main>
+        <div className="page-footer" />
+      </main>
+    </>
   )
 }
 
