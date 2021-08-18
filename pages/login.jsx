@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Store from '../lib/stores/FootballPool'
@@ -7,6 +7,7 @@ import { useCurrentUser } from '../lib/hooks'
 
 const LoginPage = ({ demoAccount }) => {
   const router = useRouter()
+  const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [user, { mutate }] = useCurrentUser()
   const season = Store((s) => ({
     week: s.week || s.currentWeek,
@@ -17,7 +18,11 @@ const LoginPage = ({ demoAccount }) => {
   useEffect(() => {
     if (!user || !season) return null
     // redirect to home if user is logged in
-    return router.push(`/weeks?sport=${sport}&yr=${season.year}`)
+    router.push(`/weeks?sport=${sport}&yr=${season.year}`)
+
+    // set loggingIn as false
+    setIsLoggingIn(false)
+    return () => {}
   }, [user, router, season])
 
   return (
@@ -36,7 +41,12 @@ const LoginPage = ({ demoAccount }) => {
           <h1 className="hero">Log In!</h1>
         </header>
         <div className="page-content">
-          <LoginForm demoAccount={demoAccount} mutate={mutate} />
+          <LoginForm
+            setIsLoggingIn={setIsLoggingIn}
+            demoAccount={demoAccount}
+            mutate={mutate}
+            isLoggingIn={isLoggingIn}
+          />
           <p
             style={{
               color: '#777',

@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import Link from 'next/link'
 import { Icon } from 'semantic-ui-react'
-import Loader from '../SemanticLoader'
+import Loader from '../DualRingLoader'
 
 const { NEXT_PUBLIC_DEMO_PSWD } = process.env
 
-const LoginForm = ({ mutate, demoAccount }) => {
+const LoginForm = ({ mutate, demoAccount, setIsLoggingIn, isLoggingIn }) => {
   const [errorMsg, setErrorMsg] = useState(null)
 
   if (demoAccount) {
@@ -33,6 +33,7 @@ const LoginForm = ({ mutate, demoAccount }) => {
 
   async function onSubmit(e) {
     e.preventDefault()
+    setIsLoggingIn(true)
     // clear any error msg after 3sec
     setTimeout(() => {
       setErrorMsg(null)
@@ -46,6 +47,8 @@ const LoginForm = ({ mutate, demoAccount }) => {
 
     return postPostLogin(res)
   }
+
+  if (demoAccount) return <Loader text="Logging in as Demo, please wait..." />
 
   return (
     <>
@@ -102,47 +105,49 @@ const LoginForm = ({ mutate, demoAccount }) => {
           }
         `}
       </style>
-      {demoAccount ? (
-        <Loader text="Logging into Demo account" />
-      ) : (
-        <div className="form">
-          <form className="login" onSubmit={onSubmit}>
-            {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
-            <label htmlFor="#email">
-              <Icon name="envelope" aria-label="Email" />{' '}
-              <input
-                required
-                id="email"
-                type="email"
-                name="email"
-                autoComplete="true"
-                placeholder="Email"
-              />
-            </label>
-            <label htmlFor="#password">
-              <Icon name="lock" aria-label="Password" />{' '}
-              <input
-                required
-                id="password"
-                type="password"
-                autoComplete="true"
-                name="current-password"
-                placeholder="Password"
-              />
-            </label>
-            <button className="button" type="submit">
-              <span>LOG IN</span>
-            </button>
-          </form>
-          <Link href="/forget-password">
-            <a>Forgot password?</a>
-          </Link>
-          <br />
-          <Link href="/signup">
-            <a>Don&apos;t have an account?</a>
-          </Link>
-        </div>
-      )}
+      <div className="form">
+        {isLoggingIn ? (
+          <Loader text="Logging you in, please wait..." />
+        ) : (
+          <>
+            <form className="login" onSubmit={onSubmit}>
+              {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
+              <label htmlFor="#email">
+                <Icon name="envelope" aria-label="Email" />{' '}
+                <input
+                  required
+                  id="email"
+                  type="email"
+                  name="email"
+                  autoComplete="true"
+                  placeholder="Email"
+                />
+              </label>
+              <label htmlFor="#password">
+                <Icon name="lock" aria-label="Password" />{' '}
+                <input
+                  required
+                  id="password"
+                  type="password"
+                  autoComplete="true"
+                  name="current-password"
+                  placeholder="Password"
+                />
+              </label>
+              <button className="button" type="submit">
+                <span>LOG IN</span>
+              </button>
+            </form>
+            <Link href="/forget-password">
+              <a>Forgot password?</a>
+            </Link>
+            <br />
+            <Link href="/signup">
+              <a>Don&apos;t have an account?</a>
+            </Link>
+          </>
+        )}
+      </div>
     </>
   )
 }
