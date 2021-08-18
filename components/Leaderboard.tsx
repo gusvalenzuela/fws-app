@@ -8,9 +8,8 @@ import DualRingLoader from './DualRingLoader'
 
 export default function Leaderboard() {
   const sport = 'football'
-  const seasonYear =
-    Store((s) => s.seasonYear) || Store.getState().currentSeasonYear
-  const week = Store((s) => s.week) || Store.getState().currentWeek
+  const seasonYear = Store((s) => s.seasonYear || s.currentSeasonYear)
+  const week = Store((s) => s.week || s.currentWeek)
 
   const { leaderboard } = useLeaderboard(sport, seasonYear, week)
 
@@ -33,17 +32,7 @@ export default function Leaderboard() {
       `}</style>
       <table>
         <caption>
-          <SeasonDropdown
-            season={seasonYear}
-            setSeasonYear={(val: number | undefined) =>
-              Store.setState({ seasonYear: val })
-            }
-          />{' '}
-          <WeekDropdown
-            week={week}
-            setWeek={(val: number | undefined) => Store.setState({ week: val })}
-          />{' '}
-          Leaderboard
+          <SeasonDropdown /> <WeekDropdown /> Leaderboard
         </caption>
         <thead>
           <tr>
