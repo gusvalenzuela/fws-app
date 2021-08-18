@@ -2,13 +2,21 @@ import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import Img from 'next/image'
-import { useCurrentUser, useUser } from '../../../lib/hooks'
+import SeasonDropdown from '../../../components/SeasonDropdown'
+import Store from '../../../lib/stores/FootballPool'
+import { useCurrentUser, useUserStandings, useUser } from '../../../lib/hooks'
 
 export default function UserPage({ userId }) {
   const [currentUser] = useCurrentUser()
   const { user, isLoading: userIsLoading } = useUser(userId)
   const { name, email, bio, profilePicture } = user || {}
   const isCurrentUser = currentUser?._id === user?._id
+  const seasonYear = Store((s) => s.seasonYear || s.currentSeasonYear)
+  const { standings } = useUserStandings(userId, seasonYear)
+
+  // React.useEffect(() => {
+  //   console.log(standings)
+  // }, [standings])
 
   return (
     <>
@@ -33,6 +41,9 @@ export default function UserPage({ userId }) {
           }
           a {
             margin-left: 0.25rem;
+          }
+          .page-content {
+            text-align: left;
           }
           .page-content .user-info {
             display: flex;
@@ -83,10 +94,16 @@ export default function UserPage({ userId }) {
               </div>
               <div>
                 <h3>My Record:</h3>
-                <p>
-                  You&apos;ve made {user.picks?.length || 0} picks over your
-                  time here.
-                </p>
+                <SeasonDropdown />
+                <br />
+                {standings?.length
+                  ? standings.map((weeklyRecord) => (
+                      <p key={weeklyRecord._id}>
+                        Week {weeklyRecord.week} Record:{' '}
+                        {weeklyRecord.wins.length}-{weeklyRecord.losses.length}
+                      </p>
+                    ))
+                  : `No records found for ${seasonYear}`}
               </div>
             </>
           )}
