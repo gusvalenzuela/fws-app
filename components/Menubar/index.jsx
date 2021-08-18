@@ -1,9 +1,9 @@
 import React, { createRef } from 'react'
 import { useRouter } from 'next/router'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
+import { generateNumbersArray } from '../../lib/utils'
 import { useCurrentUser, useAllUsers } from '../../lib/hooks'
 import Store from '../../lib/stores/FootballPool'
-import { generateNumbersArray } from '../../lib/utils'
 import Styles from './Menubar.module.css'
 
 const Menubar = () => {
@@ -13,27 +13,39 @@ const Menubar = () => {
   const menubar = createRef()
   // const selectedWeek = Store((s) => s.week) || Store.getState().currentWeek
   const selectedSport = 'football'
-  const selectedSeasonYear =
-    Store((s) => s.seasonYear) || Store.getState().currentSeasonYear
+  const selectedSeasonYear = Store((s) => s.seasonYear || s.currentSeasonYear)
 
   const toggleResponsiveMenu = () =>
     menubar.current.classList.toggle(`responsive`)
 
-  const handleWeekChange = (e, { value }) => {
+  const handleWeekChange = (_e, { value }) => {
     toggleResponsiveMenu() // to hide menu on mobile when item clicked
     Store.setState({ week: value })
-    // router.push('/weeks?sport=nfl&yr=2020')
+
+    if (router.pathname !== '/weeks') {
+      router.push(`/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`)
+    }
+
+    return null
   }
 
-  const handleSeasonChange = (e, { value }) => {
+  const handleSeasonChange = (_e, { value }) => {
     toggleResponsiveMenu() // to hide menu on mobile when item clicked
     Store.setState({ seasonYear: value })
-    // router.push(`/weeks?sport=${selectedSport}&yr=${value}`)
+
+    if (router.pathname !== '/weeks') {
+      router.push(`/weeks?sport=${selectedSport}&yr=${value}`)
+    }
+
+    return null
   }
-  const handleUserChange = (e, { value }) => {
+  const handleUserChange = (_e, { value }) => {
     toggleResponsiveMenu() // to hide menu on mobile when item clicked
     Store.setState({ selectedUser: value })
-    router.push(`/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`)
+    if (router.pathname !== '/weeks') {
+      router.push(`/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`)
+    }
+    return null
   }
 
   return (
@@ -147,8 +159,8 @@ const Menubar = () => {
                   as="button"
                   // href="/login"
                   onClick={() => {
-                    router.push('/login')
                     toggleResponsiveMenu()
+                    router.push('/login')
                   }}
                 >
                   Log In
@@ -156,8 +168,8 @@ const Menubar = () => {
                 <Dropdown.Item
                   as="button"
                   onClick={() => {
-                    router.push('/signup')
                     toggleResponsiveMenu()
+                    router.push('/signup')
                   }}
                 >
                   Sign Up
@@ -169,6 +181,7 @@ const Menubar = () => {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       onClick={() => {
+                        toggleResponsiveMenu()
                         router.push(`/user/${user._id}`)
                       }}
                     >
@@ -180,8 +193,8 @@ const Menubar = () => {
                         <Dropdown.Item
                           text="Admin Page"
                           onClick={() => {
-                            router.push('/admin')
                             toggleResponsiveMenu()
+                            router.push('/admin')
                           }}
                         />
                       )
@@ -190,16 +203,16 @@ const Menubar = () => {
                       text="Settings"
                       icon="settings"
                       onClick={() => {
-                        router.push('/settings')
                         toggleResponsiveMenu()
+                        router.push('/settings')
                       }}
                     />
                     <Dropdown.Item
                       icon="log out"
                       text="Log out"
                       onClick={() => {
-                        router.push('/logout')
                         toggleResponsiveMenu()
+                        router.push('/logout')
                       }}
                     />
                   </Dropdown.Menu>
