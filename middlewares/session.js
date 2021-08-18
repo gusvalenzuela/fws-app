@@ -3,7 +3,8 @@ import MongoStore from 'connect-mongo'
 
 export default function sessionMiddleware(req, res, next) {
   const mongoStore = MongoStore.create({
-    client: req.dbClient,
+    mongoUrl: process.env.MONGODB_URX,
+    // client: req.dbClient,
     stringify: false,
   })
   return session({
