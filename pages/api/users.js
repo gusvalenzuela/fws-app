@@ -34,7 +34,7 @@ handler.get(async ({ db }, res) => {
     return 0
   })
 
-  res.status(200).json({ users: dbUsers })
+  return res.status(200).json({ users: dbUsers })
 })
 
 handler.post(async (req, res) => {
@@ -71,51 +71,6 @@ handler.post(async (req, res) => {
       user: extractUser(req),
     })
   })
-})
-
-handler.patch(async ({ db }, res) => {
-  const dbUsers = await db
-    .collection('users')
-    .aggregate([
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-        },
-      },
-      {
-        $lookup: {
-          from: 'pickz',
-          localField: '_id',
-          foreignField: 'userId',
-          as: 'picks',
-        },
-      },
-    ])
-    .toArray()
-
-  dbUsers.map((usr) => {
-    const tempUser = usr
-    const tempRecord = []
-
-    usr.picks.forEach((pk) => {
-      // if (!pk.matchup?.winner ) return
-
-      tempRecord.push({
-        week: pk.week || pk.matchup?.week || undefined,
-        event_id: pk.event_id,
-        result: pk.selected_team?.team_id === pk.matchup?.winner ? 'W' : 'L',
-      })
-    })
-
-    tempUser.record = tempRecord
-
-    // console.log(tempRecord)
-
-    return tempUser
-  })
-
-  res.status(200).json({ users: dbUsers })
 })
 
 export default handler
