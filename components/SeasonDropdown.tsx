@@ -1,23 +1,27 @@
 import React from 'react'
 import { Dropdown } from 'semantic-ui-react'
 import { generateNumbersArray } from '../lib/utils'
+import Store from '../lib/stores/FootballPool'
 
-const SeasonDropdown = ({ season, setSeasonYear, maxYear = 2021 }) => (
-  <>
-    <span>Season </span>
-    <Dropdown
-      className="season-dropdown"
-      onChange={(e, { value }) => setSeasonYear(value)}
-      options={generateNumbersArray(2020, maxYear).map((num) => ({
-        key: num,
-        value: num,
-        text: `${num}`,
-      }))}
-      value={season}
-      text={`${season}`}
-      inline
-    />
-  </>
-)
-
+const SeasonDropdown = ({ maxYear = 2021 }) => {
+  const seasonYr = Store((s) => s.seasonYear || s.currentSeasonYear)
+  
+  return (
+    <>
+      <span>Season </span>
+      <Dropdown
+        className="season-dropdown"
+        onChange={(e, { value }) => Store.setState({ seasonYear: value })}
+        options={generateNumbersArray(2020, maxYear).map((num) => ({
+          key: num,
+          value: num,
+          text: `${num}`,
+        }))}
+        value={seasonYr}
+        text={`${seasonYr}`}
+        inline
+      />
+    </>
+  )
+}
 export default SeasonDropdown

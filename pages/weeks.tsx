@@ -21,11 +21,9 @@ import PlayerDashboard from '../components/PlayerDashboard'
 
 function Weeks({ query }) {
   // Stored variables
-  const week = Store((s) => s.week) || Store.getState().currentWeek // Store.week initializes as undefined
-  const seasonType =
-    Store((s) => s.seasonType) || Store.getState().currentSeasonType // Store.seasonType initializes as undefined
-  const seasonYear =
-    Store((s) => s.seasonYear) || Store.getState().currentSeasonYear // Store.seasonYear initializes as undefined
+  const week = Store((s) => s.week || s.currentWeek) // Store.week initializes as undefined
+  const seasonType = Store((s) => s.seasonType || s.currentSeasonType) // Store.seasonType initializes as undefined
+  const seasonYear = Store((s) => s.seasonYear || s.currentSeasonYear) // Store.seasonYear initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser) // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   // Hooks
   const [currentUser] = useCurrentUser()
@@ -131,18 +129,12 @@ function Weeks({ query }) {
         {
           // "2020 Regular Season"
 
-          <SeasonDropdown
-            season={seasonYear}
-            setSeasonYear={(val) => Store.setState({ seasonYear: val })}
-          />
+          <SeasonDropdown />
         }
         {
           // "Week 2" [Dropdown]
         }
-        <WeekDropdown
-          week={week}
-          setWeek={(val) => Store.setState({ week: val })}
-        />
+        <WeekDropdown />
 
         {
           // "(Sep 16-22)"
