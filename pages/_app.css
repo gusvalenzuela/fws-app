@@ -36,7 +36,7 @@ MENUBAR RELATED
 .right.menu button {
   margin: 0.25rem;
   border: none;
-  background-color: var(--color3, blue) !important;
+  background-color: var(--color1, blue) !important;
   color: var(--color-light, --main-white, #fff) !important;
 }
 .menu.transition.visible {

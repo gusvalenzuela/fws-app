@@ -1,16 +1,17 @@
 import React, { useEffect } from 'react'
 import Head from 'next/head'
-import Router from 'next/router'
+import { useRouter } from 'next/router'
 import SignupForm from '../components/SignupForm'
 import { useCurrentUser } from '../lib/hooks'
 
 function SignupPage() {
   const [user, { mutate }] = useCurrentUser()
+  const router = useRouter()
 
   useEffect(() => {
     // redirect to home if user is authenticated
-    if (user) Router.replace('/')
-  }, [user])
+    if (user) router.replace('/')
+  }, [user, router])
 
   return (
     <>
