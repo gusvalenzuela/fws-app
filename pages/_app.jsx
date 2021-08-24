@@ -8,6 +8,7 @@ import Moment from 'react-moment'
 import { ToastContainer } from 'react-toastify'
 import startDates from '../lib/stores/startDays.json'
 import Store from '../lib/stores/FootballPool'
+import { useAllUsers } from '../lib/hooks'
 import Menubar from '../components/Menubar'
 import Footer from '../components/Footer'
 import './_app.css'
@@ -17,8 +18,15 @@ import 'react-toastify/dist/ReactToastify.css'
 const { week_start_days: weekStartDates } = startDates
 // This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
+  const [users] = useAllUsers()
+  const storedUsers = Store((s) => s.allUsers)
+
   // on mount
   useEffect(() => {
+    if ((!storedUsers || !storedUsers.length) && users) {
+      Store.setState({ allUsers: users })
+      return
+    }
     // Start the pooled timer which runs every 1 second(s)
     // (60000 milliseconds) by default.
     Moment.startPooledTimer(1000)
@@ -35,9 +43,9 @@ export default function MyApp({ Component, pageProps }) {
       currentWeek:
         startDateIndex < 0 ? weekStartDates.length : startDateIndex + 1,
       currentSeasonYear: 2021,
-      Moment,
+      // Moment,
     })
-  }, [])
+  }, [users, storedUsers])
 
   return (
     <>

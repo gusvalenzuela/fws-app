@@ -2,16 +2,15 @@ import React, { createRef } from 'react'
 import { useRouter } from 'next/router'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { generateNumbersArray } from '../../lib/utils'
-import { useCurrentUser, useAllUsers } from '../../lib/hooks'
+import { useCurrentUser } from '../../lib/hooks'
 import Store from '../../lib/stores/FootballPool'
 import Styles from './Menubar.module.css'
 
 const Menubar = () => {
-  const [users] = useAllUsers()
-  const [user] = useCurrentUser()
   const router = useRouter()
+  const users = Store((s) => s.allUsers)
+  const [user] = useCurrentUser()
   const menubar = createRef()
-  // const selectedWeek = Store((s) => s.week) || Store.getState().currentWeek
   const selectedSport = 'football'
   const selectedSeasonYear = Store((s) => s.seasonYear || s.currentSeasonYear)
 
@@ -142,16 +141,35 @@ const Menubar = () => {
               />
             </>
           )}
-          <Dropdown.Item
+          <Dropdown item text="Leaderboards">
+            <Dropdown.Menu>
+              <Dropdown.Item
+                onClick={() => {
+                  toggleResponsiveMenu()
+                  router.push(`/leaderboard/weekly`)
+                }}
+                text="Weekly Leaderboard"
+                // icon="clipboard"
+              />
+              <Dropdown.Item
+                text="Season Leaderboard"
+                onClick={() => {
+                  toggleResponsiveMenu()
+                  router.push('/leaderboard/season')
+                }}
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+          {/* <Dropdown.Item
             as="a"
             onClick={() => {
               toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
 
-              router.push('/leaderboard')
+              router.push('/about')
             }}
           >
-            Leaderboards
-          </Dropdown.Item>
+            About
+          </Dropdown.Item> */}
           <Menu.Menu position="right">
             {!user ? (
               <>
