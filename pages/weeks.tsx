@@ -52,6 +52,10 @@ function Weeks({ query }) {
     seasonYear
   )
 
+  const [modernLayout, setModernLayout] = useState(
+    currentUser?.prefersModernLayout || true
+  )
+
   // MAIN use effect
   useEffect(() => {
     if (!week || !schedule || !sportTeams) return
@@ -110,13 +114,6 @@ function Weeks({ query }) {
 
   // console.log(`events this week ${week}`, events);
 
-  if (!currentUser)
-    return (
-      <main>
-        <h1 className="page-header">Please log in.</h1>
-      </main>
-    )
-
   return (
     <main id="weeks">
       <Head>
@@ -155,15 +152,41 @@ function Weeks({ query }) {
                 weeklyRecord={weeklyRecord}
               />
             </section>
-            <section>
+            <section
+              style={{ display: 'flex', justifyContent: 'space-around' }}
+            >
+              {/* Toggle Modern Layout on/off  */}
+              <Checkbox
+                className="modern-layout toggle-box"
+                label="Modern Layout"
+                toggle
+                checked={modernLayout}
+                onChange={() => setModernLayout(!modernLayout)}
+              />
               {/* Toggle compact cards on/off  */}
               <Checkbox
-                className="compact-cards"
-                label="Compact cards"
+                className="compact-cards toggle-box"
+                label="Compact Cards"
                 toggle
+                checked={compactCards}
                 onChange={() => setCompactCards(!compactCards)}
               />
             </section>
+            <details
+              style={{ textAlign: 'left', maxWidth: '350px', margin: 'auto' }}
+            >
+              <summary style={{ textAlign: 'center' }}>
+                Click to read more about modern vs old layout
+              </summary>
+              <b>Modern Layout:</b> AWAY team is on the left and HOME team is on
+              the right (indicated with an @ symbol in middle). Favorite is team
+              with red number under their name.
+              <br />
+              <b>Old Layout:</b> FAVORITE team is on the left and UNDERDOG is on
+              the right. Number in middle is the point-spread needed to cover by
+              favorite (left). HOME is team with all capitalized name.
+              <br />
+            </details>
             {
               /* 
                     for each game of the week, make a header or divider and a matchup card component 
@@ -223,7 +246,10 @@ function Weeks({ query }) {
                         userPick={userPicks?.find(
                           (p) => p.matchupId === matchup.event_id
                         )}
-                        user={currentUser}
+                        user={{
+                          ...currentUser,
+                          prefersModernLayout: modernLayout,
+                        }}
                         tiebreak={
                           tiebreakMatch &&
                           tiebreakMatch?.event_id === matchup.event_id

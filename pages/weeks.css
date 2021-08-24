@@ -6,9 +6,10 @@
   width: 100%;
   max-width: 825px;
 }
-.compact-cards {
+.toggle-box {
   padding-top: 8px;
   float: right;
+  margin: 0.25rem 0.75rem;
 }
 .current-time-container {
   padding: 1rem 0.5rem;

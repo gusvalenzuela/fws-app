@@ -21,6 +21,10 @@ const MatchupCardAt = ({
 }) => {
   const homeTeam = matchup.home_team
   const awayTeam = matchup.away_team
+  const favoriteTeam =
+    matchup.line_?.favorite === homeTeam.team_id ? homeTeam : awayTeam
+  const underdogTeam =
+    matchup.line_?.favorite === homeTeam.team_id ? awayTeam : homeTeam
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [sport] = useState(2)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -137,7 +141,6 @@ const MatchupCardAt = ({
   useEffect(() => {
     setSelectedTeam(null) // clear selected team for refresh
     if (!userPick) return null
-
     return setSelectedTeam(
       userPick.selectedTeamId === awayTeam.team_id ? awayTeam : homeTeam
     )
@@ -180,12 +183,23 @@ const MatchupCardAt = ({
         />
       </Image>
       <h3>
-        {!compactCards ? team.name : team.abbreviation}
+        {!compactCards &&
+        !user.prefersModernLayout &&
+        team.team_id === homeTeam.team_id
+          ? `${team.name}`.toUpperCase()
+          : !compactCards
+          ? team.name
+          : !user.prefersModernLayout && team.team_id === homeTeam.team_id
+          ? `${team.abbreviation}`.toLowerCase()
+          : team.abbreviation}
         {!compactCards && <br />}
-        {!compactCards && team.mascot}
+        {!compactCards &&
+        !user.prefersModernLayout &&
+        team.team_id === homeTeam.team_id
+          ? `${team.mascot}`.toUpperCase()
+          : !compactCards && team.mascot}
       </h3>
       {/* team name  */}
-      {/* <h4>{`$ $`}</h4> */}
       {/* Line spread */}
       <p
         style={{
@@ -197,10 +211,12 @@ const MatchupCardAt = ({
       >
         {
           // displays the point spread for favorite (-0.5)
-          matchup.line_ && team.team_id === matchup.line_.favorite ? (
-            matchup.line_.point_spread
-          ) : (
+          !user.prefersModernLayout ? (
             <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
+          ) : (
+            matchup.line_ &&
+            team.team_id === matchup.line_.favorite &&
+            matchup.line_.point_spread
           )
         }
       </p>
@@ -217,7 +233,10 @@ const MatchupCardAt = ({
             takes in specific team Obj containing abbr, name, mascot, and more  */}
             {
               // away team
-              buildTeamCard(matchup.away_team)
+              // or favorite team if prefersModernLayout = false
+              buildTeamCard(
+                user && user.prefersModernLayout ? awayTeam : favoriteTeam
+              )
             }
             {/* // this divider has slight changes // varied on the sport type
           (i.e.american football vs mma) */}
@@ -227,10 +246,14 @@ const MatchupCardAt = ({
               selectedTeam={selectedTeam}
               matchup={matchup}
               sport={sport}
+              prefersModernLayout={user && user.prefersModernLayout}
             />
             {
               // home team
-              buildTeamCard(matchup.home_team)
+              // or underdog team if prefersModernLayout = false
+              buildTeamCard(
+                user && user.prefersModernLayout ? homeTeam : underdogTeam
+              )
             }
           </Grid>
         </Segment>

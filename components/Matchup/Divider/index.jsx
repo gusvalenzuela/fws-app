@@ -7,6 +7,7 @@ const MatchupDivider = ({
   sport,
   isPastEvent,
   compactCards,
+  prefersModernLayout,
 }) => (
   <Grid.Column
     // onClick={() => console.log(matchup)}
@@ -40,22 +41,53 @@ const MatchupDivider = ({
         }).format(new Date(matchup.event_date))}
       </p>
     </div>
-    {/* versus / at icon */}
-    <Icon
-      style={{ marginBottom: '1rem' }}
-      size="huge"
-      name={`${sport === 7 ? 'handshake' : 'at'}`}
-    />
+    {
+      /* versus / at icon */
+      !prefersModernLayout ? (
+        <p style={{ fontSize: '2.5rem', color: 'red', marginBottom: '.6rem' }}>
+          {matchup.line_?.point_spread}
+        </p>
+      ) : (
+        <Icon
+          style={{ marginBottom: '1rem' }}
+          size="huge"
+          name={`${sport === 7 ? 'handshake' : 'at'}`}
+        />
+      )
+    }
+
     {!isPastEvent ? (
       <p
         className="divider-pick"
         style={{ marginTop: '.5rem', fontSize: '1.12rem' }}
       >
-        {selectedTeam
-          ? Number(selectedTeam.team_id) === matchup.away_team_id
-            ? `◀ ${selectedTeam.abbreviation}  `
-            : `  ${selectedTeam.abbreviation} ▶`
-          : '◀ Pick ▶'}
+        {!prefersModernLayout && selectedTeam ? (
+          Number(selectedTeam.team_id) === matchup.line_?.favorite ? (
+            <>
+              You&apos;ve Picked
+              <br />◀ {selectedTeam.abbreviation}
+            </>
+          ) : (
+            <>
+              You&apos;ve Picked
+              <br /> {selectedTeam.abbreviation} ▶
+            </>
+          )
+        ) : selectedTeam ? (
+          Number(selectedTeam.team_id) === matchup.away_team_id ? (
+            <>
+              You&apos;ve Picked
+              <br />◀ {selectedTeam.abbreviation}
+            </>
+          ) : (
+            <>
+              You&apos;ve Picked
+              <br /> {selectedTeam.abbreviation} ▶
+            </>
+          )
+        ) : (
+          '◀ Pick ▶'
+        )}
       </p>
     ) : (
       <br />
