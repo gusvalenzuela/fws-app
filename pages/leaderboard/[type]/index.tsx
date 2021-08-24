@@ -1,8 +1,9 @@
 import React from 'react'
 import Head from 'next/head'
-import LeaderboardTable from '../components/Leaderboard'
+import type { GetServerSideProps } from 'next'
+import LeaderboardTable from '../../../components/Leaderboard'
 
-const LeaderboardPage = () => (
+const LeaderboardPage = ({ type }) => (
   <>
     <style>
       {`
@@ -19,7 +20,7 @@ const LeaderboardPage = () => (
           <h1>Weekly Leaderboard</h1>
         </header> */}
       <div className="page-content">
-        <LeaderboardTable />
+        <LeaderboardTable category={type} />
       </div>
       <div className="page-footer">
         <span role="img" aria-label="Party popper emoji">
@@ -30,3 +31,21 @@ const LeaderboardPage = () => (
   </>
 )
 export default LeaderboardPage
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { type } = context.query
+
+  if (!type || !['weekly', 'season'].includes(type.toString())) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  return {
+    props: {
+      type,
+    }, // will be passed to the page component as props
+  }
+}

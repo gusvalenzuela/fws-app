@@ -6,12 +6,21 @@ import WeekDropdown from './WeekDropdown'
 import SeasonDropdown from './SeasonDropdown'
 import DualRingLoader from './DualRingLoader'
 
-export default function Leaderboard() {
+export default function LeaderboardTable({ category }) {
+  const isWeeklyType = category === 'weekly'
   const sport = 'football'
-  const seasonYear = Store((s) => s.seasonYear || s.currentSeasonYear)
-  const week = Store((s) => s.week || s.currentWeek)
+  const season = Store((s) => ({
+    week: s.week || s.currentWeek,
+    year: s.seasonYear || s.currentSeasonYear,
+  }))
 
-  const { leaderboard } = useLeaderboard(sport, seasonYear, week)
+  // send a desired week ONLY if user goes to "/leaderboard/weekly"
+  // otherwise "/leaderboard/season" omits week arg
+  const { leaderboard } = useLeaderboard(
+    sport,
+    season.year,
+    category === 'weekly' ? season.week : null
+  )
 
   return (
     <>
@@ -32,7 +41,7 @@ export default function Leaderboard() {
       `}</style>
       <table>
         <caption>
-          <SeasonDropdown /> <WeekDropdown /> Leaderboard
+          <SeasonDropdown /> {isWeeklyType && <WeekDropdown />} Leaderboard
         </caption>
         <thead>
           <tr>
@@ -46,11 +55,11 @@ export default function Leaderboard() {
         <tbody>
           {leaderboard ? (
             leaderboard.map((player: LeaderboardPlayer, ind: number) => (
-              <tr key={player.userId}>
+              <tr key={`${Math.random() * Date.now()}`}>
                 <td>#{ind + 1}</td>
                 <td>{player.user?.name}</td>
-                <td>{player.wins.length}</td>
-                <td>{player.losses.length}</td>
+                <td>{player.wins?.length}</td>
+                <td>{player.losses?.length}</td>
                 <td>{Math.round(player.winPercent * 100)}%</td>
               </tr>
             ))
