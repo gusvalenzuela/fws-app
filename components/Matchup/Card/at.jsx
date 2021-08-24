@@ -213,10 +213,10 @@ const MatchupCardAt = ({
           // displays the point spread for favorite (-0.5)
           !user.prefersModernLayout ? (
             <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
-          ) : (
-            matchup.line_ &&
-            team.team_id === matchup.line_.favorite &&
+          ) : matchup.line_ && team.team_id === matchup.line_.favorite ? (
             matchup.line_.point_spread
+          ) : (
+            <span style={{ visibility: 'hidden' }}>--</span>
           )
         }
       </p>
