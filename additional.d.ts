@@ -58,3 +58,10 @@ export type SportsMatchup = {
   week_name?: string
   winner?: number
 }
+export type UserPick = {
+  matchupId: string | number
+  userId: string | number
+  selectedTeamId: number
+  sportId?: number
+  updatedAt?: Date | number
+}
