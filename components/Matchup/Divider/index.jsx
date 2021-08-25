@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, Icon } from 'semantic-ui-react'
+import Loader from '../../DualRingLoader'
 
 const MatchupDivider = ({
   matchup,
@@ -8,6 +9,7 @@ const MatchupDivider = ({
   isPastEvent,
   compactCards,
   prefersModernLayout,
+  userPick,
 }) => (
   <Grid.Column
     // onClick={() => console.log(matchup)}
@@ -61,51 +63,25 @@ const MatchupDivider = ({
         className="divider-pick"
         style={{ marginTop: '.5rem', fontSize: '1.12rem' }}
       >
-        {!prefersModernLayout && selectedTeam ? (
-          Number(selectedTeam.team_id) === matchup.line_?.favorite ? (
-            <>
-              You&apos;ve Picked
-              <br />◀ {selectedTeam.abbreviation}
-            </>
-          ) : (
-            <>
-              You&apos;ve Picked
-              <br /> {selectedTeam.abbreviation} ▶
-            </>
-          )
-        ) : selectedTeam ? (
-          Number(selectedTeam.team_id) === matchup.away_team_id ? (
-            <>
-              You&apos;ve Picked
-              <br />◀ {selectedTeam.abbreviation}
-            </>
-          ) : (
-            <>
-              You&apos;ve Picked
-              <br /> {selectedTeam.abbreviation} ▶
-            </>
-          )
-        ) : (
-          '◀ Pick ▶'
-        )}
+        {!selectedTeam && '◀ Pick ▶'}
       </p>
     ) : (
       <br />
     )}
 
-    {
-      // determine if user's pick is a winner
-      // eslint-disable-next-line no-underscore-dangle
-      isPastEvent && matchup.winner === Number(selectedTeam?.team_id) ? (
-        <Icon name="checkmark" color="green" />
-      ) : isPastEvent &&
-        matchup.event_status === 'STATUS_FINAL' &&
-        selectedTeam ? (
-        <Icon name="close" color="red" />
-      ) : (
-        isPastEvent && <Icon name="minus" color="grey" />
-      )
-    }
+    {!selectedTeam && userPick ? (
+      <Loader text="Fetching your pick" />
+    ) : // determine if user's pick is a winner
+    // eslint-disable-next-line no-underscore-dangle
+    isPastEvent && matchup.winner === Number(selectedTeam?.team_id) ? (
+      <Icon name="checkmark" color="green" />
+    ) : isPastEvent &&
+      matchup.event_status === 'STATUS_FINAL' &&
+      selectedTeam ? (
+      <Icon name="close" color="red" />
+    ) : (
+      isPastEvent && <Icon name="minus" color="grey" />
+    )}
   </Grid.Column>
 )
 
