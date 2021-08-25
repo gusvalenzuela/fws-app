@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Divider, Header, Checkbox } from 'semantic-ui-react'
-import { Image, Transformation, CloudinaryContext } from 'cloudinary-react'
+import { Checkbox } from 'semantic-ui-react'
 import Head from 'next/head'
 import type { GetServerSideProps } from 'next/types'
 import type { SportsTeam, SportsMatchup } from '../additional'
@@ -11,13 +10,14 @@ import {
   useSportTeams,
   useUserPicksByWeek,
 } from '../lib/hooks'
-import Store from '../lib/stores/FootballPool'
+import TimeDisplay from '../components/TimeDisplay'
 import Loader from '../components/DualRingLoader'
 import WeekDropdown from '../components/WeekDropdown'
 import SeasonDropdown from '../components/SeasonDropdown'
-import MatchupCard from '../components/Matchup/Card'
-import TimeDisplay from '../components/TimeDisplay'
+import MatchupCardSection from '../components/Matchup/Section'
+import ByeTeamsSection from '../components/ByeTeamsSection'
 import PlayerDashboard from '../components/PlayerDashboard'
+import Store from '../lib/stores/FootballPool'
 
 function Weeks({ query }) {
   // Stored variables
@@ -189,75 +189,23 @@ function Weeks({ query }) {
             </details>
             {
               /* 
-                    for each game of the week, make a header or divider and a matchup card component 
-                    Caveat: -- only displays other user's if Date now is after the lockdate (i.e. after first Sunday Game)
-                */
+                Caveat: -- only displays other user's if Date now 
+                is after the lockdate (i.e. after first Sunday Game) 
+              */
               // if selected user is same as current user display all picks
               // or it's past the first Sunday game of the week (picks are locked date)
               // render the matchups and the corresponding user's picks
               currentUser?._id === selectedUser?._id ||
               Date.now() >= lockDate ? (
-                schedule.map((matchup: SportsMatchup, inx: number) => {
-                  const currentMatchupEventDate = new Date(matchup.event_date)
-                  const previousMatchupEventDate = new Date(
-                    schedule[inx - 1]?.event_date
-                  )
-
-                  let print = true
-                  // before rendering any event, it checks to see if it is the 1st time printing the event day (Mo, Tu, etc..)
-                  // this is for the header of each "matchup day" subsection.
-                  // we print the first date in the week every time (i.e. index 0)
-                  if (inx > 0) {
-                    // check if the previous day of the week in the mapping is the same as current
-                    if (
-                      previousMatchupEventDate.getDay() ===
-                      currentMatchupEventDate.getDay()
-                    ) {
-                      // if it is the same day as the previous
-                      // do not print, by setting print to false
-                      print = false
-                    } else {
-                      //  print it
-                      print = true
-                    }
-                  }
-
-                  return (
-                    <section key={matchup.event_id}>
-                      {!print ? (
-                        <Divider
-                          // content={matchup.schedule?.event_name}
-                          className="container-divider"
-                        />
-                      ) : (
-                        <h1
-                          className="matchup-day-header"
-                          key={`header-${matchup.event_date}`}
-                        >
-                          {currentMatchupEventDate.toDateString()}
-                        </h1>
-                      )}
-
-                      <MatchupCard
-                        version="at"
-                        compactCards={compactCards}
-                        lockDate={lockDate}
-                        matchup={matchup}
-                        userPick={userPicks?.find(
-                          (p) => p.matchupId === matchup.event_id
-                        )}
-                        user={{
-                          ...currentUser,
-                          prefersModernLayout: modernLayout,
-                        }}
-                        tiebreak={
-                          tiebreakMatch &&
-                          tiebreakMatch?.event_id === matchup.event_id
-                        }
-                      />
-                    </section>
-                  )
-                })
+                <MatchupCardSection
+                  schedule={schedule}
+                  modernLayout={modernLayout}
+                  currentUser={currentUser}
+                  lockDate={lockDate}
+                  userPicks={userPicks}
+                  compactCards={compactCards}
+                  tiebreakMatch={tiebreakMatch}
+                />
               ) : selectedUser && Date.now() < lockDate ? (
                 <p
                   style={{
@@ -280,41 +228,7 @@ function Weeks({ query }) {
         )}
       </div>
       <div className="page-footer">
-        {teamsOnBye?.length > 0 && (
-          <Divider horizontal>
-            <Header as="h4">Teams on Bye</Header>
-          </Divider>
-        )}
-        {
-          // from the complete list of sportTeams
-          // if the team is not included in the currently scheduled teams (depending on week being viewed)
-          // add it to display of "bye-week" teams
-          teamsOnBye?.map((team) => (
-            /* team logo / image  */
-            <CloudinaryContext
-              key={`bye-${team.abbreviation}`}
-              cloudName="fwscloud"
-              style={{ display: 'inline', margin: '.5rem 1rem' }}
-            >
-              {/* hosting the images on cloudinary */}
-              <Image
-                publicId={`NFL-Team_logos/${team.abbreviation || 'nfl'}.png`}
-                alt={`${team.abbreviation}'s team logo`}
-                id="team-logo-img"
-              >
-                <Transformation width="42" height="42" crop="thumb" />
-                <Transformation
-                  overlay={{
-                    fontFamily: 'Times',
-                    fontSize: 20,
-                    text: `${team.mascot}`,
-                  }}
-                  y="30"
-                />
-              </Image>
-            </CloudinaryContext>
-          ))
-        }
+        <ByeTeamsSection teams={teamsOnBye.length && teamsOnBye} />
       </div>
     </main>
   )
