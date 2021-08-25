@@ -1,6 +1,6 @@
 root: true
 ignorePatterns:
-  - '*.ts'
+  - '*.d.ts'
 env:
   browser: true # Enables browser globals like window and document
   # es2021: true
