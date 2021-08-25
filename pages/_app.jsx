@@ -43,7 +43,7 @@ export default function MyApp({ Component, pageProps }) {
       currentWeek:
         startDateIndex < 0 ? weekStartDates.length : startDateIndex + 1,
       currentSeasonYear: 2021,
-      // Moment,
+      Moment,
     })
   }, [users, storedUsers])
 
