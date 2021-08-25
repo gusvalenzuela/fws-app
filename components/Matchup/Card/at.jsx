@@ -26,14 +26,13 @@ const MatchupCardAt = ({
   const underdogTeam =
     matchup.line_?.favorite === homeTeam.team_id ? awayTeam : homeTeam
   const [selectedTeam, setSelectedTeam] = useState(null)
-  const [sport] = useState(2)
   const [isUpdating, setIsUpdating] = useState(false)
+  const sport = 2
   // is past event when it has a score obj with final confirmed,
   // or 5 hours have passed after event start
-  const [isPastEvent] = useState(
+  const isPastEvent =
     (matchup.event_status && matchup.event_status === 'STATUS_FINAL') ||
-      Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
-  )
+    Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   const isLocked =
     Date.parse(matchup.event_date) < Date.now()
       ? 'past'
@@ -161,6 +160,26 @@ const MatchupCardAt = ({
       stretched
       // width="6"
     >
+      {
+        /* selected team tag */
+        Number(selectedTeam?.team_id) === team.team_id && (
+          <p
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              zIndex: 99,
+              background: 'rgb(255, 174, 174)',
+              color: 'var(--color-dark, --main-black, black)',
+              width: '100%',
+              margin: 'auto',
+              textTransform: 'full-width',
+            }}
+          >
+            SELECTED
+          </p>
+        )
+      }
       {/* team logo / image  */}
       {/* hosting the images on cloudinary */}
       <Image
@@ -204,6 +223,10 @@ const MatchupCardAt = ({
       <p
         style={{
           margin: 0,
+          display: 'flex',
+          alignContent: 'center',
+          alignItems: 'center',
+          alignSelf: 'center',
           fontSize: '1.3rem',
           color: 'red',
           fontWeight: '800',
@@ -238,16 +261,23 @@ const MatchupCardAt = ({
                 user && user.prefersModernLayout ? awayTeam : favoriteTeam
               )
             }
-            {/* // this divider has slight changes // varied on the sport type
-          (i.e.american football vs mma) */}
-            <MatchupDivider
-              compactCards={compactCards}
-              isPastEvent={isPastEvent}
-              selectedTeam={selectedTeam}
-              matchup={matchup}
-              sport={sport}
-              prefersModernLayout={user && user.prefersModernLayout}
-            />
+            {
+              /* 
+              this divider has slight changes 
+              varied on the sport type
+             (i.e.american football vs mma) 
+             */
+              <MatchupDivider
+                compactCards={compactCards}
+                isPastEvent={isPastEvent}
+                selectedTeam={selectedTeam}
+                matchup={matchup}
+                sport={sport}
+                prefersModernLayout={user && user.prefersModernLayout}
+                userPick={!!userPick}
+              />
+            }
+
             {
               // home team
               // or underdog team if prefersModernLayout = false
