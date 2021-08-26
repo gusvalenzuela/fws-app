@@ -31,7 +31,7 @@ const MatchupDivider = ({
           month: 'numeric',
           day: 'numeric',
           // dayPeriod: "short",
-        }).format(new Date(matchup.event_date))}
+        }).format(new Date(matchup.event_date || '2021-01-01T05:00:00Z'))}
       </p>
       {/* Time */}
       <p>
@@ -40,7 +40,7 @@ const MatchupDivider = ({
           minute: '2-digit',
           timeZoneName: 'short',
           // dayPeriod: "short",
-        }).format(new Date(matchup.event_date))}
+        }).format(new Date(matchup.event_date || '2021-01-01T05:00:00Z'))}
       </p>
     </div>
     {

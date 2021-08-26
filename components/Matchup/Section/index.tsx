@@ -22,7 +22,9 @@ const MatchupCardSection = ({
         schedule.map((matchup: SportsMatchup, inx: number) => {
           // before rendering any event, it checks to see if
           // it is the 1st time printing the event day (Mo, Tu, etc..)
-          const currentMatchupEventDate = new Date(matchup.event_date)
+          const currentMatchupEventDate = new Date(
+            matchup.event_date || '1971-01-01T00:00:00Z'
+          )
           const previousMatchupEventDate = new Date(
             schedule[inx - 1]?.event_date
           )
