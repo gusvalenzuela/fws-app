@@ -6,9 +6,10 @@ import {
   Placeholder,
 } from 'cloudinary-react'
 import { toast } from 'react-toastify'
-import { Grid, Segment } from 'semantic-ui-react'
+import { Grid, Segment, Icon } from 'semantic-ui-react'
 import MatchupDivider from '../Divider'
 import Tiebreaker from '../../Tiebreaker'
+import Store from '../../../lib/stores/FootballPool'
 import Style from './Card.module.css'
 
 const MatchupCardAt = ({
@@ -19,24 +20,25 @@ const MatchupCardAt = ({
   lockDate,
   compactCards,
 }) => {
-  const homeTeam = matchup.home_team
-  const awayTeam = matchup.away_team
+  const homeTeam = matchup?.home_team
+  const awayTeam = matchup?.away_team
   const favoriteTeam =
-    matchup.line_?.favorite === homeTeam.team_id ? homeTeam : awayTeam
+    matchup?.line_?.favorite === homeTeam?.team_id ? homeTeam : awayTeam
   const underdogTeam =
-    matchup.line_?.favorite === homeTeam.team_id ? awayTeam : homeTeam
+    matchup?.line_?.favorite === homeTeam?.team_id ? awayTeam : homeTeam
+  const darkMode = Store((s) => s.darkMode)
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
   const sport = 2
   // is past event when it has a score obj with final confirmed,
   // or 5 hours have passed after event start
   const isPastEvent =
-    (matchup.event_status && matchup.event_status === 'STATUS_FINAL') ||
-    Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
+    (matchup?.event_status && matchup?.event_status === 'STATUS_FINAL') ||
+    Date.parse(matchup?.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   const isLocked =
-    Date.parse(matchup.event_date) < Date.now()
+    Date.parse(matchup?.event_date) < Date.now()
       ? 'past'
-      : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now()
+      : Date.parse(matchup?.event_date) >= lockDate && lockDate < Date.now()
       ? 'after lock date'
       : false
   const initToast = React.useRef(null)
@@ -45,7 +47,7 @@ const MatchupCardAt = ({
 
   const handleTeamSelection = async (event) => {
     const newlySelectedTeam =
-      Number(event.currentTarget.dataset.team_id) === matchup.away_team_id
+      Number(event.currentTarget.dataset.team_id) === matchup?.away_team_id
         ? awayTeam
         : homeTeam
 
@@ -145,111 +147,126 @@ const MatchupCardAt = ({
     )
   }, [userPick, awayTeam, homeTeam])
 
-  const buildTeamCard = (team) => (
-    <Grid.Column
-      color={Number(selectedTeam?.team_id) === team.team_id ? 'black' : null}
-      onClick={handleTeamSelection}
-      className={`${Style.teamContainer} team-container ${
-        Number(selectedTeam?.team_id) === team.team_id ? 'picked' : ''
-      }`}
-      verticalAlign="middle"
-      data-team_id={team.team_id}
-      data-team_name={team.abbreviation}
-      data-event={matchup.event_id}
-      id={!compactCards ? undefined : 'team-container'}
-      stretched
-      // width="6"
-    >
-      {
-        /* selected team tag */
-        Number(selectedTeam?.team_id) === team.team_id && (
-          <p
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              zIndex: 99,
-              background: 'rgb(255, 174, 174)',
-              color: 'var(--color-dark, --main-black, black)',
-              width: '100%',
-              margin: 'auto',
-              textTransform: 'full-width',
-            }}
-          >
-            SELECTED
-          </p>
-        )
-      }
-      {/* team logo / image  */}
-      {/* hosting the images on cloudinary */}
-      <Image
-        cloudName="fwscloud"
-        publicId={`NFL-Team_logos/${
-          sport === 2 ? team.abbreviation : 'nfl'
-        }.png`}
-        loading="lazy"
-        alt={`${team.abbreviation}'s team logo`}
-        title={`${team.name} ${team.mascot}`}
-        id="team-logo-img"
+  const buildTeamCard = (team = {}) => {
+    const isSelectedTeam = Number(selectedTeam?.team_id) === team.team_id
+    return (
+      <Grid.Column
+        // color={isSelectedTeam ? 'black' : null}
+        onClick={handleTeamSelection}
+        className={`${Style.teamContainer} team-container ${
+          isSelectedTeam ? 'picked' : ''
+        }`}
+        verticalAlign="middle"
+        data-team_id={team.team_id}
+        data-team_name={team.abbreviation}
+        data-event={matchup.event_id}
+        id={!compactCards ? undefined : 'team-container'}
+        stretched
+        // width="6"
       >
-        <Placeholder type="vectorize" />
-        <Transformation
-          quality="auto"
-          fetchFormat="auto"
-          height={!compactCards ? '175' : '75'}
-          width={!compactCards ? '175' : '75'}
-          crop="fit"
-        />
-      </Image>
-      <h3>
-        {!compactCards &&
-        !user.prefersModernLayout &&
-        team.team_id === homeTeam.team_id
-          ? `${team.name}`.toUpperCase()
-          : !compactCards
-          ? team.name
-          : !user.prefersModernLayout && team.team_id === homeTeam.team_id
-          ? `${team.abbreviation}`.toLowerCase()
-          : team.abbreviation}
-        {!compactCards && <br />}
-        {!compactCards &&
-        !user.prefersModernLayout &&
-        team.team_id === homeTeam.team_id
-          ? `${team.mascot}`.toUpperCase()
-          : !compactCards && team.mascot}
-      </h3>
-      {/* team name  */}
-      {/* Line spread */}
-      <p
-        style={{
-          margin: 0,
-          display: 'flex',
-          alignContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'center',
-          fontSize: '1.3rem',
-          color: 'red',
-          fontWeight: '800',
-        }}
-      >
-        {
-          // displays the point spread for favorite (-0.5)
-          !user.prefersModernLayout ? (
-            <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
-          ) : matchup.line_ && team.team_id === matchup.line_.favorite ? (
-            matchup.line_.point_spread
-          ) : (
-            <span style={{ visibility: 'hidden' }}>--</span>
-          )
-        }
-      </p>
-    </Grid.Column>
-  )
+        {/* selected team tag */}
+        <span
+          style={{
+            zIndex: 99,
+            margin: 'auto',
+            position: 'absolute',
+            top: '7px',
+            left: 0,
+            width: '100%',
+          }}
+        >
+          <Icon
+            name={isSelectedTeam ? 'check square outline' : 'square outline'}
+            size="large"
+            // color="grey"
+            // inverted
+          />
+        </span>
+        {/* team logo / image  */}
+        {/* hosting the images on cloudinary */}
+        <Image
+          cloudName="fwscloud"
+          publicId={`NFL-Team_logos/${
+            sport === 2 ? team.abbreviation : 'nfl'
+          }.png`}
+          loading="lazy"
+          alt={`${team.abbreviation}'s team logo`}
+          title={`${team.name} ${team.mascot}`}
+          id="team-logo-img"
+        >
+          <Placeholder type="vectorize" />
+          <Transformation
+            quality="auto"
+            fetchFormat="auto"
+            height={!compactCards ? '175' : '75'}
+            width={!compactCards ? '175' : '75'}
+            crop="fit"
+          />
+        </Image>
+        <h3>
+          {!compactCards &&
+          !user.prefersModernLayout &&
+          team.team_id === homeTeam.team_id
+            ? `${team.name}`.toUpperCase()
+            : !compactCards
+            ? team.name
+            : !user.prefersModernLayout && team.team_id === homeTeam.team_id
+            ? `${team.abbreviation}`.toLowerCase()
+            : team.abbreviation}
+          {!compactCards && <br />}
+          {!compactCards &&
+          !user.prefersModernLayout &&
+          team.team_id === homeTeam.team_id
+            ? `${team.mascot}`.toUpperCase()
+            : !compactCards && team.mascot}
+        </h3>
+        {/* team name  */}
+        {/* Line spread */}
+        <p
+          style={{
+            margin: 0,
+            alignSelf: 'center',
+            color: 'red',
+            transform: 'scale(1.75)',
+            fontWeight: '900',
+            textShadow: '.5px .5px #555',
+          }}
+        >
+          {
+            // displays the point spread for favorite (0.5)
+            !user.prefersModernLayout ? (
+              <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
+            ) : matchup.line_ && team.team_id === matchup.line_.favorite ? (
+              -matchup.line_.point_spread
+            ) : (
+              <span style={{ visibility: 'hidden' }}>--</span>
+            )
+          }
+        </p>
+      </Grid.Column>
+    )
+  }
 
   return (
     <>
-      <div className={Style.matchupContainer}>
-        <Segment attached tertiary={isPastEvent} raised>
+      <Segment
+        loading={matchup && !matchup.event_id}
+        attached
+        tertiary={isPastEvent}
+        raised
+        className={Style.matchupSegment}
+      >
+        <div
+          className={Style.matchupSegmentOverlay}
+          style={{ background: !darkMode ? '#fff4' : '#000b' }}
+        />
+        <div
+          className={Style.matchupGrid}
+          style={{
+            backgroundColor: 'grey',
+            background: `linear-gradient(125deg, var(--color-${awayTeam?.abbreviation}-primary, black) 50%, var(--color-${homeTeam?.abbreviation}-primary, grey) 50%)`,
+          }}
+        >
           <Grid columns="equal">
             {/* 
             buildTeamCard function returns a grid column for any team fed.
@@ -286,68 +303,71 @@ const MatchupCardAt = ({
               )
             }
           </Grid>
-        </Segment>
-        <Segment
-          color="grey"
-          inverted
-          tertiary={isPastEvent}
-          attached="bottom"
-          textAlign="center"
-          size="mini"
-        >
-          <Grid columns="equal">
-            {
-              // if a past event, display the final scores
-              // else any necessary information
-              matchup.event_status === 'STATUS_FINAL' ? (
-                <>
-                  <Grid.Column className={Style.finalColumn}>
-                    <h3>{matchup.away_score}</h3>
-                  </Grid.Column>
-                  <Grid.Column className={Style.finalColumn} width={3}>
-                    <span style={{ fontSize: 'medium' }}>
-                      {matchup.event_status_detail.toUpperCase() || 'FINAL'}
-                    </span>
-                  </Grid.Column>
-                  <Grid.Column className={Style.finalColumn}>
-                    <h3>{matchup.home_score}</h3>
-                  </Grid.Column>
-                </>
-              ) : (
-                <Grid.Column>
-                  <h4>
-                    {new Intl.DateTimeFormat('default', {
+        </div>
+      </Segment>
+      <Segment
+        color="grey"
+        inverted
+        tertiary={isPastEvent}
+        attached="bottom"
+        textAlign="center"
+        size="mini"
+      >
+        <Grid columns="equal">
+          {
+            // if a past event, display the final scores
+            // else any necessary information
+            matchup && matchup.event_status === 'STATUS_FINAL' ? (
+              <>
+                <Grid.Column className={Style.finalColumn}>
+                  <h3>{matchup.away_score}</h3>
+                </Grid.Column>
+                <Grid.Column className={Style.finalColumn} width={3}>
+                  <span style={{ fontSize: 'medium' }}>
+                    {matchup.event_status_detail.toUpperCase() || 'FINAL'}
+                  </span>
+                </Grid.Column>
+                <Grid.Column className={Style.finalColumn}>
+                  <h3>{matchup.home_score}</h3>
+                </Grid.Column>
+              </>
+            ) : (
+              <Grid.Column>
+                <h4>
+                  {matchup &&
+                    new Intl.DateTimeFormat('default', {
                       month: 'numeric',
                       day: 'numeric',
                       hour: 'numeric',
                       minute: '2-digit',
                       timeZoneName: 'short',
                       // weekday: "short",
-                    }).format(new Date(matchup.event_date))}{' '}
-                    - {matchup.broadcast}
-                  </h4>
-                </Grid.Column>
-              )
-            }
-          </Grid>
-        </Segment>
+                    }).format(
+                      new Date(matchup.event_date || '2021-01-01T05:00:00Z')
+                    )}{' '}
+                  - {matchup.broadcast}
+                </h4>
+              </Grid.Column>
+            )
+          }
+        </Grid>
+      </Segment>
 
-        {/* This displays only on the last matchup or what is the tiebreaker  */}
-        {tiebreak && (
-          <Tiebreaker
-            isLocked={isLocked}
-            user={user}
-            eventId={matchup.event_id}
-            hometeam={matchup.home_team}
-            awayteam={matchup.away_team}
-            tiebreaker={(userPick && userPick.tiebreaker) || 1}
-            finalTiebreaker={
-              matchup.event_status === 'STATUS_FINAL' &&
-              matchup.away_score + matchup.home_score
-            }
-          />
-        )}
-      </div>
+      {/* This displays only on the last matchup or what is the tiebreaker  */}
+      {tiebreak && (
+        <Tiebreaker
+          isLocked={isLocked}
+          user={user}
+          eventId={matchup.event_id}
+          hometeam={matchup.home_team}
+          awayteam={matchup.away_team}
+          tiebreaker={(userPick && userPick.tiebreaker) || 1}
+          finalTiebreaker={
+            matchup.event_status === 'STATUS_FINAL' &&
+            matchup.away_score + matchup.home_score
+          }
+        />
+      )}
     </>
   )
 }

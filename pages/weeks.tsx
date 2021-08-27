@@ -11,7 +11,6 @@ import {
   useUserPicksByWeek,
 } from '../lib/hooks'
 import TimeDisplay from '../components/TimeDisplay'
-import Loader from '../components/DualRingLoader'
 import WeekDropdown from '../components/WeekDropdown'
 import SeasonDropdown from '../components/SeasonDropdown'
 import MatchupCardSection from '../components/Matchup/Section'
@@ -31,14 +30,14 @@ function Weeks({ query }) {
   const {
     schedule,
     lockDate,
-    isLoading: scheduleIsLoading,
+    // isLoading: scheduleIsLoading,
   } = useSchedule(query.sport, seasonYear, week)
   // States
   const [Sport] = useState(2) // 2 = NFL, 7 = UFC
   const [teamsOnBye, setTeamsOnBye] = useState([])
   const [tiebreakMatch, setTiebreakMatch] = useState({ event_id: null })
   const [allPicked, setAllPicked] = useState(false)
-  const [compactCards, setCompactCards] = useState(false)
+  const [compactCards, setCompactCards] = useState(true)
   const [weeklyRecord, setWeeklyRecord] = useState(null)
   // LAST
   // place last as it looks for user._id when no selected user found
@@ -123,109 +122,100 @@ function Weeks({ query }) {
       <div className="page-header week-header">
         <TimeDisplay />
         <br />
-        {
-          // "2020 Regular Season"
-
-          <SeasonDropdown />
-        }
-        {
-          // "Week 2" [Dropdown]
-        }
+        {/* "2020 Regular Season" */}
+        <SeasonDropdown />
+        {/* "Week 2" [Dropdown] */}
         <WeekDropdown />
-
         {
           // "(Sep 16-22)"
           schedule?.length ? `(${schedule[0].week_detail})` : null
         }
       </div>
       <div className="page-content">
-        {!scheduleIsLoading && schedule?.length ? (
-          <>
-            <section>
-              <PlayerDashboard
-                lockDate={lockDate}
-                allPicked={allPicked}
-                user={!isLoading ? selectedUser : currentUser}
-                otherUser={
-                  selectedUser?._id === currentUser?._id ? false : selectedUser
-                }
-                weeklyRecord={weeklyRecord}
-              />
-            </section>
-            <section
-              style={{ display: 'flex', justifyContent: 'space-around' }}
-            >
-              {/* Toggle Modern Layout on/off  */}
-              <Checkbox
-                className="modern-layout toggle-box"
-                label="Modern Layout"
-                toggle
-                checked={modernLayout}
-                onChange={() => setModernLayout(!modernLayout)}
-              />
-              {/* Toggle compact cards on/off  */}
-              <Checkbox
-                className="compact-cards toggle-box"
-                label="Compact Cards"
-                toggle
-                checked={compactCards}
-                onChange={() => setCompactCards(!compactCards)}
-              />
-            </section>
-            <details
-              style={{ textAlign: 'left', maxWidth: '350px', margin: 'auto' }}
-            >
-              <summary style={{ textAlign: 'center' }}>
-                Click to read more about modern vs old layout
-              </summary>
-              <b>Modern Layout:</b> AWAY team is on the left and HOME team is on
-              the right (indicated with an @ symbol in middle). Favorite is team
-              with red number under their name.
-              <br />
-              <b>Old Layout:</b> FAVORITE team is on the left and UNDERDOG is on
-              the right. Number in middle is the point-spread needed to cover by
-              favorite (left). HOME is team with all capitalized name.
-              <br />
-            </details>
-            {
-              /* 
+        <>
+          <section>
+            <PlayerDashboard
+              lockDate={lockDate}
+              allPicked={allPicked}
+              user={!isLoading ? selectedUser : currentUser}
+              otherUser={
+                selectedUser?._id === currentUser?._id ? false : selectedUser
+              }
+              weeklyRecord={weeklyRecord}
+            />
+          </section>
+          <section style={{ display: 'flex', justifyContent: 'space-around' }}>
+            {/* Toggle Modern Layout on/off  */}
+            <Checkbox
+              className="modern-layout toggle-box"
+              label="Modern Layout"
+              toggle
+              checked={modernLayout}
+              onChange={() => setModernLayout(!modernLayout)}
+            />
+            {/* Toggle compact cards on/off  */}
+            <Checkbox
+              className="compact-cards toggle-box"
+              label="Compact Cards"
+              toggle
+              checked={compactCards}
+              onChange={() => setCompactCards(!compactCards)}
+            />
+          </section>
+          <details
+            style={{ textAlign: 'left', maxWidth: '350px', margin: 'auto' }}
+          >
+            <summary style={{ textAlign: 'center' }}>
+              Click to read more about modern vs old layout
+            </summary>
+            <b>Modern Layout:</b> AWAY team is on the left and HOME team is on
+            the right (indicated with an @ symbol in middle). Favorite is team
+            with red number under their name.
+            <br />
+            <b>Old Layout:</b> FAVORITE team is on the left and UNDERDOG is on
+            the right. Number in middle is the point-spread needed to cover by
+            favorite (left). HOME is team with all capitalized name.
+            <br />
+          </details>
+          {
+            /* 
                 Caveat: -- only displays other user's if Date now 
                 is after the lockdate (i.e. after first Sunday Game) 
               */
-              // if selected user is same as current user display all picks
-              // or it's past the first Sunday game of the week (picks are locked date)
-              // render the matchups and the corresponding user's picks
-              currentUser?._id === selectedUser?._id ||
-              Date.now() >= lockDate ? (
-                <MatchupCardSection
-                  schedule={schedule}
-                  modernLayout={modernLayout}
-                  currentUser={currentUser}
-                  lockDate={lockDate}
-                  userPicks={userPicks}
-                  compactCards={compactCards}
-                  tiebreakMatch={tiebreakMatch}
-                />
-              ) : selectedUser && Date.now() < lockDate ? (
-                <p
-                  style={{
-                    textAlign: 'justify',
-                    padding: '1rem',
-                    maxWidth: '800px',
-                    margin: 'auto',
-                  }}
-                >
-                  <b>Note:</b> Other users&apos; picks are not viewable until
-                  after the start of the first Sunday game.
-                </p>
-              ) : null
-            }
-          </>
+            // if selected user is same as current user display all picks
+            // or it's past the first Sunday game of the week (picks are locked date)
+            // render the matchups and the corresponding user's picks
+            currentUser?._id === selectedUser?._id || Date.now() >= lockDate ? (
+              <MatchupCardSection
+                schedule={schedule?.length ? schedule : [{}, {}, {}]}
+                modernLayout={modernLayout}
+                currentUser={currentUser}
+                lockDate={lockDate}
+                userPicks={userPicks}
+                compactCards={compactCards}
+                tiebreakMatch={tiebreakMatch}
+              />
+            ) : selectedUser && Date.now() < lockDate ? (
+              <p
+                style={{
+                  textAlign: 'justify',
+                  padding: '1rem',
+                  maxWidth: '800px',
+                  margin: 'auto',
+                }}
+              >
+                <b>Note:</b> Other users&apos; picks are not viewable until
+                after the start of the first Sunday game.
+              </p>
+            ) : null
+          }
+        </>
+        {/* {!scheduleIsLoading && schedule?.length ? (
         ) : (
           <section>
             <Loader text="Loading matchups..." />
           </section>
-        )}
+        )} */}
       </div>
       <div className="page-footer">
         <ByeTeamsSection teams={teamsOnBye.length && teamsOnBye} />
