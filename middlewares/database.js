@@ -1,10 +1,12 @@
 import { MongoClient } from 'mongodb'
 
-const client = new MongoClient(process.env.MONGODB_URX, {
+const mongoOptions = {
   // useNewUrlParser: true,
   // useUnifiedTopology: true,
-  keepAlive: false,
-})
+  keepAlive: true,
+}
+
+const client = new MongoClient(process.env.MONGODB_URX, mongoOptions)
 
 export async function setUpDb(db) {
   db.collection('tokens').createIndex(
@@ -12,7 +14,7 @@ export async function setUpDb(db) {
     { expireAfterSeconds: 0 }
   )
   db.collection('picks').createIndex(
-    { matchupId: 1, userId: 1 },
+    { matchupId: 1, userId: 1, seasonYear: 1, week: 1 },
     { unique: true }
   )
   db.collection('users').createIndex(
@@ -25,7 +27,7 @@ export default async function database(req, _res, next) {
   await client.connect()
   req.dbClient = client
   req.db = client.db(process.env.DB_NAME)
-  // await setUpDb(req.db)
+  await setUpDb(req.db)
 
   return next()
 }
