@@ -1,13 +1,95 @@
-.matchupContainer {
-  position: relative;
+/* .matchupContainer {
   max-width: 825px;
   margin: auto;
   height: fit-content;
-}
-.matchupContainer h3 {
+} */
+.matchupSegment h3 {
   margin: 0;
   margin-top: -8px;
   margin-bottom: 8px;
+}
+.matchupSegment {
+  position: relative;
+  background-color: transparent;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.matchupSegmentOverlay {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* opacity: 0.22; */
+  z-index: 0;
+}
+.matchupGrid {
+  text-shadow: 0.5px 0.5px #345;
+  --color-ARI-primary: #97233f;
+  --color-ARI-secondary: #ffb612;
+  --color-ATL-primary: #a71930;
+  --color-ATL-secondary: #000000;
+  --color-BAL-primary: #241773;
+  --color-BAL-secondary: #9e7c0c;
+  --color-BUF-primary: #00338d;
+  --color-BUF-secondary: #c60c30;
+  --color-CAR-primary: #0085ca;
+  --color-CAR-secondary: #101820;
+  --color-CHI-primary: #c83803;
+  --color-CHI-secondary: #0b162a;
+  --color-CIN-primary: #fb4f14;
+  --color-CIN-secondary: #000000;
+  --color-CLE-primary: #311d00;
+  --color-CLE-secondary: #ff3c00;
+  --color-DAL-primary: #003594;
+  --color-DAL-secondary: #869397;
+  --color-DEN-primary: #fb4f14;
+  --color-DEN-secondary: #002244;
+  --color-DET-primary: #0076b6;
+  --color-DET-secondary: #b0b7bc;
+  --color-GB-primary: #203731;
+  --color-GB-secondary: #ffb612;
+  --color-HOU-primary: #03202f;
+  --color-HOU-secondary: #a71930;
+  --color-IND-primary: #002c5f;
+  --color-IND-secondary: #a2aaad;
+  --color-JAX-primary: #9f792c;
+  --color-JAX-secondary: #006778;
+  --color-KC-primary: #e31837;
+  --color-KC-secondary: #ffb81c;
+  --color-LAS-primary: #a5acaf;
+  --color-LAS-secondary: #000000;
+  --color-LAC-primary: #0080c6;
+  --color-LAC-secondary: #ffc20e;
+  --color-LAR-primary: #003594;
+  --color-LAR-secondary: #ffd100;
+  --color-MIA-primary: #008e97;
+  --color-MIA-secondary: #fc4c02;
+  --color-MIN-primary: #4f2683;
+  --color-MIN-secondary: #ffc62f;
+  --color-NE-primary: #c60c30;
+  --color-NE-secondary: #002244;
+  --color-NO-primary: #d3bc8d;
+  --color-NO-secondary: #101820;
+  --color-NYJ-primary: #125740;
+  --color-NYJ-secondary: #ffffff;
+  --color-NYG-primary: #0b2265;
+  --color-NYG-secondary: #a71930;
+  --color-PHI-primary: #004c54;
+  --color-PHI-secondary: #acc0c6;
+  --color-PIT-primary: #ffb612;
+  --color-PIT-secondary: #101820;
+  --color-SF-primary: #aa0000;
+  --color-SF-secondary: #b3995d;
+  --color-SEA-primary: #69be28;
+  --color-SEA-secondary: #002244;
+  --color-TB-primary: #d50a0a;
+  --color-TB-secondary: #0a0a08;
+  --color-TEN-primary: #0c2340;
+  --color-TEN-secondary: #4b92db;
+  --color-WSH-primary: #773141;
+  --color-WSH-secondary: #ffb612;
 }
 .finalColumn {
   color: #000;
@@ -18,6 +100,7 @@
   text-align: center;
   height: 100%;
   cursor: pointer;
+  margin: auto 14px !important;
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
   -webkit-animation-fill-mode: both;
