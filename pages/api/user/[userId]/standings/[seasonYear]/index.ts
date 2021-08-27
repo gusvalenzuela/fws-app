@@ -17,9 +17,11 @@ handler.get(async (req: CustomNextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  if (!seasonYear) return res.json(null)
-
-  return res.json(await getUserStandings(db, userId, seasonYear))
+  if (!seasonYear) {
+    res.json(null)
+  } else {
+    res.json(await getUserStandings(db, userId, seasonYear))
+  }
 })
 
 export default handler

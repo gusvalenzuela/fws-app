@@ -2,7 +2,7 @@ import nextConnect from 'next-connect'
 import type { NextApiResponse } from 'next'
 import type { CustomNextApiRequest } from '../../additional'
 import middleware from '../../middlewares/middleware'
-import { getLeaderboard, getUserStandings } from '../../lib/db'
+import { getLeaderboard } from '../../lib/db'
 
 const handler = nextConnect()
 

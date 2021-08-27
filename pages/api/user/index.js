@@ -22,7 +22,9 @@ cloudinary.config({
 
 handler.use(middleware)
 
-handler.get(async (req, res) => res.json({ user: extractUser(req) }))
+handler.get(async (req, res) => {
+  res.json({ user: extractUser(req) })
+})
 
 handler.patch(upload.single('profilePicture'), async (req, res) => {
   if (!req.user) {
