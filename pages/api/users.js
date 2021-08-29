@@ -4,37 +4,16 @@ import normalizeEmail from 'validator/lib/normalizeEmail'
 import bcrypt from 'bcryptjs'
 import { nanoid } from 'nanoid'
 import middleware from '../../middlewares/middleware'
+import { getAllUsers } from '../../lib/db'
 import { extractUser } from '../../lib/api-helpers'
 
 const handler = nextConnect()
 
 handler.use(middleware)
 
-handler.get(async ({ db }, res) => {
-  const dbUsers = await db
-    .collection('users')
-    .aggregate([
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-        },
-      },
-    ])
-    .toArray()
-
-  // sort alphabetically by name
-  dbUsers.sort((a, b) => {
-    if (a.name.toLowerCase() > b.name.toLowerCase()) {
-      return 1
-    }
-    if (a.name.toLowerCase() < b.name.toLowerCase()) {
-      return -1
-    }
-    return 0
-  })
-
-  return res.status(200).json({ users: dbUsers })
+handler.get(async (req, res) => {
+  if (!req.user) return res.status(401).send('Please log in')
+  return res.status(200).json(await getAllUsers(req))
 })
 
 handler.post(async (req, res) => {
