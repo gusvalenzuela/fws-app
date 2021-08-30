@@ -100,7 +100,8 @@ export default function UserPage({ userId }) {
                   ? standings.map((weeklyRecord) => (
                       <p key={weeklyRecord._id}>
                         Week {weeklyRecord.week} Record:{' '}
-                        {weeklyRecord.wins.length}-{weeklyRecord.losses.length}
+                        {weeklyRecord.wins?.length}-
+                        {weeklyRecord.losses?.length}
                       </p>
                     ))
                   : `No records found for ${seasonYear}`}
@@ -109,7 +110,7 @@ export default function UserPage({ userId }) {
           )}
         </div>
 
-        <div className="page-footer">Thank you for playing.</div>
+        <div className="page-footer">Thank you for playing!</div>
       </main>
     </>
   )
