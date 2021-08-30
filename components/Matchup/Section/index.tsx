@@ -45,7 +45,7 @@ const MatchupCardSection = ({
           }
 
           return (
-            <article key={matchup.event_id}>
+            <>
               {/* A blank or date divider */}
               {!print ? (
                 <Divider
@@ -63,6 +63,7 @@ const MatchupCardSection = ({
 
               {/* A Matchup Card stack for each matchup */}
               <MatchupCard
+                key={`${matchup.event_date}`}
                 version="at"
                 compactCards={compactCards}
                 lockDate={lockDate}
@@ -78,7 +79,7 @@ const MatchupCardSection = ({
                   tiebreakMatch && tiebreakMatch?.event_id === matchup.event_id
                 }
               />
-            </article>
+            </>
           )
         })
     }
