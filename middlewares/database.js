@@ -1,12 +1,6 @@
 import { MongoClient } from 'mongodb'
 
-const mongoOptions = {
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true,
-  keepAlive: true,
-}
-
-const client = new MongoClient(process.env.MONGODB_URX, mongoOptions)
+const client = new MongoClient(process.env.MONGODB_URX)
 
 export async function setUpDb(db) {
   db.collection('tokens').createIndex(
