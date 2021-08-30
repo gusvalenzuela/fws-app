@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Store from '../lib/stores/FootballPool'
@@ -9,6 +10,8 @@ const LoginPage = ({ demoAccount }) => {
   const router = useRouter()
   const [isLoggingIn, setIsLoggingIn] = useState(false)
   const [user, { mutate }] = useCurrentUser()
+
+  const darkMode = Store((s) => s.darkMode)
   const season = Store((s) => ({
     week: s.week || s.currentWeek,
     year: s.seasonYear || s.currentSeasonYear,
@@ -42,6 +45,7 @@ const LoginPage = ({ demoAccount }) => {
         </header>
         <div className="page-content">
           <LoginForm
+            darkMode={darkMode}
             setIsLoggingIn={setIsLoggingIn}
             demoAccount={demoAccount}
             mutate={mutate}
@@ -49,8 +53,10 @@ const LoginPage = ({ demoAccount }) => {
           />
           <p
             style={{
-              color: '#777',
+              color: `${darkMode ? '#ccc' : '#222'}`,
               textAlign: 'center',
+              maxWidth: '375px',
+              margin: 'auto',
             }}
           >
             <b>Disclaimer: </b>
@@ -65,6 +71,14 @@ const LoginPage = ({ demoAccount }) => {
 }
 
 export default LoginPage
+
+LoginPage.propTypes = {
+  demoAccount: PropTypes.oneOf([PropTypes.string, null]),
+}
+
+LoginPage.defaultProps = {
+  demoAccount: null,
+}
 
 export async function getServerSideProps({ query }) {
   const demoAccount = query.demo || null

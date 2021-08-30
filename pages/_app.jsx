@@ -11,22 +11,20 @@ import Store from '../lib/stores/FootballPool'
 import { useAllUsers } from '../lib/hooks'
 import Menubar from '../components/Menubar'
 import Footer from '../components/Footer'
-import './_app.css'
-import 'semantic-ui-css/semantic.min.css'
 import 'react-toastify/dist/ReactToastify.css'
+import 'semantic-ui-css/semantic.min.css'
+import './_app.css'
 
 const { week_start_days: weekStartDates } = startDates
+
 // This default export is required in a new `pages/_app.js\x` file.
 export default function MyApp({ Component, pageProps }) {
   const [users] = useAllUsers()
   const storedUsers = Store((s) => s.allUsers)
+  const darkMode = Store((s) => s.darkMode)
 
-  // on mount
+  // Mount & M O M E N T
   useEffect(() => {
-    if ((!storedUsers || !storedUsers.length) && users) {
-      Store.setState({ allUsers: users })
-      return
-    }
     // Start the pooled timer which runs every 1 second(s)
     // (60000 milliseconds) by default.
     Moment.startPooledTimer(1000)
@@ -45,11 +43,18 @@ export default function MyApp({ Component, pageProps }) {
       currentSeasonYear: 2021,
       Moment,
     })
+  }, [])
+
+  // on users
+  useEffect(() => {
+    if ((!storedUsers || !storedUsers.length) && users) {
+      Store.setState({ allUsers: users })
+    }
   }, [users, storedUsers])
 
   return (
     <>
-      <Menubar />
+      <Menubar darkMode={darkMode} />
       <ToastContainer
         // limit={3}
         newestOnTop
@@ -58,7 +63,7 @@ export default function MyApp({ Component, pageProps }) {
         position="top-center"
       />
       <Component {...pageProps} />
-      <Footer />
+      <Footer darkMode={darkMode} />
     </>
   )
 }

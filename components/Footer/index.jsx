@@ -1,13 +1,34 @@
 import React from 'react'
 
-export default function Footer() {
+// Footer.propTypes = {
+//   darkMode: PropTypes.boolean.isRequired,
+// }
+
+export default function Footer({ darkMode }) {
   return (
-    <footer className="footer">
-      <div style={{ display: 'flex' }}>
-        <span> &copy; 2020 </span>
-        <a href="https://gusvalenzuela.com/">\\ Gus Valenzuela</a>
-        <a href="https://github.com/gusvalenzuela/fws-app">\\ code</a>
-      </div>
-    </footer>
+    <>
+      <style jsx>{`
+        footer.footer {
+          position: relative;
+          display: flex;
+          // background: var(--color2, --main-white, #fff);
+          border-top: 4px solid var(--brand-color1, red);
+          margin-top: 5px;
+          padding: 1rem 1rem 5rem;
+          justify-content: center;
+          background-color: var(--main-${darkMode ? 'black' : 'white'});
+          color: var(--main-${darkMode ? 'white' : 'black'});
+        }
+        .footer span {
+          color: var(--main-${darkMode ? 'white' : 'black'});
+          margin-left: 5px;
+        }
+      `}</style>
+      <footer className="footer">
+        <span> &copy; 2020-2021 </span>
+        <a href="https://gusvalenzuela.com/"> \\ Gus Valenzuela</a>
+        <a href="https://github.com/gusvalenzuela/fws-app"> \\ code</a>
+      </footer>
+    </>
   )
 }

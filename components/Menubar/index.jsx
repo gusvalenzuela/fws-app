@@ -1,4 +1,5 @@
-import React, { createRef } from 'react'
+import React, { createRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useRouter } from 'next/router'
 import { Menu, Dropdown, Icon } from 'semantic-ui-react'
 import { generateNumbersArray } from '../../lib/utils'
@@ -6,7 +7,7 @@ import { useCurrentUser } from '../../lib/hooks'
 import Store from '../../lib/stores/FootballPool'
 import Styles from './Menubar.module.css'
 
-const Menubar = () => {
+const Menubar = ({ darkMode }) => {
   const router = useRouter()
   const users = Store((s) => s.allUsers)
   const [user] = useCurrentUser()
@@ -47,120 +48,133 @@ const Menubar = () => {
     return null
   }
 
+  useEffect(() => {
+    const mainElement = document.querySelector('main')
+    const bodyElement = document.querySelector('body')
+    const pageHeaderElement = document.querySelector('.page-header')
+    const navElement = document.querySelector('.menuNav')
+    const currentTheme = `var(--${darkMode ? 'dark' : 'light'}-mode)`
+    const alternateTheme = `var(--${!darkMode ? 'dark' : 'light'}-mode)`
+
+    if (mainElement) {
+      mainElement.style.backgroundColor = currentTheme
+      mainElement.style.color = alternateTheme
+    }
+    if (bodyElement) {
+      bodyElement.style.backgroundColor = currentTheme
+      bodyElement.style.color = alternateTheme
+    }
+    if (pageHeaderElement) {
+      pageHeaderElement.style.color = alternateTheme
+    }
+    if (navElement) {
+      // navElement.style.backgroundColor = currentTheme
+      navElement.style.borderColor = currentTheme
+      navElement.style.color = alternateTheme
+    }
+  }, [menubar, darkMode])
+
   return (
     <nav className="menubar responsive" id="menubar" ref={menubar}>
-      <div>
-        <Menu stackable attached="top">
-          <Menu.Header
-            onClick={toggleResponsiveMenu}
-            as="h3"
-            className={Styles.menubarHeader}
-          >
-            <span>FWS Pool </span>
-            {user && (
-              <span
-                style={{ color: 'var(--brand-color1)', fontWeight: 'bolder' }}
-              >
-                {` | ${user.name}`}
-              </span>
-            )}
-          </Menu.Header>
-          <Dropdown.Item
-            as="a"
-            onClick={() => {
-              toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
-              // when user clicks home, reset a few globally stored states
-              // set "selectedUser" to undefined when clicking home, defaults to current user
-              Store.setState({
-                selectedUser: user ? user._id : undefined,
-                week: Store.getState().currentWeek,
-                season: Store.getState().currentSeasonYear,
-              })
-              if (user) {
-                router.push(
-                  `/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`
-                )
-              } else {
-                router.push('/')
-              }
-            }}
-          >
-            Home
-          </Dropdown.Item>
+      <Menu inverted={darkMode} className="menuNav" stackable attached="top">
+        <Menu.Header
+          onClick={toggleResponsiveMenu}
+          as="h3"
+          className={Styles.menubarHeader}
+        >
+          <span>FWS Pool </span>
           {user && (
-            <>
-              {' '}
-              <Dropdown
-                // selection
-                selectOnNavigation={false}
-                options={generateNumbersArray(2020, 2021).map((num) => ({
-                  key: num,
-                  text: `Season ${num}`,
-                  value: num,
-                }))}
-                item
-                text="Seasons"
-                onChange={handleSeasonChange}
-              />
-              <Dropdown
-                selectOnNavigation={false}
-                options={generateNumbersArray().map((num) => ({
-                  key: num,
-                  text: num,
-                  value: num,
-                }))}
-                item
-                text="Weeks"
-                onChange={handleWeekChange}
-              />
-              {/* <Dropdown.Item
-              as="a"
-              onClick={() => {
-                toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
-
-                router.push(
-                  `/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`
-                )
-              }}
+            <span
+              style={{ color: 'var(--brand-color1)', fontWeight: 'bolder' }}
             >
-              Weeks
-            </Dropdown.Item> */}
-              <Dropdown
-                selectOnNavigation={false}
-                options={
-                  // basic users' data is pulled from DB and a dropdown made for each
-                  users?.map(({ name, _id }, index) => ({
-                    key: index,
-                    text: `${name}`,
-                    value: _id,
-                  }))
-                }
-                item
-                text="Users"
-                onChange={handleUserChange}
-              />
-            </>
+              {` | ${user.name}`}
+            </span>
           )}
-          <Dropdown item text="Leaderboards">
-            <Dropdown.Menu>
-              <Dropdown.Item
-                onClick={() => {
-                  toggleResponsiveMenu()
-                  router.push(`/leaderboard/weekly`)
-                }}
-                text="Weekly Leaderboard"
-                // icon="clipboard"
-              />
-              <Dropdown.Item
-                text="Season Leaderboard"
-                onClick={() => {
-                  toggleResponsiveMenu()
-                  router.push('/leaderboard/season')
-                }}
-              />
-            </Dropdown.Menu>
-          </Dropdown>
-          {/* <Dropdown.Item
+        </Menu.Header>
+        <Dropdown.Item
+          as="a"
+          onClick={() => {
+            toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
+            // when user clicks home, reset a few globally stored states
+            // set "selectedUser" to undefined when clicking home, defaults to current user
+            Store.setState({
+              selectedUser: user ? user._id : undefined,
+              week: Store.getState().currentWeek,
+              season: Store.getState().currentSeasonYear,
+            })
+            if (user) {
+              router.push(
+                `/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`
+              )
+            } else {
+              router.push('/')
+            }
+          }}
+        >
+          Home
+        </Dropdown.Item>
+        {user && (
+          <>
+            {' '}
+            <Dropdown
+              // selection
+              selectOnNavigation={false}
+              options={generateNumbersArray(2020, 2021).map((num) => ({
+                key: num,
+                text: `Season ${num}`,
+                value: num,
+              }))}
+              item
+              text="Seasons"
+              onChange={handleSeasonChange}
+            />
+            <Dropdown
+              selectOnNavigation={false}
+              options={generateNumbersArray().map((num) => ({
+                key: num,
+                text: num,
+                value: num,
+              }))}
+              item
+              text="Weeks"
+              onChange={handleWeekChange}
+            />
+            <Dropdown
+              selectOnNavigation={false}
+              options={
+                // basic users' data is pulled from DB and a dropdown made for each
+                users?.map(({ name, _id }, index) => ({
+                  key: index,
+                  text: `${name}`,
+                  value: _id,
+                }))
+              }
+              item
+              text="Users"
+              onChange={handleUserChange}
+            />
+          </>
+        )}
+        <Dropdown item text="Leaderboards">
+          <Dropdown.Menu>
+            <Dropdown.Item
+              onClick={() => {
+                toggleResponsiveMenu()
+                router.push(`/leaderboard/weekly`)
+              }}
+              text="Weekly Leaderboard"
+              // icon="clipboard"
+            />
+            <Dropdown.Item
+              text="Season Leaderboard"
+              onClick={() => {
+                toggleResponsiveMenu()
+                router.push('/leaderboard/season')
+              }}
+            />
+          </Dropdown.Menu>
+        </Dropdown>
+        {/* <Dropdown.Item
             as="a"
             onClick={() => {
               toggleResponsiveMenu() // this assures the responsive menu is closed when clicked
@@ -170,76 +184,92 @@ const Menubar = () => {
           >
             About
           </Dropdown.Item> */}
-          <Menu.Menu position="right">
-            {!user ? (
-              <>
-                <Dropdown.Item
-                  as="button"
-                  // href="/login"
-                  onClick={() => {
-                    toggleResponsiveMenu()
-                    router.push('/login')
-                  }}
-                >
-                  Log In
-                </Dropdown.Item>
-                <Dropdown.Item
-                  as="button"
-                  onClick={() => {
-                    toggleResponsiveMenu()
-                    router.push('/signup')
-                  }}
-                >
-                  Sign Up
-                </Dropdown.Item>
-              </>
-            ) : (
-              <>
-                <Dropdown simple item text="My Account">
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      onClick={() => {
-                        toggleResponsiveMenu()
-                        router.push(`/user/${user._id}`)
-                      }}
-                    >
-                      My Profile
-                    </Dropdown.Item>
-                    {
-                      // add dropdown for admin page, if user is an Admin User
-                      user?.isAdmin && (
-                        <Dropdown.Item
-                          text="Admin Page"
-                          onClick={() => {
-                            toggleResponsiveMenu()
-                            router.push('/admin')
-                          }}
-                        />
-                      )
-                    }
-                    <Dropdown.Item
-                      text="Settings"
-                      icon="settings"
-                      onClick={() => {
-                        toggleResponsiveMenu()
-                        router.push('/settings')
-                      }}
-                    />
-                    <Dropdown.Item
-                      icon="log out"
-                      text="Log out"
-                      onClick={() => {
-                        toggleResponsiveMenu()
-                        router.push('/logout')
-                      }}
-                    />
-                  </Dropdown.Menu>
-                </Dropdown>
-              </>
-            )}
-          </Menu.Menu>
-        </Menu>
-      </div>
+        <Menu.Item>
+          <div
+            tabIndex={0}
+            role="button"
+            id="darkModeButton"
+            className={Styles.darkModeButton}
+            onClick={() => Store.setState({ darkMode: !darkMode })}
+          >
+            <Icon
+              size="large"
+              // fitted
+              flipped="horizontally"
+              inverted={darkMode}
+              name={!darkMode ? 'moon' : 'sun'}
+            />
+          </div>
+        </Menu.Item>
+        <Menu.Menu position="right">
+          {!user ? (
+            <>
+              <Dropdown.Item
+                as="button"
+                // href="/login"
+                onClick={() => {
+                  toggleResponsiveMenu()
+                  router.push('/login')
+                }}
+              >
+                Log In
+              </Dropdown.Item>
+              <Dropdown.Item
+                as="button"
+                onClick={() => {
+                  toggleResponsiveMenu()
+                  router.push('/signup')
+                }}
+              >
+                Sign Up
+              </Dropdown.Item>
+            </>
+          ) : (
+            <>
+              <Dropdown simple item text="My Account">
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    onClick={() => {
+                      toggleResponsiveMenu()
+                      router.push(`/user/${user._id}`)
+                    }}
+                  >
+                    My Profile
+                  </Dropdown.Item>
+                  {
+                    // add dropdown for admin page, if user is an Admin User
+                    user?.isAdmin && (
+                      <Dropdown.Item
+                        text="Admin Page"
+                        onClick={() => {
+                          toggleResponsiveMenu()
+                          router.push('/admin')
+                        }}
+                      />
+                    )
+                  }
+                  <Dropdown.Item
+                    text="Settings"
+                    icon="settings"
+                    onClick={() => {
+                      toggleResponsiveMenu()
+                      router.push('/settings')
+                    }}
+                  />
+                  <Dropdown.Item
+                    icon="log out"
+                    text="Log out"
+                    onClick={() => {
+                      toggleResponsiveMenu()
+                      router.push('/logout')
+                    }}
+                  />
+                </Dropdown.Menu>
+              </Dropdown>
+            </>
+          )}
+        </Menu.Menu>
+      </Menu>
       <button
         type="button"
         tabIndex={0}
@@ -256,5 +286,8 @@ const Menubar = () => {
       </button>
     </nav>
   )
+}
+Menubar.propTypes = {
+  darkMode: PropTypes.bool.isRequired,
 }
 export default Menubar

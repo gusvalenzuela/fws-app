@@ -3,6 +3,9 @@
 :root {
   --main-white: #f2f2f2;
   --main-black: #020202;
+  --dark-mode: #17171a;
+  --light-mode: #d7d7d9;
+  --current-theme: #17171a;
   --text-cool: #eadffb;
   --brand-color1: #a01d26;
   --color-dark: #2f2e33;
@@ -17,7 +20,20 @@ body {
   font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  /* background: url(../images/what-the-hex-dark.png); */
+}
+.dark-mode {
+  background-color: var(--color-dark, --main-black, #020202) !important;
+}
+.dark-mode,
+#darkModeCheckbox input ~ label {
+  color: var(--color-light, --main-white, #f2f2f2) !important;
+}
+.light-mode {
+  background-color: var(--color-light, --main-w, #f2f2f2) !important;
+}
+.light-mode,
+#lightModeCheckbox input ~ label {
+  color: var(--color-dark, --main-black, #020202) !important;
 }
 /* 
 MENUBAR RELATED
@@ -38,6 +54,17 @@ MENUBAR RELATED
   border: none;
   background-color: var(--color1, blue) !important;
   color: var(--color-light, --main-white, #fff) !important;
+  cursor: pointer;
+}
+.right.menu button:hover {
+  background-color: var(--color-dark, --main-black) !important;
+  color: var(--main-white, white);
+  border-bottom: 1px solid transparent;
+}
+.right.menu button:active {
+  background-color: var(--color-dark, --main-black);
+  border-bottom: 1px solid black;
+  cursor: wait;
 }
 .menu.transition.visible {
   overflow: auto;
@@ -48,7 +75,7 @@ MENUBAR RELATED
   margin: 0 !important;
 }
 .menubar button.active {
-  background-color: var(--color2);
+  background-color: rgba(var(--color-dark-rgb), 5);
   color: white;
 }
 .menubar button.icon {
@@ -117,8 +144,8 @@ time.time {
   text-align: center;
 }
 .page-header {
-  background: var(--color2);
-  color: var(--color-dark);
+  /* background: var(--color2); */
+  color: var(--dark-mode);
   text-align: center;
   max-width: none;
 }
@@ -154,24 +181,7 @@ time.time {
   color: var(--brand-color1, #f00) !important;
 }
 
-footer.footer {
-  position: relative;
-  background: var(--color2, --main-white, #fff);
-  border-top: 4px solid var(--brand-color1, red);
-  margin-top: 5px;
-  padding: 1rem 1rem 5rem;
-}
-.footer > div {
-  position: absolute;
-  top: 55%;
-  left: 0;
-  right: 0;
-  justify-content: center;
-}
-.footer div * {
-  /* color: var(--main-white); */
-  margin-left: 5px;
-}
+
 
 /* 
 TOAST RELATED

@@ -24,6 +24,7 @@ function Weeks({ query }) {
   const seasonType = Store((s) => s.seasonType || s.currentSeasonType) // Store.seasonType initializes as undefined
   const seasonYear = Store((s) => s.seasonYear || s.currentSeasonYear) // Store.seasonYear initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser) // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
+  const darkMode = Store((s) => s.darkMode)
   // Hooks
   const [currentUser] = useCurrentUser()
   const { sportTeams } = useSportTeams(query.sport)
@@ -144,10 +145,17 @@ function Weeks({ query }) {
               weeklyRecord={weeklyRecord}
             />
           </section>
-          <section style={{ display: 'flex', justifyContent: 'space-around' }}>
+          <section
+            style={{
+              color: `var(${darkMode ? 'light' : 'dark'}-mode)`,
+              display: 'flex',
+              justifyContent: 'space-around',
+            }}
+            id={`${darkMode ? 'dark' : 'light'}ModeCheckbox`}
+          >
             {/* Toggle Modern Layout on/off  */}
             <Checkbox
-              className="modern-layout toggle-box"
+              className="toggle-box"
               label="Modern Layout"
               toggle
               checked={modernLayout}
@@ -155,7 +163,7 @@ function Weeks({ query }) {
             />
             {/* Toggle compact cards on/off  */}
             <Checkbox
-              className="compact-cards toggle-box"
+              className="toggle-box"
               label="Compact Cards"
               toggle
               checked={compactCards}

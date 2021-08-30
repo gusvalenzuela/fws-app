@@ -6,7 +6,13 @@ import Loader from '../DualRingLoader'
 
 const { NEXT_PUBLIC_DEMO_PSWD } = process.env
 
-const LoginForm = ({ mutate, demoAccount, setIsLoggingIn, isLoggingIn }) => {
+const LoginForm = ({
+  mutate,
+  demoAccount,
+  setIsLoggingIn,
+  isLoggingIn,
+  darkMode,
+}) => {
   const [errorMsg, setErrorMsg] = useState(null)
 
   if (demoAccount) {
@@ -60,9 +66,15 @@ const LoginForm = ({ mutate, demoAccount, setIsLoggingIn, isLoggingIn }) => {
             margin: 2.5rem auto;
             max-width: 300px;
             transition: box-shadow 0.2s ease 0s;
-            background: #ffff;
+            background: var(
+              ${darkMode ? '--color-dark, #678' : '--main-white, #ccc'}
+            );
+            color: var(
+              ${!darkMode ? '--color-dark, #678' : '--main-white, #ccc'}
+            );
             text-align: center;
           }
+
           form {
             margin-bottom: 1rem;
           }
