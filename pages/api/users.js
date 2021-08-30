@@ -12,7 +12,7 @@ const handler = nextConnect()
 handler.use(middleware)
 
 handler.get(async (req, res) => {
-  if (!req.user) return res.status(401).send('Please log in')
+  if (!req.user) return res.status(401).json(null)
   return res.status(200).json(await getAllUsers(req))
 })
 
