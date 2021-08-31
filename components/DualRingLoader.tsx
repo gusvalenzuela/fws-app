@@ -4,7 +4,13 @@ const DualRingLoader = ({ text = ' ' }) => (
   <>
     <style jsx>{`
       aside {
+        display: grid;
+        place-self: center;
+        place-items: center;
+        flex: 1 1 100%;
         padding: 1rem;
+        width: 100%;
+        height: 100%;
       }
       .text {
         margin: auto;
@@ -15,8 +21,6 @@ const DualRingLoader = ({ text = ' ' }) => (
       .lds-dual-ring {
         position: relative;
         display: inline-block;
-        width: 99%;
-        height: 99%;
       }
       .lds-dual-ring:after {
         content: ' ';
