@@ -2,9 +2,10 @@ import React from 'react'
 import { Divider } from 'semantic-ui-react'
 import type { SportsMatchup, UserPick } from '../../../additional'
 import MatchupCard from '../Card'
+import DualRingLoader from '../../DualRingLoader'
 
 const MatchupCardSection = ({
-  schedule = [],
+  schedule,
   compactCards,
   lockDate,
   userPicks,
@@ -12,21 +13,41 @@ const MatchupCardSection = ({
   modernLayout,
   tiebreakMatch,
 }) => (
-  <section key="allMatchupCards">
+  <>
+    <style jsx>{`
+      section.placeholderSection {
+        position: relative;
+        display: flex;
+        box-shadoe: 0px 10px 10px #aaa;
+        background: linear-gradient(
+          123deg,
+          var(--light-mode, #fff),
+          var(--dark-mode, #000)
+        );
+        color: #000;
+        min-height: 200px;
+        width: 100%;
+        margin: auto;
+      }
+    `}</style>
     {
       /* 
         for each game of the week, make a header or divider and a matchup card component 
         Caveat: -- only displays other user's if Date now is after the lockdate (i.e. after first Sunday Game)
       */
-      schedule.length &&
+      !schedule || !schedule?.length ? (
+        <section className="placeholderSection">
+          <DualRingLoader text="Loading matchups, one moment please." />
+        </section>
+      ) : (
         schedule.map((matchup: SportsMatchup, inx: number) => {
           // before rendering any event, it checks to see if
           // it is the 1st time printing the event day (Mo, Tu, etc..)
           const currentMatchupEventDate = new Date(
-            matchup.event_date || '1971-01-01T00:00:00Z'
+            matchup.event_date || '1970-01-01T05:00:00Z'
           )
           const previousMatchupEventDate = new Date(
-            schedule[inx - 1]?.event_date
+            schedule[inx - 1]?.event_date || '1970-01-01T05:00:00Z'
           )
 
           let print = true
@@ -49,13 +70,14 @@ const MatchupCardSection = ({
               {/* A blank or date divider */}
               {!print ? (
                 <Divider
+                  key={`divider-${matchup.event_id || `${inx}`}`}
                   // content={matchup.schedule?.event_name}
                   className="container-divider"
                 />
               ) : (
                 <h1
+                  key={`header-${matchup.event_id || `${inx}`}`}
                   className="matchup-day-header"
-                  key={`header-${matchup.event_date}`}
                 >
                   {currentMatchupEventDate.toDateString()}
                 </h1>
@@ -63,7 +85,7 @@ const MatchupCardSection = ({
 
               {/* A Matchup Card stack for each matchup */}
               <MatchupCard
-                key={`${matchup.event_date}`}
+                key={matchup.event_id || `${inx}`}
                 version="at"
                 compactCards={compactCards}
                 lockDate={lockDate}
@@ -82,8 +104,9 @@ const MatchupCardSection = ({
             </>
           )
         })
+      )
     }
-  </section>
+  </>
 )
 
 export default MatchupCardSection

@@ -20,12 +20,12 @@ const MatchupCardAt = ({
   lockDate,
   compactCards,
 }) => {
-  const homeTeam = matchup?.home_team
-  const awayTeam = matchup?.away_team
+  const homeTeam = matchup.home_team
+  const awayTeam = matchup.away_team
   const favoriteTeam =
-    matchup?.line_?.favorite === homeTeam?.team_id ? homeTeam : awayTeam
+    matchup.line_?.favorite === homeTeam?.team_id ? homeTeam : awayTeam
   const underdogTeam =
-    matchup?.line_?.favorite === homeTeam?.team_id ? awayTeam : homeTeam
+    matchup.line_?.favorite === homeTeam?.team_id ? awayTeam : homeTeam
   const darkMode = Store((s) => s.darkMode)
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -33,12 +33,12 @@ const MatchupCardAt = ({
   // is past event when it has a score obj with final confirmed,
   // or 5 hours have passed after event start
   const isPastEvent =
-    (matchup?.event_status && matchup?.event_status === 'STATUS_FINAL') ||
-    Date.parse(matchup?.event_date) + 1000 * 60 * 60 * 5 < Date.now()
+    (matchup.event_status && matchup.event_status === 'STATUS_FINAL') ||
+    Date.parse(matchup.event_date) + 1000 * 60 * 60 * 5 < Date.now()
   const isLocked =
-    Date.parse(matchup?.event_date) < Date.now()
+    Date.parse(matchup.event_date) < Date.now()
       ? 'past'
-      : Date.parse(matchup?.event_date) >= lockDate && lockDate < Date.now()
+      : Date.parse(matchup.event_date) >= lockDate && lockDate < Date.now()
       ? 'after lock date'
       : false
   const initToast = React.useRef(null)
@@ -47,7 +47,7 @@ const MatchupCardAt = ({
 
   const handleTeamSelection = async (event) => {
     const newlySelectedTeam =
-      Number(event.currentTarget.dataset.team_id) === matchup?.away_team_id
+      Number(event.currentTarget.dataset.team_id) === matchup.away_team_id
         ? awayTeam
         : homeTeam
 
@@ -109,7 +109,7 @@ const MatchupCardAt = ({
       toast.update(initToast.current, {
         render: (
           <>
-            Week {matchup?.week} pick updated to{' '}
+            Week {matchup.week} pick updated to{' '}
             {newlySelectedTeam?.abbreviation}.
             <br />
             <b style={{ fontSize: 'small' }}>
@@ -250,7 +250,7 @@ const MatchupCardAt = ({
   return (
     <>
       <Segment
-        loading={matchup && !matchup.event_id}
+        loading={!matchup.event_id}
         attached
         tertiary={isPastEvent}
         raised
@@ -258,7 +258,7 @@ const MatchupCardAt = ({
       >
         <div
           className={Style.matchupSegmentOverlay}
-          style={{ background: !darkMode ? '#fff4' : '#000b' }}
+          style={{ background: !darkMode ? '#fff3' : '#000b' }}
         />
         <div
           className={Style.matchupGrid}

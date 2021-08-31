@@ -58,8 +58,10 @@ function Weeks({ query }) {
 
   // MAIN use effect
   useEffect(() => {
-    if (!week || !schedule || !sportTeams) return
+    setTeamsOnBye(null)
     setWeeklyRecord(null)
+    setAllPicked(false)
+    if (!week || !schedule || !sportTeams) return
     // Determine which teams on Bye Week (i.e. not scheduled)
     const scheduledTeams: Array<number> = schedule
       .map((matchup: SportsMatchup) => [
@@ -195,7 +197,7 @@ function Weeks({ query }) {
             // render the matchups and the corresponding user's picks
             currentUser?._id === selectedUser?._id || Date.now() >= lockDate ? (
               <MatchupCardSection
-                schedule={schedule?.length ? schedule : [{}, {}, {}]}
+                schedule={schedule}
                 modernLayout={modernLayout}
                 currentUser={currentUser}
                 lockDate={lockDate}
@@ -204,17 +206,19 @@ function Weeks({ query }) {
                 tiebreakMatch={tiebreakMatch}
               />
             ) : selectedUser && Date.now() < lockDate ? (
-              <p
-                style={{
-                  textAlign: 'justify',
-                  padding: '1rem',
-                  maxWidth: '800px',
-                  margin: 'auto',
-                }}
-              >
-                <b>Note:</b> Other users&apos; picks are not viewable until
-                after the start of the first Sunday game.
-              </p>
+              <section>
+                <p
+                  style={{
+                    textAlign: 'justify',
+                    padding: '1rem',
+                    maxWidth: '800px',
+                    margin: 'auto',
+                  }}
+                >
+                  <b>Note:</b> Other users&apos; picks are not viewable until
+                  after the start of the first Sunday game.
+                </p>
+              </section>
             ) : null
           }
         </>
@@ -226,7 +230,9 @@ function Weeks({ query }) {
         )} */}
       </div>
       <div className="page-footer">
-        <ByeTeamsSection teams={teamsOnBye.length && teamsOnBye} />
+        {teamsOnBye ? (
+          <ByeTeamsSection teams={teamsOnBye.length && teamsOnBye} />
+        ) : null}
       </div>
     </main>
   )
