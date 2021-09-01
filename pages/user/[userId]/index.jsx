@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import Img from 'next/image'
 import SeasonDropdown from '../../../components/SeasonDropdown'
+import DualRingLoader from '../../../components/DualRingLoader'
 import Store from '../../../lib/stores/FootballPool'
 import { useCurrentUser, useUserStandings, useUser } from '../../../lib/hooks'
 
@@ -72,7 +73,7 @@ export default function UserPage({ userId }) {
         </header>
         <div className="page-content">
           {userIsLoading ? (
-            <div className="user-info">Loading information...</div>
+            <DualRingLoader text="Loading information..." />
           ) : (
             <>
               <div className="user-info">
