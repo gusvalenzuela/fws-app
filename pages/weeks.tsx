@@ -46,14 +46,13 @@ function Weeks({ query }) {
     selectedUserId || currentUser?._id
   )
 
+  const [modernLayout, setModernLayout] = useState(
+    currentUser?.prefersModernLayout || true
+  )
   const { picks: userPicks } = useUserPicksByWeek(
     (Date.now() > lockDate && selectedUserId) || currentUser?._id,
     week,
     seasonYear
-  )
-
-  const [modernLayout, setModernLayout] = useState(
-    currentUser?.prefersModernLayout || true
   )
 
   // MAIN use effect
@@ -114,7 +113,11 @@ function Weeks({ query }) {
     }
   }, [week, sportTeams, Sport, seasonType, seasonYear, schedule, userPicks])
 
-  // console.log(`events this week ${week}`, events);
+  // ON CURRENT USER CHANGE
+  useEffect(() => {
+    if (!currentUser) return
+    setModernLayout(currentUser.prefersModernLayout)
+  }, [currentUser])
 
   return (
     <main id="weeks">
