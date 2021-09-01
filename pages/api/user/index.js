@@ -42,18 +42,31 @@ handler.patch(upload.single('profilePicture'), async (req, res) => {
     })
     profilePicture = image.secure_url
   }
-  const { name, bio } = req.body
-  await req.db.collection('users').updateOne(
+  const { name, bio, layout } = req.body
+  const updatedUser = await req.db.collection('users').updateOne(
     { _id: req.user._id },
     {
       $set: {
         ...(name && { name }),
         bio: bio || '',
         ...(profilePicture && { profilePicture }),
+        ...(layout && { prefersModernLayout: layout === 'modern' }),
       },
     }
   )
-  res.json({ user: { name, bio } })
+
+  if (updatedUser.matchedCount < 1 || updatedUser.modifiedCount < 1) {
+    res.status(400).json({ msg: 'No user found or modified.' })
+    return
+  }
+  res.status(200).json({
+    user: {
+      name,
+      bio,
+      prefersModernLayout: layout === 'modern',
+      profilePicture,
+    },
+  })
 })
 
 export const config = {
