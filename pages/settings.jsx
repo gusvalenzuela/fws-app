@@ -1,18 +1,14 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import Head from 'next/head'
+import nextConnect from 'next-connect'
+import middleware from '../middlewares/middleware'
+import { extractUser } from '../lib/api-helpers'
 import ProfileSection from '../components/ProfileSection'
 import { useCurrentUser } from '../lib/hooks'
 
-const SettingPage = () => {
-  const [user] = useCurrentUser()
-
-  if (!user || user.isDemo) {
-    return (
-      <>
-        <p>Please sign in</p>
-      </>
-    )
-  }
+const SettingPage = ({ currentUser }) => {
+  const [user, { mutate }] = useCurrentUser()
   return (
     <>
       <Head>
@@ -23,7 +19,7 @@ const SettingPage = () => {
           <h1>Change your account&apos;s settings:</h1>
         </header>
         <div className="page-content">
-          <ProfileSection />
+          <ProfileSection user={user || currentUser} mutateUser={mutate} />
         </div>
 
         <div className="page-footer">
@@ -37,3 +33,39 @@ const SettingPage = () => {
 }
 
 export default SettingPage
+
+export async function getServerSideProps(ctx) {
+  // use handler to extract user from session
+  const handler = nextConnect()
+  handler.use(middleware)
+  await handler.run(ctx.req, ctx.res)
+
+  // user
+  const { user } = ctx.req
+
+  // route if no user
+  if (!user || user.isDemo) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+  // if user found, extract from req and return as prop
+  // this currentUser is used when user hook is unavailable
+  return { props: { currentUser: extractUser(ctx.req) } }
+}
+
+SettingPage.propTypes = {
+  currentUser: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    bio: PropTypes.string,
+    email: PropTypes.string,
+    emailVerified: PropTypes.bool,
+    isAdmin: PropTypes.bool,
+    prefersModernLayout: PropTypes.bool,
+    profilePicture: PropTypes.string,
+  }).isRequired,
+}
