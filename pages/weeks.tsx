@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Checkbox } from 'semantic-ui-react'
+import { useSession } from 'next-auth/client'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 import type { GetServerSideProps } from 'next/types'
+import { Checkbox } from 'semantic-ui-react'
 import type { SportsTeam, SportsMatchup } from '../additional'
 import {
   useUser,
@@ -10,7 +13,7 @@ import {
   useSportTeams,
   useUserPicksByWeek,
 } from '../lib/hooks'
-import TimeDisplay from '../components/TimeDisplay'
+// import TimeDisplay from '../components/TimeDisplay'
 import WeekDropdown from '../components/WeekDropdown'
 import SeasonDropdown from '../components/SeasonDropdown'
 import MatchupCardSection from '../components/Matchup/Section'
@@ -26,6 +29,8 @@ function Weeks({ query }) {
   const selectedUserId = Store((s) => s.selectedUser) // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   const darkMode = Store((s) => s.darkMode)
   // Hooks
+  const router = useRouter()
+  const [session] = useSession()
   const [currentUser] = useCurrentUser()
   const { sportTeams } = useSportTeams(query.sport)
   const {
@@ -46,9 +51,6 @@ function Weeks({ query }) {
     selectedUserId || currentUser?._id
   )
 
-  const [modernLayout, setModernLayout] = useState(
-    currentUser?.prefersModernLayout || true
-  )
   const { picks: userPicks } = useUserPicksByWeek(
     (Date.now() > lockDate && selectedUserId) || currentUser?._id,
     week,
@@ -113,130 +115,133 @@ function Weeks({ query }) {
     }
   }, [week, sportTeams, Sport, seasonType, seasonYear, schedule, userPicks])
 
-  // ON CURRENT USER CHANGE
   useEffect(() => {
-    if (!currentUser) return
-    setModernLayout(currentUser.prefersModernLayout)
-  }, [currentUser])
+    if (!currentUser && !session?.user) {
+      router.push('/')
+    }
+  }, [currentUser, router, session])
+
+  const TimeDisplay: any = dynamic(() => import('../components/TimeDisplay'), {
+    loading: () => null,
+    ssr: false,
+  })
 
   return (
     <main id="weeks">
       <Head>
         <title>FWS | Weekly Matchups</title>
       </Head>
-
-      <div className="page-header week-header">
-        <TimeDisplay />
-        <br />
-        {/* "2020 Regular Season" */}
-        <SeasonDropdown />
-        {/* "Week 2" [Dropdown] */}
-        <WeekDropdown />
-        {
-          // "(Sep 16-22)"
-          schedule?.length ? `(${schedule[0].week_detail})` : null
-        }
-      </div>
-      <div className="page-content">
+      {currentUser && (
         <>
-          <section>
-            <PlayerDashboard
-              lockDate={lockDate}
-              allPicked={allPicked}
-              user={!isLoading ? selectedUser : currentUser}
-              otherUser={
-                selectedUser?._id === currentUser?._id ? false : selectedUser
-              }
-              weeklyRecord={weeklyRecord}
-            />
-          </section>
-          <section
-            style={{
-              color: `var(${darkMode ? 'light' : 'dark'}-mode)`,
-              display: 'flex',
-              justifyContent: 'space-around',
-            }}
-            id={`${darkMode ? 'dark' : 'light'}ModeCheckbox`}
-          >
-            {/* Toggle Modern Layout on/off  */}
-            <Checkbox
-              className="toggle-box"
-              label="Modern Layout"
-              toggle
-              checked={modernLayout}
-              onChange={() => setModernLayout(!modernLayout)}
-            />
-            {/* Toggle compact cards on/off  */}
-            <Checkbox
-              className="toggle-box"
-              label="Compact Cards"
-              toggle
-              checked={compactCards}
-              onChange={() => setCompactCards(!compactCards)}
-            />
-          </section>
-          <details
-            style={{ textAlign: 'left', maxWidth: '350px', margin: 'auto' }}
-          >
-            <summary style={{ textAlign: 'center' }}>
-              Click to read more about modern vs old layout
-            </summary>
-            <b>Modern Layout:</b> AWAY team is on the left and HOME team is on
-            the right (indicated with an @ symbol in middle). Favorite is team
-            with red number under their name.
+          <div className="page-header week-header">
+            <TimeDisplay />
             <br />
-            <b>Old Layout:</b> FAVORITE team is on the left and UNDERDOG is on
-            the right. Number in middle is the point-spread needed to cover by
-            favorite (left). HOME is team with all capitalized name.
-            <br />
-          </details>
-          {
-            /* 
+            {/* "2020 Regular Season" */}
+            <SeasonDropdown />
+            {/* "Week 2" [Dropdown] */}
+            <WeekDropdown />
+            {
+              // "(Sep 16-22)"
+              schedule?.length ? `(${schedule[0].week_detail})` : null
+            }
+          </div>
+          <div className="page-content">
+            <section>
+              <PlayerDashboard
+                lockDate={lockDate}
+                allPicked={allPicked}
+                user={!isLoading ? selectedUser : currentUser}
+                otherUser={
+                  selectedUser?._id === currentUser?._id ? false : selectedUser
+                }
+                weeklyRecord={weeklyRecord}
+              />
+            </section>
+            <section
+              style={{
+                color: `var(${darkMode ? 'light' : 'dark'}-mode)`,
+                display: 'flex',
+                justifyContent: 'space-around',
+              }}
+              id={`${darkMode ? 'dark' : 'light'}ModeCheckbox`}
+            >
+              {/* Toggle compact cards on/off  */}
+              <Checkbox
+                className="toggle-box"
+                label="Compact Cards"
+                toggle
+                checked={compactCards}
+                onChange={() => setCompactCards(!compactCards)}
+              />
+            </section>
+            {/* <details
+              style={{
+                textAlign: 'left',
+                maxWidth: '350px',
+                margin: 'auto',
+              }}
+            >
+              <summary style={{ textAlign: 'center' }}>
+                Click to read more about modern vs old layout
+              </summary>
+              <b>Modern Layout:</b> AWAY team is on the left and HOME team is on
+              the right (indicated with an @ symbol in middle). Favorite is team
+              with red number under their name.
+              <br />
+              <b>Old Layout:</b> FAVORITE team is on the left and UNDERDOG is on
+              the right. Number in middle is the point-spread needed to cover by
+              favorite (left). HOME is team with all capitalized name.
+              <br />
+            </details> */}
+            {
+              /* 
                 Caveat: -- only displays other user's if Date now 
                 is after the lockdate (i.e. after first Sunday Game) 
               */
-            // if selected user is same as current user display all picks
-            // or it's past the first Sunday game of the week (picks are locked date)
-            // render the matchups and the corresponding user's picks
-            currentUser?._id === selectedUser?._id || Date.now() >= lockDate ? (
-              <MatchupCardSection
-                schedule={schedule}
-                modernLayout={modernLayout}
-                currentUser={currentUser}
-                lockDate={lockDate}
-                userPicks={userPicks}
-                compactCards={compactCards}
-                tiebreakMatch={tiebreakMatch}
-              />
-            ) : selectedUser && Date.now() < lockDate ? (
-              <section>
-                <p
-                  style={{
-                    textAlign: 'justify',
-                    padding: '1rem',
-                    maxWidth: '800px',
-                    margin: 'auto',
-                  }}
-                >
-                  <b>Note:</b> Other users&apos; picks are not viewable until
-                  after the start of the first Sunday game.
-                </p>
-              </section>
-            ) : null
-          }
-        </>
-        {/* {!scheduleIsLoading && schedule?.length ? (
+              // if selected user is same as current user display all picks
+              // or it's past the first Sunday game of the week (picks are locked date)
+              // render the matchups and the corresponding user's picks
+              currentUser?._id === selectedUser?._id ||
+              Date.now() >= lockDate ? (
+                <MatchupCardSection
+                  schedule={schedule}
+                  modernLayout={!!currentUser?.prefersModernLayout}
+                  currentUser={currentUser}
+                  lockDate={lockDate}
+                  userPicks={userPicks}
+                  compactCards={compactCards}
+                  tiebreakMatch={tiebreakMatch}
+                />
+              ) : selectedUser && Date.now() < lockDate ? (
+                <section>
+                  <p
+                    style={{
+                      textAlign: 'justify',
+                      padding: '1rem',
+                      maxWidth: '800px',
+                      margin: 'auto',
+                    }}
+                  >
+                    <b>Note:</b> Other users&apos; picks are not viewable until
+                    after the start of the first Sunday game.
+                  </p>
+                </section>
+              ) : null
+            }
+            {/* {!scheduleIsLoading && schedule?.length ? (
         ) : (
           <section>
             <Loader text="Loading matchups..." />
           </section>
         )} */}
-      </div>
-      <div className="page-footer">
-        {teamsOnBye ? (
-          <ByeTeamsSection teams={teamsOnBye.length && teamsOnBye} />
-        ) : null}
-      </div>
+          </div>
+          <div className="page-footer">
+            {teamsOnBye ? (
+              <ByeTeamsSection teams={teamsOnBye.length && teamsOnBye} />
+            ) : null}
+          </div>
+        </>
+      )}
     </main>
   )
 }

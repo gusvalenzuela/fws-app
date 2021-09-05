@@ -206,15 +206,14 @@ const Menubar = ({ darkMode }) => {
             <>
               <Dropdown.Item
                 as="button"
-                // href="/login"
                 onClick={() => {
                   toggleResponsiveMenu()
-                  router.push('/login')
+                  router.push('/signin')
                 }}
               >
-                Log In
+                Sign In
               </Dropdown.Item>
-              <Dropdown.Item
+              {/* <Dropdown.Item
                 as="button"
                 onClick={() => {
                   toggleResponsiveMenu()
@@ -222,7 +221,7 @@ const Menubar = ({ darkMode }) => {
                 }}
               >
                 Sign Up
-              </Dropdown.Item>
+              </Dropdown.Item> */}
             </>
           ) : (
             <>
@@ -258,10 +257,10 @@ const Menubar = ({ darkMode }) => {
                   />
                   <Dropdown.Item
                     icon="log out"
-                    text="Log out"
+                    text="Sign Out"
                     onClick={() => {
                       toggleResponsiveMenu()
-                      router.push('/logout')
+                      router.push('/signout')
                     }}
                   />
                 </Dropdown.Menu>

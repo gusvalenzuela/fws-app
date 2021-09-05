@@ -1,4 +1,5 @@
 import nextConnect from 'next-connect'
+import { getSession } from 'next-auth/client'
 import middleware from '../../../../middlewares/middleware'
 import { getUserPicks } from '../../../../lib/db'
 
@@ -7,8 +8,8 @@ const handler = nextConnect()
 handler.use(middleware)
 
 handler.get(async (req, res) => {
-  const { user } = req
-  if (!user) return res.status(401).send('Please log in')
+  const session = await getSession({ req })
+  if (!session.user) return res.status(401).send('Please log in')
 
   const { userId, week, yr } = req.query
 

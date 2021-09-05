@@ -1,0 +1,48 @@
+.signInButton {
+  position: relative;
+  /* display: grid;
+  grid-template-columns: 1fr 24fr; */
+  justify-items: start;
+  border: 1px solid transparent;
+  padding: 1em;
+  width: 100%;
+  max-width: 190px;
+  margin: auto;
+  margin-top: 0.5rem;
+}
+.lightMode {
+  background-color: var(--color-dark, #678);
+  color: var(--main-white, #ccc);
+}
+.darkMode {
+  background-color: var(--main-white, #ccc);
+  color: var(--color-dark, #678);
+}
+
+/* // when pointer is a mouse (fine) */
+@media (hover: hover) and (pointer: fine) {
+  .signInButton:hover {
+    background-color: var(--brand-color1, #8a2929);
+    color: var(--main-white, white);
+    cursor: pointer;
+    opacity: 0.9;
+  }
+  .signInButton:active {
+    color: var(--main-black, #222);
+    background-color: var(--color2);
+    border: 1px solid var(--color-light, --main-white, #ddd);
+    cursor: wait;
+  }
+}
+.signInButton:hover {
+  background-color: var(--brand-color1, #8a2929);
+  color: var(--main-white, white);
+  cursor: pointer;
+  opacity: 0.9;
+}
+.signInButton:active {
+  color: var(--main-black, #222);
+  background-color: var(--color2);
+  border: 1px solid var(--color-light, --main-white, #ddd);
+  cursor: wait;
+}

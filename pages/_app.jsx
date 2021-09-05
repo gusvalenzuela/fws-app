@@ -4,16 +4,18 @@ Please move all global CSS imports to src\pages\_app.js.
 Read more: https://err.sh/next.js/css-global
 */
 import React, { useEffect } from 'react'
-import Moment from 'react-moment'
-import { ToastContainer } from 'react-toastify'
-import startDates from '../lib/stores/startDays.json'
-import Store from '../lib/stores/FootballPool'
-import { useAllUsers } from '../lib/hooks'
-import Menubar from '../components/Menubar'
-import Footer from '../components/Footer'
 import 'react-toastify/dist/ReactToastify.css'
 import 'semantic-ui-css/semantic.min.css'
 import './_app.css'
+import Moment from 'react-moment'
+import 'moment-timezone'
+import { Provider } from 'next-auth/client'
+import { ToastContainer } from 'react-toastify'
+import startDates from '../lib/stores/startDays.json'
+import { useAllUsers } from '../lib/hooks'
+import Menubar from '../components/Menubar'
+import Footer from '../components/Footer'
+import Store from '../lib/stores/FootballPool'
 
 const { week_start_days: weekStartDates } = startDates
 
@@ -53,7 +55,7 @@ export default function MyApp({ Component, pageProps }) {
   }, [users, storedUsers])
 
   return (
-    <>
+    <Provider session={pageProps.session}>
       <Menubar darkMode={darkMode} />
       <ToastContainer
         // limit={3}
@@ -64,6 +66,6 @@ export default function MyApp({ Component, pageProps }) {
       />
       <Component {...pageProps} />
       <Footer darkMode={darkMode} />
-    </>
+    </Provider>
   )
 }
