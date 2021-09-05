@@ -10,7 +10,7 @@ const ProfileSection = ({ user, mutateUser }) => {
   const bioRef: MutableRefObject<HTMLTextAreaElement> = useRef(null)
   const profilePictureRef: MutableRefObject<HTMLInputElement> = useRef(null)
   const profileToast = useRef(null)
-  const passwordToast = useRef(null)
+  // const passwordToast = useRef(null)
 
   useEffect(() => {
     nameRef.current.value = user.name
@@ -66,47 +66,47 @@ const ProfileSection = ({ user, mutateUser }) => {
     }
   }
 
-  const handleSubmitPasswordChange = async (e) => {
-    e.preventDefault()
-    if (isUpdating) return
-    setIsUpdating(true)
-    const body = {
-      oldPassword: e.currentTarget.oldPassword.value,
-      newPassword: e.currentTarget.newPassword.value,
-    }
-    e.currentTarget.oldPassword.value = ''
-    e.currentTarget.newPassword.value = ''
+  // const handleSubmitPasswordChange = async (e) => {
+  //   e.preventDefault()
+  //   if (isUpdating) return
+  //   setIsUpdating(true)
+  //   const body = {
+  //     oldPassword: e.currentTarget.oldPassword.value,
+  //     newPassword: e.currentTarget.newPassword.value,
+  //   }
+  //   e.currentTarget.oldPassword.value = ''
+  //   e.currentTarget.newPassword.value = ''
 
-    const res = await fetch('/api/user/password', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
+  //   const res = await fetch('/api/user/password', {
+  //     method: 'PUT',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify(body),
+  //   })
 
-    // AFTER RESPONSE
-    setIsUpdating(false)
-    if (res.status === 200) {
-      // SUCCESS TOAST
-      if (!toast.isActive(passwordToast.current)) {
-        passwordToast.current = toast.success(
-          'Password successfully changed.',
-          {
-            toastId: 'password-updated',
-          }
-        )
-      }
-    } else {
-      const resData = await res.json()
-      const errorMessage =
-        resData?.msg || (await res.text()) || 'No user found.'
-      // ERROR TOAST
-      if (!toast.isActive(passwordToast.current)) {
-        passwordToast.current = toast.error(errorMessage, {
-          toastId: 'password-updated',
-        })
-      }
-    }
-  }
+  //   // AFTER RESPONSE
+  //   setIsUpdating(false)
+  //   if (res.status === 200) {
+  //     // SUCCESS TOAST
+  //     if (!toast.isActive(passwordToast.current)) {
+  //       passwordToast.current = toast.success(
+  //         'Password successfully changed.',
+  //         {
+  //           toastId: 'password-updated',
+  //         }
+  //       )
+  //     }
+  //   } else {
+  //     const resData = await res.json()
+  //     const errorMessage =
+  //       resData?.msg || (await res.text()) || 'No user found.'
+  //     // ERROR TOAST
+  //     if (!toast.isActive(passwordToast.current)) {
+  //       passwordToast.current = toast.error(errorMessage, {
+  //         toastId: 'password-updated',
+  //       })
+  //     }
+  //   }
+  // }
 
   async function sendVerificationEmail() {
     await fetch('/api/user/email/verify', {
@@ -116,7 +116,7 @@ const ProfileSection = ({ user, mutateUser }) => {
 
   return (
     <>
-      <style jsx>
+      <style>
         {`
           form {
             display: grid;
@@ -150,11 +150,11 @@ const ProfileSection = ({ user, mutateUser }) => {
             width: 100%;
             margin-left: 10px;
           }
-          form#passwordForm > label {
-            display: grid;
-            grid-template-columns: 1fr minmax(50px, 1.6fr);
-            justify-self: left;
-          }
+          // form#passwordForm > label {
+          //   display: grid;
+          //   grid-template-columns: 1fr minmax(50px, 1.6fr);
+          //   justify-self: left;
+          // }
         `}
       </style>
 
@@ -218,12 +218,31 @@ const ProfileSection = ({ user, mutateUser }) => {
               />
               Modern
             </label>
+            <details
+              style={{
+                textAlign: 'left',
+                maxWidth: '350px',
+                margin: 'auto',
+              }}
+            >
+              <summary style={{ textAlign: 'center' }}>
+                Click to read more about modern vs old layout
+              </summary>
+              <b>Modern Layout:</b> AWAY team is on the left and HOME team is on
+              the right (indicated with an @ symbol in middle). Favorite is team
+              with red number under their name.
+              <br />
+              <b>Old Layout:</b> FAVORITE team is on the left and UNDERDOG is on
+              the right. Number in middle is the point-spread needed to cover by
+              favorite (left). HOME is team with all capitalized name.
+              <br />
+            </details>
           </div>
           <button disabled={isUpdating} type="submit">
             Sav{isUpdating ? 'ing' : 'e'}
           </button>
         </form>
-        <form id="passwordForm" onSubmit={handleSubmitPasswordChange}>
+        {/* <form id="passwordForm" onSubmit={handleSubmitPasswordChange}>
           <h3>Change your password</h3>
           <label htmlFor="oldpassword">
             Old Password:
@@ -246,7 +265,7 @@ const ProfileSection = ({ user, mutateUser }) => {
           <button disabled={isUpdating} type="submit">
             Chang{isUpdating ? 'ing' : 'e'} Password
           </button>
-        </form>
+        </form> */}
       </section>
     </>
   )

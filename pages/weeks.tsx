@@ -174,25 +174,7 @@ function Weeks({ query }) {
                 onChange={() => setCompactCards(!compactCards)}
               />
             </section>
-            {/* <details
-              style={{
-                textAlign: 'left',
-                maxWidth: '350px',
-                margin: 'auto',
-              }}
-            >
-              <summary style={{ textAlign: 'center' }}>
-                Click to read more about modern vs old layout
-              </summary>
-              <b>Modern Layout:</b> AWAY team is on the left and HOME team is on
-              the right (indicated with an @ symbol in middle). Favorite is team
-              with red number under their name.
-              <br />
-              <b>Old Layout:</b> FAVORITE team is on the left and UNDERDOG is on
-              the right. Number in middle is the point-spread needed to cover by
-              favorite (left). HOME is team with all capitalized name.
-              <br />
-            </details> */}
+
             {
               /* 
                 Caveat: -- only displays other user's if Date now 

@@ -1,9 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
-import nextConnect from 'next-connect'
-import middleware from '../middlewares/middleware'
-import { extractUser } from '../lib/api-helpers'
+import { getSession } from 'next-auth/client'
 import ProfileSection from '../components/ProfileSection'
 import { useCurrentUser } from '../lib/hooks'
 
@@ -20,7 +18,7 @@ const SettingPage = () => {
           <h1>
             {!user || user.isDemo
               ? 'Please sign in'
-              : 'Change your account&apos;s settings:'}
+              : `Change your account's settings:`}
           </h1>
         </header>
         {user && !user.isDemo ? (
@@ -42,16 +40,16 @@ const SettingPage = () => {
 export default SettingPage
 
 export async function getServerSideProps(ctx) {
+  const { req } = ctx
   // use handler to extract user from session
-  const handler = nextConnect()
-  handler.use(middleware)
-  await handler.run(ctx.req, ctx.res)
-
-  // user
-  const { user } = ctx.req
+  const session = await getSession({ req })
 
   // route if no user
-  if (!user || user.isDemo) {
+  if (
+    !session ||
+    !session?.user
+    // || session?.user.isDemo
+  ) {
     return {
       redirect: {
         destination: '/',
@@ -61,7 +59,7 @@ export async function getServerSideProps(ctx) {
   }
   // if user found, extract from req and return as prop
   // this currentUser is used when user hook is unavailable
-  return { props: { currentUser: extractUser(ctx.req) } }
+  return { props: { currentUser: session.user } }
 }
 
 SettingPage.propTypes = {
