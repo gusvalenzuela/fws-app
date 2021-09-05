@@ -1,4 +1,5 @@
 import nextConnect from 'next-connect'
+import { getSession } from 'next-auth/client'
 import isEmail from 'validator/lib/isEmail'
 import normalizeEmail from 'validator/lib/normalizeEmail'
 import bcrypt from 'bcryptjs'
@@ -12,7 +13,9 @@ const handler = nextConnect()
 handler.use(middleware)
 
 handler.get(async (req, res) => {
-  if (!req.user) return res.status(401).json(null)
+  const session = await getSession({ req })
+
+  if (!session && !session?.user) return res.status(401).json(null)
   return res.status(200).json(await getAllUsers(req))
 })
 

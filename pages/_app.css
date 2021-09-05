@@ -12,7 +12,8 @@
   --color-dark-rgb: 47, 46, 51;
   --color-light: #d5d6d2;
   --color-light-rgb: 213, 214, 210;
-  --color1: #3a5199;
+  --color1: #b3202a;
+  --color2: #377737;
   --color-success: #ddf5d1;
 }
 html,
@@ -52,14 +53,14 @@ MENUBAR RELATED
 .right.menu button {
   margin: 0.25rem;
   border: none;
-  background-color: var(--color1, blue) !important;
+  background-color: var(--color1, #b3202a) !important;
   color: var(--color-light, --main-white, #fff) !important;
+  border-bottom: 1px solid transparent;
   cursor: pointer;
 }
 .right.menu button:hover {
   background-color: var(--color-dark, --main-black) !important;
   color: var(--main-white, white);
-  border-bottom: 1px solid transparent;
 }
 .right.menu button:active {
   background-color: var(--color-dark, --main-black);
@@ -180,8 +181,6 @@ time.time {
   background-color: transparent !important ;
   color: var(--brand-color1, #f00) !important;
 }
-
-
 
 /* 
 TOAST RELATED

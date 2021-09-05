@@ -1,16 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import Head from 'next/head'
+import { useSession } from 'next-auth/client'
 import { useRouter } from 'next/router'
-import { useCurrentUser } from '../lib/hooks'
 
 const HomePage = () => {
   const router = useRouter()
-  const [user] = useCurrentUser()
+  const [session, loading] = useSession()
 
   React.useEffect(() => {
-    if (user) router.push('/weeks?sport=football&yr=2021')
-  }, [user, router])
+    if (session?.user) router.push('/weeks?sport=football&yr=2021')
+  }, [router, session, loading])
 
   return (
     <>
@@ -34,34 +34,48 @@ const HomePage = () => {
           text-transform: uppercase;
           font-size: 14px;
           font-weight: 700;
-          background: var(--brand-color1);
+          background-color: var(--brand-color1);
           color: var(--color-light);
           padding: 0.5rem 1rem;
           margin-bottom: 8px;
           margin-right: 8px;
           justify-content: center;
         }
-        a.button span {
-          cursor: default;
-        }
-
-        a.demo-link {
+        a.button:hover {
           cursor: pointer;
-          color: var(--color-light);
+          opacity: 0.9;
+          background-color: var(--color-light, #ddd);
+          color: var(--brand-color1, red);
+        }
+        a.button:active,
+        a.button:visited {
+          background-color: var(--color-dark, #222);
+          color: var(--color-light, #ddd);
+        }
+        button.demo-link {
+          border: none;
+          cursor: pointer;
+          color: var(--brand-color1, --color1);
           margin: 2.8rem 0 1rem;
-          text-shadow: 1px 1px 1px #00000041;
+          text-shadow: 1px 1px 1px #ffffff41;
           background: linear-gradient(transparent 35%, #00000077);
           padding: 1rem;
           display: block;
           width: max-content;
         }
-        a.demo-link:hover {
+        button.demo-link:hover {
           /* color: #000000; */
           background: linear-gradient(transparent 35%, #000000ff);
         }
-        a.demo-link:active {
+        button.demo-link:active,
+        button.demo-link:visited {
           color: #ffffff59;
           background: linear-gradient(transparent 35%, #ffffff09);
+        }
+
+        a.button:active,
+        button.demo-link:active {
+          cursor: wait;
         }
       `}</style>
       <Head>
@@ -86,7 +100,7 @@ const HomePage = () => {
                 className="button"
                 name="signup"
                 onClick={() => {
-                  router.push('/signup')
+                  router.push('/signin')
                 }}
               >
                 <span>Sign up for FREE!</span>
@@ -95,9 +109,9 @@ const HomePage = () => {
                 role="button"
                 tabIndex={0}
                 className="button"
-                name="login"
+                name="signin"
                 onClick={() => {
-                  router.push('/login')
+                  router.push('/signin')
                 }}
               >
                 <span>Log In</span>
@@ -106,16 +120,17 @@ const HomePage = () => {
             <i style={{ fontSize: 'x-small' }}>
               <sup>*</sup>Currently only featuring American Football.
             </i>
-            <a
-              role="button"
-              tabIndex={0}
+            <button
+              title="Sign in to Demo account. Coming back soon!"
+              disabled
+              type="button"
               className="demo-link"
               onClick={() => {
-                router.push('/login?demo=7')
+                router.push('/signin?demo=7')
               }}
             >
               Use Demo Account
-            </a>
+            </button>
           </div>
         </header>
         <div className="page-content">

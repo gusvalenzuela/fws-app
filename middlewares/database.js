@@ -1,6 +1,15 @@
 import { MongoClient } from 'mongodb'
 
-const client = new MongoClient(process.env.MONGODB_URX)
+const isDev = process.env.NODE_ENV === 'development'
+
+const client = new MongoClient(
+  isDev ? process.env.MONGODB_LOCAL_URX : process.env.MONGODB_URX,
+  {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    keepAlive: false,
+  }
+)
 
 export async function setUpDb(db) {
   db.collection('tokens').createIndex(
@@ -25,3 +34,5 @@ export default async function database(req, _res, next) {
 
   return next()
 }
+
+export { client }
