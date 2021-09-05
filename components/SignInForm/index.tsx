@@ -29,39 +29,40 @@ const SignInForm = ({ providers, signIn, darkMode }) => (
     </style>
     <div className="form">
       <h4>Sign in with:</h4>
-      {Object.values(providers).map((provider: ClientSafeProvider) => {
-        if (provider.name !== 'Demo') {
-          // semantic-ui graciously provides icons for most popular providers
-          // (google, twitter, github, facebook, etc) but we have to convert
-          // the incoming provider name (string) into an enum that the
-          // Icon component will accept.
-          // Use type assertion ('as') and import the enum type (SemanticICONS)
-          // to convert from a proper string to an option in enum array
-          // https://www.typescriptlang.org/docs/handbook/jsx.html
+      {providers &&
+        Object.values(providers).map((provider: ClientSafeProvider) => {
+          if (provider.name !== 'Demo') {
+            // semantic-ui graciously provides icons for most popular providers
+            // (google, twitter, github, facebook, etc) but we have to convert
+            // the incoming provider name (string) into an enum that the
+            // Icon component will accept.
+            // Use type assertion ('as') and import the enum type (SemanticICONS)
+            // to convert from a proper string to an option in enum array
+            // https://www.typescriptlang.org/docs/handbook/jsx.html
 
-          // TODO check to see if name is in list before conversion
-          const providerName =
-            (provider.name.toLowerCase() as SemanticICONS) || 'circle'
-          return (
-            // return a button for each provider signin flow
-            // background-color:
-            // );
-            // color: var(${darkMode ? '--color-dark, #678' : '--main-white, #ccc'});
-            <button
-              className={`${Styles.signInButton} ${
-                darkMode ? Styles.darkMode : Styles.lightMode
-              }`}
-              key={provider.id}
-              type="button"
-              onClick={() => signIn(provider.id)}
-            >
-              <Icon name={providerName} />
-              {provider.name}
-            </button>
-          )
-        }
-        return null
-      })}
+            // TODO check to see if name is in list before conversion
+            const providerName =
+              (provider.name.toLowerCase() as SemanticICONS) || 'circle'
+            return (
+              // return a button for each provider signin flow
+              // background-color:
+              // );
+              // color: var(${darkMode ? '--color-dark, #678' : '--main-white, #ccc'});
+              <button
+                className={`${Styles.signInButton} ${
+                  darkMode ? Styles.darkMode : Styles.lightMode
+                }`}
+                key={provider.id}
+                type="button"
+                onClick={() => signIn(provider.id)}
+              >
+                <Icon name={providerName} />
+                {provider.name}
+              </button>
+            )
+          }
+          return null
+        })}
       {/* <DemoButton signIn={signIn} /> */}
     </div>
   </>
