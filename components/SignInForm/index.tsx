@@ -29,7 +29,7 @@ const SignInForm = ({ providers, signIn, darkMode }) => (
     </style>
     <div className="form">
       <h4>Sign in with:</h4>
-      {providers &&
+      {providers ? (
         Object.values(providers).map((provider: ClientSafeProvider) => {
           if (provider.name !== 'Demo') {
             // semantic-ui graciously provides icons for most popular providers
@@ -62,7 +62,22 @@ const SignInForm = ({ providers, signIn, darkMode }) => (
             )
           }
           return null
-        })}
+        })
+      ) : (
+        <>
+          <div
+            className={`${Styles.signInButton} ${
+              darkMode ? Styles.darkMode : Styles.lightMode
+            }`}
+          >
+            ¯\_(ツ)_/¯
+          </div>
+          <p>
+            Something&apos;s wrong. No sign-in providers.
+            <br /> Contact the site administrator.
+          </p>
+        </>
+      )}
       {/* <DemoButton signIn={signIn} /> */}
     </div>
   </>
