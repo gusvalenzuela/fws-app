@@ -62,12 +62,13 @@ const SignInPage = ({ demoAccount, providers }) => {
           <p
             style={{
               color: `${darkMode ? '#ccc' : '#222'}`,
-              textAlign: 'center',
+              textAlign: 'left',
               maxWidth: '375px',
               margin: 'auto',
             }}
           >
             <b>Disclaimer: </b>
+            <br />
             This app is for ENTERTAINMENT USE ONLY. Very much in alpha and
             subject to change without notice.
           </p>

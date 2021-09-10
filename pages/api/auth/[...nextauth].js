@@ -1,8 +1,8 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
-import { getUser } from '../../../lib/db'
+// import { getUser } from '../../../lib/db'
 
-const { DEMO_USER, NODE_ENV } = process.env
+const { NODE_ENV } = process.env
 const isDev = NODE_ENV === 'development'
 
 // For more information on each option (and a full list of options) go to
@@ -23,42 +23,42 @@ export default async function handler(req, res) {
           ? process.env.FACEBOOK_SECRET_TEST
           : process.env.FACEBOOK_SECRET,
       }),
-      // Providers.Email({
-      //   server: process.env.EMAIL_SERVER,
-      //   from: process.env.EMAIL_FROM,
-      // }),
-      Providers.Credentials({
-        id: 'demo',
-        type: 'credentials',
-        // THIS IS A DEMO PROVIDER
-        // only job is to log in a demo
-        // The name to display on the sign in form (e.g. 'Sign in with...')
-        name: 'Demo',
-        // The credentials is used to generate a suitable form on the sign in page.
-        // You can specify whatever fields you are expecting to be submitted.
-        // e.g. domain, username, password, 2FA token, etc.
-        credentials: {
-          email: {
-            label: 'Email',
-            type: 'text',
-            placeholder: 'email@example.com',
-          },
-        },
-        async authorize(credentials, request) {
-          if (!DEMO_USER) return null
-          if (credentials.email === 'demo@email.com') {
-            const user = await getUser(request, DEMO_USER, 'demo')
-            if (user) {
-              return { id: DEMO_USER, ...user }
-            }
-          }
-          // If you return null or false then the credentials will be rejected
-          return null
-          // You can also Reject this callback with an Error or with a URL:
-          // throw new Error('error message') // Redirect to error page
-          // throw '/path/to/redirect'        // Redirect to a URL
-        },
+      Providers.Email({
+        server: process.env.EMAIL_SERVER,
+        from: process.env.EMAIL_FROM,
       }),
+      // Providers.Credentials({
+      //   id: 'demo',
+      //   type: 'credentials',
+      //   // THIS IS A DEMO PROVIDER
+      //   // only job is to log in a demo
+      //   // The name to display on the sign in form (e.g. 'Sign in with...')
+      //   name: 'Demo',
+      //   // The credentials is used to generate a suitable form on the sign in page.
+      //   // You can specify whatever fields you are expecting to be submitted.
+      //   // e.g. domain, username, password, 2FA token, etc.
+      //   credentials: {
+      //     email: {
+      //       label: 'Email',
+      //       type: 'text',
+      //       placeholder: 'email@example.com',
+      //     },
+      //   },
+      //   async authorize(credentials, request) {
+      //     if (!DEMO_USER) return null
+      //     if (credentials.email === 'demo@email.com') {
+      //       const user = await getUser(request, DEMO_USER, 'demo')
+      //       if (user) {
+      //         return { id: DEMO_USER, ...user }
+      //       }
+      //     }
+      //     // If you return null or false then the credentials will be rejected
+      //     return null
+      //     // You can also Reject this callback with an Error or with a URL:
+      //     // throw new Error('error message') // Redirect to error page
+      //     // throw '/path/to/redirect'        // Redirect to a URL
+      //   },
+      // }),
       // Temporarily removing the Apple provider from the demo site as the
       // callback URL for it needs updating due to Vercel changing domains
       /*
@@ -157,8 +157,8 @@ export default async function handler(req, res) {
        * @return {object}              Session that will be returned to the client
        */
       async session(session, token) {
-        const reshapedSession = { ...session }
         // console.log(session, token)
+        const reshapedSession = { ...session }
         // Add property to session, like an access_token from a provider.
         // session.accessToken = token.accessToken
         if (session?.user) {
