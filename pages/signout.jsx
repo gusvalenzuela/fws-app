@@ -59,7 +59,7 @@ const LogoutPage = () => {
                 type="button"
                 onClick={() => {
                   setSigningOff(true)
-                  signOut({ redirect: '/' })
+                  signOut()
                 }}
                 className="button"
               >

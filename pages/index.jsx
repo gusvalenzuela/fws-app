@@ -114,7 +114,7 @@ const HomePage = () => {
                   router.push('/signin')
                 }}
               >
-                <span>Log In</span>
+                <span>Sign In</span>
               </a>
             </div>
             <i style={{ fontSize: 'x-small' }}>

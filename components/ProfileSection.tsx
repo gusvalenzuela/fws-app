@@ -226,15 +226,17 @@ const ProfileSection = ({ user, mutateUser }) => {
               }}
             >
               <summary style={{ textAlign: 'center' }}>
-                Click to read more about modern vs old layout
+                Expand to read more about Modern vs Classic layouts
               </summary>
-              <b>Modern Layout:</b> AWAY team is on the left and HOME team is on
-              the right (indicated with an @ symbol in middle). Favorite is team
-              with red number under their name.
+              <b>Modern Layout:</b>
+              <br /> AWAY team is on the left and HOME team is on the right
+              (indicated with an @ symbol in middle). Favorite is team with red
+              number under their name.
               <br />
-              <b>Old Layout:</b> FAVORITE team is on the left and UNDERDOG is on
-              the right. Number in middle is the point-spread needed to cover by
-              favorite (left). HOME is team with all capitalized name.
+              <b>Classic Layout:</b>
+              <br /> FAVORITE team is on the left and UNDERDOG is on the right.
+              Number in middle is the point-spread needed to cover by favorite
+              (left). HOME is team with all capitalized name.
               <br />
             </details>
           </div>
