@@ -25,7 +25,6 @@
     "cloudinary-react": "1.7.0",
     "connect-mongo": "^4.5.0",
     "dotenv": "^10.0.0",
-    "express-session": "^1.17.1",
     "lodash": "^4.17.21",
     "moment": "2.29.1",
     "moment-timezone": "^0.5.33",
@@ -36,8 +35,6 @@
     "next-auth": "^3.29.0",
     "next-connect": "0.10.2",
     "nodemailer": "^6.6.3",
-    "passport": "^0.4.1",
-    "passport-local": "^1.0.0",
     "prop-types": "^15.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -48,7 +45,7 @@
     "sib-api-v3-sdk": "^8.2.1",
     "swr": "1.0.1",
     "unfetch": "4.2.0",
-    "validator": "^13.1.17",
+    "validator": "^13.6.0",
     "zustand": "3.5.10"
   },
   "devDependencies": {
