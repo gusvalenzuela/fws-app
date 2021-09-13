@@ -51,7 +51,7 @@ const SignInFormContents = ({
 
   return (
     <>
-      <style jsx={true}>
+      <style jsx>
         {`
           hr {
             position: relative;
@@ -167,7 +167,14 @@ const SignInFormContents = ({
         emailLinkStatus={emailLinkStatus}
         signIn={handleEmailProviderSubmit}
       />
-      {/* <DemoButton signIn={signIn} /> */}
+      {/* <DemoButton
+        signIn={async () =>
+          signIn('email', {
+            email: 'demo@gusvalenzuela.com',
+            redirect: false,
+          })
+        }
+      /> */}
     </>
   )
 }

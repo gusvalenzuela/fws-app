@@ -35,7 +35,10 @@ const SignInForm = ({ providers, signIn, darkMode }) => {
       </style>
       <div className="form">
         {!emailLinkStatus.error && emailLinkStatus.complete ? (
-          <p>Check your email for link to sign in</p>
+          <>
+            <h3>Check your email</h3>
+            <p>A link has been sent to sign in.</p>
+          </>
         ) : emailLinkStatus.error && emailLinkStatus.complete ? (
           <button type="button" onClick={() => router.reload()}>
             Try Again
