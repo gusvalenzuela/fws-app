@@ -1,6 +1,7 @@
+import nodemailer from 'nodemailer'
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
-// import { getUser } from '../../../lib/db'
+import { html, text } from '../../../lib/utils/auth'
 
 const { NODE_ENV } = process.env
 const isDev = NODE_ENV === 'development'
@@ -26,6 +27,27 @@ export default async function handler(req, res) {
       Providers.Email({
         server: process.env.EMAIL_SERVER,
         from: process.env.EMAIL_FROM,
+        sendVerificationRequest: async ({
+          identifier: email,
+          url,
+          provider: { server, from },
+        }) => {
+          if (email === 'demo@gusvalenzuela.com') {
+            // see if can be logged in from here
+            // given an access or sessiontoken
+            // const loggingIn = await fetch(url).then((r) => r)
+          }
+          const { host } = new URL(url)
+          const transport = nodemailer.createTransport(server)
+          // mail creation helper
+          await transport.sendMail({
+            to: email,
+            from,
+            subject: `Sign in to FWS! and Start Picking`,
+            text: text({ url, host }),
+            html: html({ url, host, email }),
+          })
+        },
       }),
       // Providers.Credentials({
       //   id: 'demo',
