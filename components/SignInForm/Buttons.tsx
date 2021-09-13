@@ -50,10 +50,10 @@ const SignInButtons = ({
       id={btnId}
       type="button"
       onClick={signIn}
-      disabled={emailLinkStatus.sending}
+      disabled={emailLinkStatus?.sending}
     >
       <Icon name={iconName} />
-      {emailLinkStatus.sending ? 'Sending' : btnText}
+      {emailLinkStatus?.sending ? 'Sending' : btnText}
     </button>
   </>
 )
@@ -85,7 +85,7 @@ SignInButtons.propTypes = {
     sending: PropTypes.bool,
     error: PropTypes.bool,
     complete: PropTypes.bool,
-  }).isRequired,
+  }),
   btnId: PropTypes.string,
   btnText: PropTypes.string,
   iconName: PropTypes.string,
@@ -94,4 +94,5 @@ SignInButtons.defaultProps = {
   btnId: 'customSignInButton',
   btnText: 'Sign In',
   iconName: 'universal access',
+  emailLinkStatus: null,
 }
