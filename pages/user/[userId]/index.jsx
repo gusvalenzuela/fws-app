@@ -10,7 +10,7 @@ import { useCurrentUser, useUserStandings, useUser } from '../../../lib/hooks'
 export default function UserPage({ userId }) {
   const [currentUser] = useCurrentUser()
   const { user, isLoading: userIsLoading } = useUser(userId)
-  const { name, email, bio, profilePicture } = user || {}
+  const { name, email, bio, profilePicture, image } = user || {}
   const isCurrentUser = currentUser?._id === user?._id
   const seasonYear = Store((s) => s.seasonYear || s.currentSeasonYear)
   const { standings } = useUserStandings(userId, seasonYear)
@@ -77,7 +77,12 @@ export default function UserPage({ userId }) {
           ) : (
             <>
               <div className="user-info">
-                <Img src={profilePicture} width="256" height="256" alt={name} />
+                <Img
+                  src={image || profilePicture}
+                  width="256"
+                  height="256"
+                  alt={name}
+                />
                 <section>
                   <div>
                     <h2>{name}</h2>
