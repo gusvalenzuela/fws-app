@@ -1,13 +1,12 @@
 /* eslint-disable react/jsx-boolean-value */
 import React from 'react'
 import PropTypes from 'prop-types'
+import isEmail from 'validator/lib/isEmail'
+import normalizeEmail from 'validator/lib/normalizeEmail'
 import { ClientSafeProvider } from 'next-auth/client'
 import { Icon, SemanticICONS } from 'semantic-ui-react'
 import { EmailButton } from './Buttons'
 import Styles from './index.module.css'
-
-const emailCheck =
-  /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
 
 const SignInFormContents = ({
   providers,
@@ -23,11 +22,11 @@ const SignInFormContents = ({
   })
 
   const handleEmailProviderSubmit = async (ev) => {
-    const emailAddress = emailProviderInputRef.current.value
+    const emailAddress = normalizeEmail(emailProviderInputRef.current.value)
     ev.preventDefault()
     // check email input value against the regexp
     // testing for common email string combinations
-    if (!emailCheck.exec(emailAddress)) {
+    if (!isEmail(emailAddress)) {
       setEmailValidation({ ...emailValidation, error: true })
       return
     }
