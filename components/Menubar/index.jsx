@@ -87,7 +87,7 @@ const Menubar = ({ darkMode }) => {
             <span
               style={{ color: 'var(--brand-color1)', fontWeight: 'bolder' }}
             >
-              {` | ${user.name}`}
+              {` | ${user.name || user.email.split('@')[0]}`}
             </span>
           )}
         </Menu.Header>
@@ -143,9 +143,9 @@ const Menubar = ({ darkMode }) => {
               selectOnNavigation={false}
               options={
                 // basic users' data is pulled from DB and a dropdown made for each
-                users?.map(({ name, _id }, index) => ({
+                users?.map(({ name, _id, email }, index) => ({
                   key: index,
-                  text: `${name}`,
+                  text: `${name || email}`,
                   value: _id,
                 }))
               }
