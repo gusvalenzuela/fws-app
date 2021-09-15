@@ -4,7 +4,7 @@ specifiers:
   '@types/react': ^17.0.20
   '@typescript-eslint/eslint-plugin': ^4.31.0
   '@typescript-eslint/parser': ^4.31.0
-  axios: 0.21.1
+  axios: 0.21.4
   bcryptjs: ^2.4.3
   cloudinary: ^1.27.0
   cloudinary-react: 1.7.0
@@ -36,7 +36,7 @@ specifiers:
   react-dom: 17.0.2
   react-moment: 1.1.1
   react-test-renderer: 17.0.2
-  react-toastify: 7.0.4
+  react-toastify: 8.0.2
   semantic-ui-css: 2.4.1
   semantic-ui-react: 2.0.3
   sib-api-v3-sdk: ^8.2.1
@@ -47,7 +47,7 @@ specifiers:
   zustand: 3.5.10
 
 dependencies:
-  axios: 0.21.1
+  axios: 0.21.4
   bcryptjs: 2.4.3
   cloudinary: 1.27.0
   cloudinary-react: 1.7.0_lodash@4.17.21+react@17.0.2
@@ -56,18 +56,18 @@ dependencies:
   lodash: 4.17.21
   moment: 2.29.1
   moment-timezone: 0.5.33
-  mongodb: 3.7.0
+  mongodb: 3.7.1
   multer: 1.4.3
   nanoid: 3.1.25
   next: 11.1.2_bd7797d63db473de6e2318609a63c933
-  next-auth: 3.29.0_37704c5d02791a4e9bb197702ad8b55f
+  next-auth: 3.29.0_22d1ac38d9ef1decb936c2ec2004a9e8
   next-connect: 0.10.2
   nodemailer: 6.6.3
   prop-types: 15.7.2
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-moment: 1.1.1_e2de3c42c851e0688dbd2109b79845c7
-  react-toastify: 7.0.4_react-dom@17.0.2+react@17.0.2
+  react-toastify: 8.0.2_react-dom@17.0.2+react@17.0.2
   semantic-ui-css: 2.4.1
   semantic-ui-react: 2.0.3_react-dom@17.0.2+react@17.0.2
   sib-api-v3-sdk: 8.2.1
@@ -239,10 +239,10 @@ packages:
       next-auth: ^3.17.2
     dependencies:
       '@babel/runtime': 7.15.3
-      next-auth: 3.29.0_37704c5d02791a4e9bb197702ad8b55f
+      next-auth: 3.29.0_22d1ac38d9ef1decb936c2ec2004a9e8
     dev: false
 
-  /@next-auth/typeorm-legacy-adapter/0.1.4_mongodb@3.7.0+next-auth@3.29.0:
+  /@next-auth/typeorm-legacy-adapter/0.1.4_mongodb@3.7.1+next-auth@3.29.0:
     resolution: {integrity: sha512-UDnctrPiUU0yaPNeFhD6uw0FAuWGvx6IUVwUYTEzZm26RCEe/BBjkpGLYk43M3rcnkBPfkiljomAs/O7Uzh12w==}
     peerDependencies:
       mongodb: ^3.5.9
@@ -261,10 +261,10 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.15.3
-      mongodb: 3.7.0
-      next-auth: 3.29.0_37704c5d02791a4e9bb197702ad8b55f
+      mongodb: 3.7.1
+      next-auth: 3.29.0_22d1ac38d9ef1decb936c2ec2004a9e8
       require_optional: 1.0.1
-      typeorm: 0.2.37_mongodb@3.7.0
+      typeorm: 0.2.37_mongodb@3.7.1
     transitivePeerDependencies:
       - '@sap/hana-client'
       - better-sqlite3
@@ -781,8 +781,8 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /axios/0.21.1:
-    resolution: {integrity: sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==}
+  /axios/0.21.4:
+    resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
       follow-redirects: 1.14.2
     transitivePeerDependencies:
@@ -2844,8 +2844,8 @@ packages:
       whatwg-url: 8.7.0
     dev: false
 
-  /mongodb/3.7.0:
-    resolution: {integrity: sha512-JOAYjT9WYeRFkIP6XtDidAr3qvpfLRJhT2iokRWWH0tgqCQr9kmSfOJBZ3Ry0E5A3EqKxVPVhN3MV8Gn03o7pA==}
+  /mongodb/3.7.1:
+    resolution: {integrity: sha512-iSVgexYr8ID0ieeNFUbRfQeOZxOchRck6kEDVySQRaa8VIw/1Pm+/LgcpZcl/BWV6nT0L8lP9qyl7dRPJ6mnLw==}
     engines: {node: '>=4'}
     peerDependencies:
       aws4: '*'
@@ -2935,7 +2935,7 @@ packages:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
     dev: true
 
-  /next-auth/3.29.0_37704c5d02791a4e9bb197702ad8b55f:
+  /next-auth/3.29.0_22d1ac38d9ef1decb936c2ec2004a9e8:
     resolution: {integrity: sha512-B//4QTv/1Of0D+roZ82URmI6L2JSbkKgeaKI7Mdrioq8lAzp9ff8NdmouvZL/7zwrPe2cUyM6MLYlasfuI3ZIQ==}
     peerDependencies:
       react: ^16.13.1 || ^17
@@ -2943,7 +2943,7 @@ packages:
     dependencies:
       '@babel/runtime': 7.15.3
       '@next-auth/prisma-legacy-adapter': 0.1.2_next-auth@3.29.0
-      '@next-auth/typeorm-legacy-adapter': 0.1.4_mongodb@3.7.0+next-auth@3.29.0
+      '@next-auth/typeorm-legacy-adapter': 0.1.4_mongodb@3.7.1+next-auth@3.29.0
       futoin-hkdf: 1.4.2
       jose: 1.28.1
       jsonwebtoken: 8.5.1
@@ -3665,8 +3665,8 @@ packages:
       scheduler: 0.20.2
     dev: true
 
-  /react-toastify/7.0.4_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-Rol7+Cn39hZp5hQ/k6CbMNE2CKYV9E5OQdC/hBLtIQU2xz7DdAm7xil4NITQTHR6zEbE5RVFbpgSwTD7xRGLeQ==}
+  /react-toastify/8.0.2_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-0Nud2d0VD4LIevgkB4L8NYoQ5plTpfqgj2CRVxs58SGA/TTO+2Ojz4C1bLUdGUWsw0zuWqd4GJqxNuMIv0cXMw==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -4452,7 +4452,7 @@ packages:
     resolution: {integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=}
     dev: false
 
-  /typeorm/0.2.37_mongodb@3.7.0:
+  /typeorm/0.2.37_mongodb@3.7.1:
     resolution: {integrity: sha512-7rkW0yCgFC24I5T0f3S/twmLSuccPh1SQmxET/oDWn2sSDVzbyWdnItSdKy27CdJGTlKHYtUVeOcMYw5LRsXVw==}
     hasBin: true
     peerDependencies:
@@ -4513,7 +4513,7 @@ packages:
       glob: 7.1.7
       js-yaml: 4.1.0
       mkdirp: 1.0.4
-      mongodb: 3.7.0
+      mongodb: 3.7.1
       reflect-metadata: 0.1.13
       sha.js: 2.4.11
       tslib: 2.3.1

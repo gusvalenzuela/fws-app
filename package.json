@@ -19,7 +19,7 @@
   "license": "MIT",
   "homepage": "https://github.com/gusvalenzuela/#readme",
   "dependencies": {
-    "axios": "0.21.1",
+    "axios": "0.21.4",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.27.0",
     "cloudinary-react": "1.7.0",
@@ -39,7 +39,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-moment": "1.1.1",
-    "react-toastify": "7.0.4",
+    "react-toastify": "8.0.2",
     "semantic-ui-css": "2.4.1",
     "semantic-ui-react": "2.0.3",
     "sib-api-v3-sdk": "^8.2.1",
