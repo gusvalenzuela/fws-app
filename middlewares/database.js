@@ -1,15 +1,31 @@
+/* eslint-disable import/no-mutable-exports */
+/* eslint-disable no-underscore-dangle */
 import { MongoClient } from 'mongodb'
 
-const isDev = process.env.NODE_ENV === 'development'
+let client
+let clientPromise
 
-const client = new MongoClient(
-  isDev ? process.env.MONGODB_LOCAL_URX : process.env.MONGODB_URX,
-  {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    keepAlive: false,
+const isDev = process.env.NODE_ENV === 'development'
+const uri = isDev ? process.env.MONGODB_LOCAL_URX : process.env.MONGODB_URX
+const options = {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  keepAlive: false,
+}
+
+if (isDev) {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  if (!global._mongoClientPromise) {
+    client = new MongoClient(uri, options)
+    global._mongoClientPromise = client.connect()
   }
-)
+  clientPromise = global._mongoClientPromise
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri, options)
+  clientPromise = client.connect()
+}
 
 export async function setUpDb(db) {
   db.collection('tokens').createIndex(
@@ -27,12 +43,15 @@ export async function setUpDb(db) {
 }
 
 export default async function database(req, _res, next) {
-  await client.connect()
+  // await client.connect()
   req.dbClient = client
-  req.db = client.db(process.env.DB_NAME)
+  req.db = (await clientPromise).db(process.env.DB_NAME)
   await setUpDb(req.db)
 
   return next()
 }
 
-export { client }
+export { client, clientPromise }
+// // Export a module-scoped MongoClient promise. By doing this in a
+// // separate module, the client can be shared across functions.
+// export default clientPromise
