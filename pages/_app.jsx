@@ -40,8 +40,7 @@ export default function MyApp({ Component, pageProps }) {
     // if startDate is negative (i.e. out of bounds)
     //  use last week ([array].length == "weeks" in array)
     Store.setState({
-      currentWeek:
-        startDateIndex < 0 ? weekStartDates.length : startDateIndex + 1,
+      currentWeek: startDateIndex < 0 ? weekStartDates.length : startDateIndex,
       currentSeasonYear: 2021,
       Moment,
     })
