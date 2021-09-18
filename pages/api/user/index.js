@@ -30,7 +30,7 @@ handler.get(async (req, res) => {
     res.json(null)
     return
   }
-  res.json({ user: await getUser(req, session.user.id) })
+  res.json({ user: await getUser(req, session.user.id, true) })
 })
 
 handler.patch(upload.single('profilePicture'), async (req, res) => {
@@ -53,7 +53,7 @@ handler.patch(upload.single('profilePicture'), async (req, res) => {
   }
   const { name, bio, layout } = req.body
   const updatedUser = await req.db.collection('users').updateOne(
-    { _id:objId},
+    { _id: objId },
     {
       $set: {
         ...(name && { name }),
