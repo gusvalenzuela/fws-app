@@ -32,7 +32,7 @@ const AdminEventSection = ({ event }) => {
       away_score: awayTeamScoreRef.current.value,
       final: document.getElementById(`final-${eventId}`).checked,
     }
-    const res = await fetch('/api/results', {
+    const res = await fetch('/api/matchups', {
       method: 'PATCH',
       body: JSON.stringify(formData),
     })
@@ -60,14 +60,11 @@ const AdminEventSection = ({ event }) => {
       },
     }
 
-    const res = await fetch(
-      `/api/matchups/football/${event.season_year}/${event.week}`,
-      {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      }
-    )
+    const res = await fetch(`/api/matchups`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    })
     setIsUpdating(false)
     if (res.status === 200) {
       setMsg({ message: 'Point Spread updated' })
@@ -108,7 +105,7 @@ const AdminEventSection = ({ event }) => {
         event_date: eventDateTime,
       }
 
-      const res = await fetch('/api/dates', {
+      const res = await fetch('/api/matchups', {
         method: 'PATCH',
         body: JSON.stringify(formData),
       })
