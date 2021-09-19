@@ -15,6 +15,11 @@
   --color1: #b3202a;
   --color2: #377737;
   --color-success: #ddf5d1;
+  --toastify-color-progress-dark: linear-gradient(
+    to right,
+    var(--color-light),
+    var(--color-dark)
+  );
 }
 html,
 body {
@@ -180,48 +185,4 @@ time.time {
 .season-dropdown {
   background-color: transparent !important ;
   color: var(--brand-color1, #f00) !important;
-}
-
-/* 
-TOAST RELATED
-by: Toastify-react
-*/
-
-/** Classes for the progress bar **/
-.Toastify__progress-bar--dark {
-  background: linear-gradient(
-    to right,
-    var(--color-light),
-    var(--color-dark)
-  ) !important;
-}
-.Toastify__progress-bar {
-  background: linear-gradient(
-    to right,
-    var(--color1),
-    var(--color-light)
-  ) !important;
-}
-/** Used to define the position of the ToastContainer **/
-/* .Toastify__toast-container--top-center {
-  top: 20px !important;
-} */
-/** Classes for the displayed toast **/
-.Toastify__toast--default {
-  background-color: #fffffff7 !important;
-  color: #020202 !important;
-}
-.Toastify__toast--dark {
-  background-color: #000000df !important;
-}
-.Toastify__toast--info,
-.Toastify__toast--success {
-  width: 100%;
-  font-size: 1.23rem;
-  font-weight: 600;
-}
-.Toastify__toast {
-  text-align: center;
-  font-size: 1.15rem;
-  font-weight: 600;
 }
