@@ -13,8 +13,7 @@ import { Provider } from 'next-auth/client'
 import { ToastContainer } from 'react-toastify'
 import startDates from '../lib/stores/startDays.json'
 import { useAllUsers } from '../lib/hooks'
-import Menubar from '../components/Menubar'
-import Footer from '../components/Footer'
+import Layout from '../components/layout'
 import Store from '../lib/stores/FootballPool'
 
 const { week_start_days: weekStartDates } = startDates
@@ -55,16 +54,16 @@ export default function MyApp({ Component, pageProps }) {
 
   return (
     <Provider session={pageProps.session}>
-      <Menubar darkMode={darkMode} />
-      <ToastContainer
-        // limit={3}
-        newestOnTop
-        // hideProgressBar
-        role="dialog"
-        position="top-center"
-      />
-      <Component {...pageProps} />
-      <Footer darkMode={darkMode} />
+      <Layout darkMode={darkMode}>
+        <ToastContainer
+          limit={4}
+          newestOnTop
+          // hideProgressBar
+          role="dialog"
+          position="top-center"
+        />
+        <Component {...pageProps} />
+      </Layout>
     </Provider>
   )
 }

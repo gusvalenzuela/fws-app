@@ -1,7 +1,15 @@
-import React from "react";
+import React from 'react'
+import Menubar from './Menubar'
+import Footer from './Footer'
 
-function Layout({ children }) {
-  return <div>{children}</div>;
+function Layout({ children, darkMode }) {
+  return (
+    <>
+      <Menubar darkMode={darkMode} />
+      {children}
+      <Footer darkMode={darkMode} />
+    </>
+  )
 }
 
-export default Layout;
+export default Layout
