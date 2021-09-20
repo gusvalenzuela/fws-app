@@ -54,10 +54,7 @@
   margin-top: 2.5rem !important;
 }
 
-#team-container {
-  display: grid !important;
-  grid-template-columns: auto auto auto;
-}
+
 /* #matchup-divider {
 } */
 .matchup-divider {

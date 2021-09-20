@@ -3,11 +3,11 @@
   margin: auto;
   height: fit-content;
 } */
-.matchupSegment h3 {
+/* .matchupSegment h3 {
   margin: 0;
   margin-top: -8px;
   margin-bottom: 8px;
-}
+} */
 .matchupSegment {
   position: relative;
   background-color: transparent;
@@ -112,12 +112,23 @@
 }
 .teamContainer img {
   max-width: 100%;
+  margin-bottom: -3rem;
 }
 .teamContainer > h3,
 .teamContainer > img,
 .teamContainer > p {
   margin: auto;
 }
+.compactCards {
+  display: grid !important;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  justify-content: space-evenly;
+}
+.teamContainer .compactCards img {
+  margin-bottom: inherit;
+}
+
 /* animations  */
 @keyframes bounce {
   0%,

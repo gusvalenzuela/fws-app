@@ -161,7 +161,6 @@ const MatchupCardAt = ({
         data-team_id={team.team_id}
         data-team_name={team.abbreviation}
         data-event={matchup.event_id}
-        id={!compactCards ? undefined : 'team-container'}
         stretched
         // width="6"
       >
@@ -183,67 +182,76 @@ const MatchupCardAt = ({
             // inverted
           />
         </span>
-        {/* team logo / image  */}
-        {/* hosting the images on cloudinary */}
-        <Image
-          cloudName="fwscloud"
-          publicId={`NFL-Team_logos/${
-            sport === 2 ? team.abbreviation : 'nfl'
-          }.png`}
-          loading="lazy"
-          alt={`${team.abbreviation}'s team logo`}
-          title={`${team.name} ${team.mascot}`}
-          id="team-logo-img"
-        >
-          <Placeholder type="vectorize" />
-          <Transformation
-            quality="auto"
-            fetchFormat="auto"
-            height={!compactCards ? '175' : '75'}
-            width={!compactCards ? '175' : '75'}
-            crop="fit"
-          />
-        </Image>
-        <h3>
-          {!compactCards &&
-          !user.prefersModernLayout &&
-          team.team_id === homeTeam.team_id
-            ? `${team.name}`.toUpperCase()
-            : !compactCards
-            ? team.name
-            : !user.prefersModernLayout && team.team_id === homeTeam.team_id
-            ? `${team.abbreviation}`.toLowerCase()
-            : team.abbreviation}
-          {!compactCards && <br />}
-          {!compactCards &&
-          !user.prefersModernLayout &&
-          team.team_id === homeTeam.team_id
-            ? `${team.mascot}`.toUpperCase()
-            : !compactCards && team.mascot}
-        </h3>
-        {/* team name  */}
-        {/* Line spread */}
-        <p
-          style={{
-            margin: 0,
-            alignSelf: 'center',
-            color: 'red',
-            transform: 'scale(1.75)',
-            fontWeight: '900',
-            textShadow: '.5px .5px #555',
-          }}
-        >
-          {
-            // displays the point spread for favorite (0.5)
-            !user.prefersModernLayout ? (
-              <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
-            ) : matchup.line_ && team.team_id === matchup.line_.favorite ? (
-              -matchup.line_.point_spread
-            ) : (
-              <span style={{ visibility: 'hidden' }}>--</span>
-            )
-          }
-        </p>
+        <section className={!compactCards ? undefined : Style.compactCards}>
+          {' '}
+          {/* team logo / image  */}
+          {/* hosting the images on cloudinary */}
+          <Image
+            cloudName="fwscloud"
+            publicId={`NFL-Team_logos/${
+              sport === 2 ? team.abbreviation : 'nfl'
+            }.png`}
+            loading="lazy"
+            alt={`${team.abbreviation}'s team logo`}
+            title={`${team.name} ${team.mascot}`}
+            id="team-logo-img"
+          >
+            <Placeholder type="vectorize" />
+            <Transformation
+              quality="auto"
+              fetchFormat="auto"
+              height={!compactCards ? '175' : '75'}
+              width={!compactCards ? '175' : '75'}
+              crop="fit"
+            />
+          </Image>
+          <h3>
+            {!compactCards &&
+            !user.prefersModernLayout &&
+            team.team_id === homeTeam.team_id
+              ? `${team.name}`.toUpperCase()
+              : !compactCards
+              ? team.name
+              : !user.prefersModernLayout && team.team_id === homeTeam.team_id
+              ? `${team.abbreviation}`.toLowerCase()
+              : team.abbreviation}
+            {!compactCards && <br />}
+            {!compactCards &&
+            !user.prefersModernLayout &&
+            team.team_id === homeTeam.team_id
+              ? `${team.mascot}`.toUpperCase()
+              : !compactCards && team.mascot}
+            <br />
+            {/* team record  */}
+            <span style={{ fontSize: '.85rem' }}>
+              {homeTeam.team_id === team.team_id
+                ? matchup.home_record
+                : matchup.away_record}
+            </span>
+          </h3>
+          {/* Line spread */}
+          <p
+            style={{
+              margin: 0,
+              alignSelf: 'center',
+              color: 'red',
+              transform: 'scale(1.75)',
+              fontWeight: '900',
+              textShadow: '.5px .5px #555',
+            }}
+          >
+            {
+              // displays the point spread for favorite (0.5)
+              !user.prefersModernLayout ? (
+                <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
+              ) : matchup.line_ && team.team_id === matchup.line_.favorite ? (
+                -matchup.line_.point_spread
+              ) : (
+                <span style={{ visibility: 'hidden' }}>--</span>
+              )
+            }
+          </p>
+        </section>{' '}
       </Grid.Column>
     )
   }
