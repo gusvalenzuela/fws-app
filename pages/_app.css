@@ -58,6 +58,7 @@ MENUBAR RELATED
 }
 .top.stackable.menu {
   border-radius: 0 !important;
+  max-width: 100vw;
 }
 .right.menu button {
   margin: 0.25rem;
