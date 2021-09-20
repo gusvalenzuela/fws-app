@@ -52,6 +52,10 @@ MENUBAR RELATED
     color: black;
   }
 }
+.menubar {
+  position: relative;
+  min-height: 66px;
+}
 .top.stackable.menu {
   border-radius: 0 !important;
 }

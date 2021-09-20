@@ -71,15 +71,26 @@ const Menubar = ({ darkMode }) => {
       // navElement.style.backgroundColor = currentTheme
       navElement.style.borderColor = currentTheme
       navElement.style.color = alternateTheme
+
+      // SET HEIGHT OF MENUBAR ELEMENT
+      // to account for display: fixed
+      // TODO: make dynamic
+      menubar.current.style.height = `${navElement.clientHeight || 70}px`
     }
   }, [menubar, darkMode])
 
   return (
     <nav className="menubar responsive" id="menubar" ref={menubar}>
-      <Menu inverted={darkMode} className="menuNav" stackable attached="top">
+      <Menu
+        inverted={darkMode}
+        className="menuNav"
+        stackable
+        fixed="top"
+        // attached="top"
+      >
         <Menu.Header
           onClick={toggleResponsiveMenu}
-          as="h3"
+          as="h5"
           className={Styles.menubarHeader}
         >
           <span>FWS Pool </span>
@@ -155,7 +166,7 @@ const Menubar = ({ darkMode }) => {
             />
           </>
         )}
-        <Dropdown item text="Leaderboards">
+        <Dropdown item text="Info">
           <Dropdown.Menu>
             <Dropdown.Item
               onClick={() => {
@@ -225,7 +236,7 @@ const Menubar = ({ darkMode }) => {
             </>
           ) : (
             <>
-              <Dropdown simple item text="My Account">
+              <Dropdown simple item text="Account">
                 <Dropdown.Menu>
                   <Dropdown.Item
                     onClick={() => {
