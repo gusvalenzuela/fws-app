@@ -4,11 +4,10 @@ Please move all global CSS imports to src\pages\_app.js.
 Read more: https://err.sh/next.js/css-global
 */
 import React, { useEffect } from 'react'
-import 'react-toastify/dist/ReactToastify.css'
+import 'react-toastify/dist/ReactToastify.min.css'
 import 'semantic-ui-css/semantic.min.css'
 import './_app.css'
-import Moment from 'react-moment'
-import 'moment-timezone'
+
 import { Provider } from 'next-auth/client'
 import { ToastContainer } from 'react-toastify'
 import startDates from '../lib/stores/startDays.json'
@@ -28,7 +27,7 @@ export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     // Start the pooled timer which runs every 1 second(s)
     // (60000 milliseconds) by default.
-    Moment.startPooledTimer(1000)
+    // Moment.startPooledTimer(1000)
 
     // startDateIndex finds the first date that is not in the past
     // for the start of the nfl week (wednesday)
@@ -41,7 +40,8 @@ export default function MyApp({ Component, pageProps }) {
     Store.setState({
       currentWeek: startDateIndex < 0 ? weekStartDates.length : startDateIndex,
       currentSeasonYear: 2021,
-      Moment,
+      timeZone: 'America/Los_Angeles',
+      // Moment,
     })
   }, [])
 

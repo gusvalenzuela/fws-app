@@ -9,7 +9,6 @@ import { toast } from 'react-toastify'
 import { Grid, Segment, Icon } from 'semantic-ui-react'
 import MatchupDivider from '../Divider'
 import Tiebreaker from '../../Tiebreaker'
-import Store from '../../../lib/stores/FootballPool'
 import Style from './Card.module.css'
 
 const MatchupCardAt = ({
@@ -19,6 +18,8 @@ const MatchupCardAt = ({
   tiebreak,
   lockDate,
   compactCards,
+  darkMode,
+  timeZone,
 }) => {
   const homeTeam = matchup.home_team
   const awayTeam = matchup.away_team
@@ -26,7 +27,7 @@ const MatchupCardAt = ({
     matchup.line_?.favorite === homeTeam?.team_id ? homeTeam : awayTeam
   const underdogTeam =
     matchup.line_?.favorite === homeTeam?.team_id ? awayTeam : homeTeam
-  const darkMode = Store((s) => s.darkMode)
+
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
   const sport = 2
@@ -341,6 +342,7 @@ const MatchupCardAt = ({
                       hour: 'numeric',
                       minute: '2-digit',
                       timeZoneName: 'short',
+                      timeZone: timeZone || 'America/Los_Angeles',
                       // weekday: "short",
                     }).format(
                       new Date(matchup.event_date || '2021-01-01T05:00:00Z')

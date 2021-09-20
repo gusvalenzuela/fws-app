@@ -29,6 +29,7 @@ function Weeks({ query }) {
   const seasonYear = Store((s) => s.seasonYear || s.currentSeasonYear) // Store.seasonYear initializes as undefined
   const selectedUserId = Store((s) => s.selectedUser) // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   const darkMode = Store((s) => s.darkMode)
+  const userTimeZone = Store((s) => s.timeZone)
   // Hooks
   const [currentUser] = useCurrentUser()
   const { sportTeams } = useSportTeams(query.sport)
@@ -120,7 +121,7 @@ function Weeks({ query }) {
         <title>FWS | Weekly Matchups</title>
       </Head>
       <div className="page-header week-header">
-        <TimeDisplay />
+        <TimeDisplay userTimeZone={userTimeZone} />
         <br />
         {/* "2020 Regular Season" */}
         <SeasonDropdown />
@@ -176,6 +177,8 @@ function Weeks({ query }) {
           </section>
         ) : null}
         <MatchupCardSection
+          darkMode={darkMode}
+          timeZone={userTimeZone}
           schedule={schedule}
           modernLayout={!!currentUser?.prefersModernLayout || true}
           currentUser={currentUser}

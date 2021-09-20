@@ -12,6 +12,8 @@ const MatchupCardSection = ({
   currentUser,
   modernLayout,
   tiebreakMatch,
+  darkMode,
+  timeZone,
 }) => (
   <>
     <style jsx>{`
@@ -79,12 +81,22 @@ const MatchupCardSection = ({
                   key={`header-${matchup.event_id || `${inx}`}`}
                   className="matchup-day-header"
                 >
-                  {currentMatchupEventDate.toDateString()}
+                  {new Intl.DateTimeFormat('default', {
+                    weekday: 'long',
+                    month: 'short',
+                    day: '2-digit',
+                    year: 'numeric',
+                    // timeZoneName: 'short',
+                    timeZone: timeZone || 'America/Los_Angeles',
+                    // weekday: "short",
+                  }).format(currentMatchupEventDate)}
                 </h1>
               )}
 
               {/* A Matchup Card stack for each matchup */}
               <MatchupCard
+                timeZone={timeZone}
+                darkMode={darkMode}
                 key={matchup.event_id || `${inx}`}
                 version="at"
                 compactCards={compactCards}
