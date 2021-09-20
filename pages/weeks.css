@@ -50,6 +50,9 @@
   text-align: center;
   border-radius: 2px;
 }
+.matchup-day-header:first-of-type {
+  margin-top: 2.5rem !important;
+}
 
 #team-container {
   display: grid !important;

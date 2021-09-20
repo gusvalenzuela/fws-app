@@ -4,7 +4,7 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import type { GetServerSideProps } from 'next/types'
-import { Checkbox } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import type { SportsTeam, SportsMatchup } from '../additional'
 import {
   useUser,
@@ -13,7 +13,6 @@ import {
   useSportTeams,
   useUserPicksByWeek,
 } from '../lib/hooks'
-// import TimeDisplay from '../components/TimeDisplay'
 import WeekDropdown from '../components/WeekDropdown'
 import SeasonDropdown from '../components/SeasonDropdown'
 import MatchupCardSection from '../components/Matchup/Section'
@@ -21,6 +20,10 @@ import ByeTeamsSection from '../components/ByeTeamsSection'
 import PlayerDashboard from '../components/PlayerDashboard'
 import Store from '../lib/stores/FootballPool'
 
+const TimeDisplay: any = dynamic(() => import('../components/TimeDisplay'), {
+  loading: () => null,
+  ssr: false,
+})
 function Weeks({ query }) {
   // Stored variables
   const week = Store((s) => s.week || s.currentWeek) // Store.week initializes as undefined
@@ -121,11 +124,6 @@ function Weeks({ query }) {
     }
   }, [currentUser, router, session])
 
-  const TimeDisplay: any = dynamic(() => import('../components/TimeDisplay'), {
-    loading: () => null,
-    ssr: false,
-  })
-
   return (
     <main id="weeks">
       <Head>
@@ -156,23 +154,25 @@ function Weeks({ query }) {
                 }
                 weeklyRecord={weeklyRecord}
               />
-            </section>
-            <section
-              style={{
-                color: `var(${darkMode ? 'light' : 'dark'}-mode)`,
-                display: 'flex',
-                justifyContent: 'space-around',
-              }}
-              id={`${darkMode ? 'dark' : 'light'}ModeCheckbox`}
-            >
-              {/* Toggle compact cards on/off  */}
-              <Checkbox
-                className="toggle-box"
-                label="Compact Cards"
-                toggle
-                checked={compactCards}
-                onChange={() => setCompactCards(!compactCards)}
-              />
+              <span
+                role="radio"
+                tabIndex={0}
+                aria-checked={compactCards}
+                style={{
+                  color: `var(${!darkMode ? 'light' : 'dark'}-mode)`,
+                  background: `transparent`,
+                  float: 'left',
+                  cursor: 'pointer',
+                  padding: '.5rem',
+                  opacity: `${compactCards ? '1' : '.8'}`,
+                }}
+                id={`${darkMode ? 'dark' : 'light'}ModeCheckbox`}
+                onClick={() => setCompactCards(!compactCards)}
+              >
+                {/* Toggle compact cards on/off  */}
+                <Icon name="expand arrows alternate" inverted={darkMode} />{' '}
+                Cards
+              </span>
             </section>
 
             {
@@ -210,12 +210,6 @@ function Weeks({ query }) {
                 </section>
               ) : null
             }
-            {/* {!scheduleIsLoading && schedule?.length ? (
-        ) : (
-          <section>
-            <Loader text="Loading matchups..." />
-          </section>
-        )} */}
           </div>
           <div className="page-footer">
             {teamsOnBye ? (
