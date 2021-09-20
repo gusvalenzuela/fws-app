@@ -55,9 +55,9 @@ const HomePage = () => {
         button.demo-link {
           border: none;
           cursor: pointer;
-          color: var(--brand-color1, --color1);
+          color: #f5f5f5;
           margin: 2.8rem 0 1rem;
-          text-shadow: 1px 1px 1px #ffffff41;
+          text-shadow: 1px 1px 1px #00000041;
           background: linear-gradient(transparent 35%, #00000077);
           padding: 1rem;
           display: block;
@@ -121,15 +121,15 @@ const HomePage = () => {
               <sup>*</sup>Currently only featuring American Football.
             </i>
             <button
-              title="Sign in to Demo account. Coming back soon!"
-              disabled
+              title="Signing in to Demo account coming back soon! See without signing in for now"
               type="button"
               className="demo-link"
-              onClick={() => {
-                router.push('/signin?demo=7')
+              onClick={(e) => {
+                e.currentTarget.disabled = true
+                router.push('/weeks?sport=football')
               }}
             >
-              Use Demo Account
+              See Demo
             </button>
           </div>
         </header>

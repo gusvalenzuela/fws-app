@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/client'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
 import type { GetServerSideProps } from 'next/types'
 import { Icon } from 'semantic-ui-react'
 import type { SportsTeam, SportsMatchup } from '../additional'
@@ -32,8 +30,6 @@ function Weeks({ query }) {
   const selectedUserId = Store((s) => s.selectedUser) // "Store" selectedUser = undefined ? user will be used instead (used when clicking "Home" for example)
   const darkMode = Store((s) => s.darkMode)
   // Hooks
-  const router = useRouter()
-  const [session] = useSession()
   const [currentUser] = useCurrentUser()
   const { sportTeams } = useSportTeams(query.sport)
   const {
@@ -118,106 +114,86 @@ function Weeks({ query }) {
     }
   }, [week, sportTeams, Sport, seasonType, seasonYear, schedule, userPicks])
 
-  useEffect(() => {
-    if (!currentUser && !session?.user) {
-      router.push('/')
-    }
-  }, [currentUser, router, session])
-
   return (
     <main id="weeks">
       <Head>
         <title>FWS | Weekly Matchups</title>
       </Head>
-      {currentUser && (
-        <>
-          <div className="page-header week-header">
-            <TimeDisplay />
-            <br />
-            {/* "2020 Regular Season" */}
-            <SeasonDropdown />
-            {/* "Week 2" [Dropdown] */}
-            <WeekDropdown />
-            {
-              // "(Sep 16-22)"
-              schedule?.length ? `(${schedule[0].week_detail})` : null
+      <div className="page-header week-header">
+        <TimeDisplay />
+        <br />
+        {/* "2020 Regular Season" */}
+        <SeasonDropdown />
+        {/* "Week 2" [Dropdown] */}
+        <WeekDropdown />
+        {
+          // "(Sep 16-22)"
+          schedule?.length ? `(${schedule[0].week_detail})` : null
+        }
+      </div>
+      <div className="page-content">
+        <section>
+          <PlayerDashboard
+            lockDate={lockDate}
+            allPicked={allPicked}
+            user={!isLoading ? selectedUser : currentUser}
+            otherUser={
+              selectedUser?._id === currentUser?._id ? false : selectedUser
             }
-          </div>
-          <div className="page-content">
-            <section>
-              <PlayerDashboard
-                lockDate={lockDate}
-                allPicked={allPicked}
-                user={!isLoading ? selectedUser : currentUser}
-                otherUser={
-                  selectedUser?._id === currentUser?._id ? false : selectedUser
-                }
-                weeklyRecord={weeklyRecord}
-              />
-              <span
-                role="radio"
-                tabIndex={0}
-                aria-checked={compactCards}
-                style={{
-                  color: `var(${!darkMode ? 'light' : 'dark'}-mode)`,
-                  background: `transparent`,
-                  float: 'left',
-                  cursor: 'pointer',
-                  padding: '.5rem',
-                  opacity: `${compactCards ? '1' : '.8'}`,
-                }}
-                id={`${darkMode ? 'dark' : 'light'}ModeCheckbox`}
-                onClick={() => setCompactCards(!compactCards)}
-              >
-                {/* Toggle compact cards on/off  */}
-                <Icon name="expand arrows alternate" inverted={darkMode} />{' '}
-                Cards
-              </span>
-            </section>
-
-            {
-              /* 
-                Caveat: -- only displays other user's if Date now 
-                is after the lockdate (i.e. after first Sunday Game) 
-              */
-              // if selected user is same as current user display all picks
-              // or it's past the first Sunday game of the week (picks are locked date)
-              // render the matchups and the corresponding user's picks
-              currentUser?._id === selectedUser?._id ||
-              Date.now() >= lockDate ? (
-                <MatchupCardSection
-                  schedule={schedule}
-                  modernLayout={!!currentUser?.prefersModernLayout}
-                  currentUser={currentUser}
-                  lockDate={lockDate}
-                  userPicks={userPicks}
-                  compactCards={compactCards}
-                  tiebreakMatch={tiebreakMatch}
-                />
-              ) : selectedUser && Date.now() < lockDate ? (
-                <section>
-                  <p
-                    style={{
-                      textAlign: 'justify',
-                      padding: '1rem',
-                      maxWidth: '800px',
-                      margin: 'auto',
-                    }}
-                  >
-                    <b>Note:</b> Other users&apos; picks are not viewable until
-                    after the start of the first Sunday game.
-                  </p>
-                </section>
-              ) : null
-            }
-          </div>
-          <div className="page-footer">
-            {teamsOnBye ? (
-              <ByeTeamsSection teams={teamsOnBye.length && teamsOnBye} />
-            ) : null}
-          </div>
-        </>
-      )}
+            weeklyRecord={weeklyRecord}
+          />
+          <span
+            role="radio"
+            tabIndex={0}
+            aria-checked={compactCards}
+            style={{
+              color: `var(${!darkMode ? 'light' : 'dark'}-mode)`,
+              background: `transparent`,
+              float: 'left',
+              cursor: 'pointer',
+              padding: '.5rem',
+              opacity: `${compactCards ? '1' : '.8'}`,
+            }}
+            id={`${darkMode ? 'dark' : 'light'}ModeCheckbox`}
+            onClick={() => setCompactCards(!compactCards)}
+          >
+            {/* Toggle compact cards on/off  */}
+            <Icon name="expand arrows alternate" inverted={darkMode} /> Cards
+          </span>
+        </section>
+        {currentUser?._id !== selectedUser?._id && Date.now() < lockDate ? (
+          <section>
+            <p
+              style={{
+                textAlign: 'justify',
+                padding: '.5rem',
+                marginTop: '2rem',
+              }}
+            >
+              <b>Note:</b> Other users&apos; picks are not viewable until after
+              the start of the first Sunday game.
+            </p>
+          </section>
+        ) : null}
+        <MatchupCardSection
+          schedule={schedule}
+          modernLayout={!!currentUser?.prefersModernLayout || true}
+          currentUser={currentUser}
+          lockDate={lockDate}
+          userPicks={
+            currentUser?._id === selectedUser?._id || Date.now() >= lockDate
+              ? userPicks
+              : null
+          }
+          compactCards={compactCards}
+          tiebreakMatch={tiebreakMatch}
+        />
+      </div>
+      <div className="page-footer">
+        {teamsOnBye ? (
+          <ByeTeamsSection teams={teamsOnBye.length && teamsOnBye} />
+        ) : null}
+      </div>
     </main>
   )
 }
@@ -225,7 +201,7 @@ function Weeks({ query }) {
 export default React.memo(Weeks)
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { sport, yr } = context.query
+  const { sport } = context.query
 
   if (!sport) {
     return {
@@ -237,7 +213,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   return {
     props: {
-      query: { sport, yr },
+      query: { sport },
     }, // will be passed to the page component as props
   }
 }
