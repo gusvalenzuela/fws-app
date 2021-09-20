@@ -71,11 +71,6 @@ const Menubar = ({ darkMode }) => {
       // navElement.style.backgroundColor = currentTheme
       navElement.style.borderColor = currentTheme
       navElement.style.color = alternateTheme
-
-      // SET HEIGHT OF MENUBAR ELEMENT
-      // to account for display: fixed
-      // TODO: make dynamic
-      menubar.current.style.height = `${navElement.clientHeight || 70}px`
     }
   }, [menubar, darkMode])
 
@@ -93,14 +88,16 @@ const Menubar = ({ darkMode }) => {
           as="h5"
           className={Styles.menubarHeader}
         >
-          <span>FWS Pool </span>
-          {user && (
+          <span style={{ color: user ? 'var(--brand-color1)' : '' }}>
+            FWS Pool
+          </span>
+          {/* {user && (
             <span
               style={{ color: 'var(--brand-color1)', fontWeight: 'bolder' }}
             >
               {` | ${user.name || user.email.split('@')[0]}`}
             </span>
-          )}
+          )} */}
         </Menu.Header>
         <Dropdown.Item
           as="a"

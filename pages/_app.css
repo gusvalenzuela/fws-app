@@ -54,7 +54,7 @@ MENUBAR RELATED
 }
 .menubar {
   position: relative;
-  min-height: 66px;
+  min-height: 50px;
 }
 .top.stackable.menu {
   border-radius: 0 !important;
