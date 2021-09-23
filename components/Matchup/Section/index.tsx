@@ -10,7 +10,8 @@ const MatchupCardSection = ({
   lockDate,
   userPicks,
   currentUser,
-  modernLayout,
+  isCurrentUser,
+  // modernLayout,
   tiebreakMatch,
   darkMode,
   timeZone,
@@ -40,6 +41,19 @@ const MatchupCardSection = ({
       !schedule || !schedule?.length ? (
         <section className="placeholderSection">
           <DualRingLoader text="Loading matchups, one moment please." />
+        </section>
+      ) : !isCurrentUser && Date.now() < lockDate ? (
+        <section>
+          <p
+            style={{
+              textAlign: 'justify',
+              padding: '.5rem',
+              marginTop: '2rem',
+            }}
+          >
+            <b>Note:</b> Other users&apos; picks are not viewable until after
+            the start of the first Sunday game.
+          </p>
         </section>
       ) : (
         schedule.map((matchup: SportsMatchup, inx: number) => {
@@ -105,10 +119,7 @@ const MatchupCardSection = ({
                 userPick={userPicks?.find(
                   (p: UserPick) => p.matchupId === matchup.event_id
                 )}
-                user={{
-                  ...currentUser,
-                  prefersModernLayout: modernLayout,
-                }}
+                user={currentUser}
                 tiebreak={
                   tiebreakMatch && tiebreakMatch?.event_id === matchup.event_id
                 }

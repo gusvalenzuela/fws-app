@@ -59,6 +59,7 @@ function Weeks({ query }) {
 
   // MAIN use effect
   useEffect(() => {
+    // console.log(selectedUser)
     setTeamsOnBye(null)
     setWeeklyRecord(null)
     setAllPicked(false)
@@ -162,26 +163,14 @@ function Weeks({ query }) {
             <Icon name="expand arrows alternate" inverted={darkMode} /> Cards
           </span>
         </section>
-        {currentUser?._id !== selectedUser?._id && Date.now() < lockDate ? (
-          <section>
-            <p
-              style={{
-                textAlign: 'justify',
-                padding: '.5rem',
-                marginTop: '2rem',
-              }}
-            >
-              <b>Note:</b> Other users&apos; picks are not viewable until after
-              the start of the first Sunday game.
-            </p>
-          </section>
-        ) : null}
+
         <MatchupCardSection
           darkMode={darkMode}
           timeZone={userTimeZone}
           schedule={schedule}
-          modernLayout={!!currentUser?.prefersModernLayout || true}
+          // modernLayout={!!currentUser?.prefersModernLayout || true}
           currentUser={currentUser}
+          isCurrentUser={currentUser?._id === selectedUser?._id}
           lockDate={lockDate}
           userPicks={
             currentUser?._id === selectedUser?._id || Date.now() >= lockDate
