@@ -54,7 +54,6 @@
   margin-top: 2.5rem !important;
 }
 
-
 /* #matchup-divider {
 } */
 .matchup-divider {
@@ -156,4 +155,9 @@
   .matchup-divider p.divider-pick {
     font-size: 1rem !important;
   }
+}
+
+/* OVERRIDE SEMANTIC-UI */
+.ui.grid {
+  margin: -1rem auto !important;
 }
