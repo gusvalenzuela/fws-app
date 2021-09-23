@@ -52,8 +52,10 @@ const MatchupCardAt = ({
       Number(event.currentTarget.dataset.team_id) === matchup.away_team_id
         ? awayTeam
         : homeTeam
-
-    if (isUpdating) return toast.info('Still updating, please wait') // wait for Mongo DB to respond
+    // don't do anything if clicked team is already selected
+    if (newlySelectedTeam.team_id === selectedTeam.team_id) return null
+    // wait for Mongo DB to respond
+    if (isUpdating) return toast.info('Still updating, please wait')
     if (isLocked) {
       // check to see to no similar toast is active (prevent dupes)
       if (!toast.isActive(lockedToast.current)) {
