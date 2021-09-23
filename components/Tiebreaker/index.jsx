@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Dropdown } from 'semantic-ui-react'
 import { toast } from 'react-toastify'
 
@@ -147,3 +148,25 @@ const Tiebreaker = ({
 }
 
 export default Tiebreaker
+
+const TeamProps = {
+  // team_id: PropTypes.number,
+  abbreviation: PropTypes.string,
+  // mascot: PropTypes.string,
+}
+
+Tiebreaker.propTypes = {
+  isLocked: PropTypes.bool.isRequired,
+  eventId: PropTypes.string.isRequired,
+  hometeam: PropTypes.shape(TeamProps).isRequired,
+  awayteam: PropTypes.shape(TeamProps).isRequired,
+  tiebreaker: PropTypes.number,
+  finalTiebreaker: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]),
+  user: PropTypes.shape({ _id: PropTypes.string }),
+}
+
+Tiebreaker.defaultProps = {
+  tiebreaker: 1,
+  finalTiebreaker: false,
+  user: null,
+}

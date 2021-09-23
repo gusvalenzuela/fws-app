@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import type { GetServerSideProps } from 'next/types'
@@ -188,6 +189,10 @@ function Weeks({ query }) {
       </div>
     </main>
   )
+}
+
+Weeks.propTypes = {
+  query: PropTypes.string.isRequired,
 }
 
 export default React.memo(Weeks)
