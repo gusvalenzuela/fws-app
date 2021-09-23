@@ -27,6 +27,7 @@ const MatchupCardAt = ({
     matchup.line_?.favorite === homeTeam?.team_id ? homeTeam : awayTeam
   const underdogTeam =
     matchup.line_?.favorite === homeTeam?.team_id ? awayTeam : homeTeam
+  const prefersModernLayout = user ? user.prefersModernLayout : true
 
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
@@ -207,17 +208,17 @@ const MatchupCardAt = ({
           </Image>
           <h3>
             {!compactCards &&
-            !user.prefersModernLayout &&
+            !prefersModernLayout &&
             team.team_id === homeTeam.team_id
               ? `${team.name}`.toUpperCase()
               : !compactCards
               ? team.name
-              : !user.prefersModernLayout && team.team_id === homeTeam.team_id
+              : !prefersModernLayout && team.team_id === homeTeam.team_id
               ? `${team.abbreviation}`.toLowerCase()
               : team.abbreviation}
             {!compactCards && <br />}
             {!compactCards &&
-            !user.prefersModernLayout &&
+            !prefersModernLayout &&
             team.team_id === homeTeam.team_id
               ? `${team.mascot}`.toUpperCase()
               : !compactCards && team.mascot}
@@ -242,7 +243,7 @@ const MatchupCardAt = ({
           >
             {
               // displays the point spread for favorite (0.5)
-              !user.prefersModernLayout ? (
+              !prefersModernLayout ? (
                 <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
               ) : matchup.line_ && team.team_id === matchup.line_.favorite ? (
                 -matchup.line_.point_spread
@@ -273,7 +274,7 @@ const MatchupCardAt = ({
           className={Style.matchupGrid}
           style={{
             backgroundColor: 'grey',
-            background: `linear-gradient(125deg, var(--color-${awayTeam?.abbreviation}-primary, black) 50%, var(--color-${homeTeam?.abbreviation}-primary, grey) 50%)`,
+            background: `linear-gradient(125deg, var(--color-${awayTeam?.abbreviation}-primary, white) 50%, var(--color-${homeTeam?.abbreviation}-primary, grey) 50%)`,
           }}
         >
           <Grid columns="equal">
@@ -283,9 +284,7 @@ const MatchupCardAt = ({
             {
               // away team
               // or favorite team if prefersModernLayout = false
-              buildTeamCard(
-                user && user.prefersModernLayout ? awayTeam : favoriteTeam
-              )
+              buildTeamCard(prefersModernLayout ? awayTeam : favoriteTeam)
             }
             {
               /* 
@@ -299,7 +298,7 @@ const MatchupCardAt = ({
                 selectedTeam={selectedTeam}
                 matchup={matchup}
                 sport={sport}
-                prefersModernLayout={user && user.prefersModernLayout}
+                prefersModernLayout={prefersModernLayout}
                 userPick={!!userPick}
               />
             }
@@ -307,9 +306,7 @@ const MatchupCardAt = ({
             {
               // home team
               // or underdog team if prefersModernLayout = false
-              buildTeamCard(
-                user && user.prefersModernLayout ? homeTeam : underdogTeam
-              )
+              buildTeamCard(prefersModernLayout ? homeTeam : underdogTeam)
             }
           </Grid>
         </div>
