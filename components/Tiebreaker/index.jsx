@@ -12,6 +12,7 @@ const Tiebreaker = ({
   user,
 }) => {
   const [isUpdating, setIsUpdating] = React.useState(false)
+  const [tbValue, setTbValue] = React.useState(tiebreaker)
   const tiebreakToast = React.useRef(null)
   const loginToPickToast = React.useRef(null)
 
@@ -33,7 +34,8 @@ const Tiebreaker = ({
 
   const handleTiebreakerSubmit = async (input) => {
     if (isUpdating) return
-
+    // update State so dropdown updates client-side
+    setTbValue(input)
     // if no signed in user, display message about logging in
     if (!user) {
       // check to see to no similar toast is active (prevent dupes)
@@ -123,7 +125,7 @@ const Tiebreaker = ({
           selection
           options={tiebreakerOptions()}
           onChange={(e, { value }) => handleTiebreakerSubmit(value)}
-          value={tiebreaker}
+          value={tbValue}
           compact
           labeled
         />{' '}
