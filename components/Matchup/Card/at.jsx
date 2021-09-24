@@ -31,6 +31,7 @@ const MatchupCardAt = ({
 
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [isUpdating, setIsUpdating] = useState(false)
+  const [tbValue, setTbValue] = useState(1)
   const sport = 2
   // is past event when it has a score obj with final confirmed,
   // or 5 hours have passed after event start
@@ -146,16 +147,19 @@ const MatchupCardAt = ({
   useEffect(() => {
     setSelectedTeam(null) // clear selected team for refresh
     if (!userPick) return null
-    return setSelectedTeam(
+    setSelectedTeam(
       userPick.selectedTeamId === awayTeam.team_id ? awayTeam : homeTeam
     )
-  }, [userPick, awayTeam, homeTeam])
+    if (tiebreak && userPick.tiebreaker) {
+      setTbValue(userPick.tiebreaker)
+    }
+    return () => {}
+  }, [userPick, awayTeam, homeTeam, tbValue, tiebreak])
 
   const buildTeamCard = (team = {}) => {
     const isSelectedTeam = Number(selectedTeam?.team_id) === team.team_id
     return (
       <Grid.Column
-        // color={isSelectedTeam ? 'black' : null}
         onClick={handleTeamSelection}
         className={`${Style.teamContainer} team-container ${
           isSelectedTeam ? 'picked' : ''
@@ -365,12 +369,13 @@ const MatchupCardAt = ({
       {/* This displays only on the last matchup or what is the tiebreaker  */}
       {tiebreak && (
         <Tiebreaker
-          isLocked={isLocked}
+          isLocked={!!isLocked}
           user={user}
           eventId={matchup.event_id}
           hometeam={matchup.home_team}
           awayteam={matchup.away_team}
-          tiebreaker={(userPick && userPick.tiebreaker) || 1}
+          tiebreaker={tbValue}
+          setTbValue={setTbValue}
           finalTiebreaker={
             matchup.event_status === 'STATUS_FINAL' &&
             matchup.away_score + matchup.home_score

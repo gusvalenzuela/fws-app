@@ -9,11 +9,11 @@ const Tiebreaker = ({
   hometeam,
   awayteam,
   tiebreaker,
+  setTbValue,
   finalTiebreaker,
   user,
 }) => {
   const [isUpdating, setIsUpdating] = React.useState(false)
-  const [tbValue, setTbValue] = React.useState(tiebreaker)
   const tiebreakToast = React.useRef(null)
   const loginToPickToast = React.useRef(null)
 
@@ -126,7 +126,7 @@ const Tiebreaker = ({
           selection
           options={tiebreakerOptions()}
           onChange={(e, { value }) => handleTiebreakerSubmit(value)}
-          value={tbValue}
+          value={tiebreaker}
           compact
           labeled
         />{' '}
