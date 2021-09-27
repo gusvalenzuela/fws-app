@@ -2,7 +2,7 @@ import React from 'react'
 import { Divider } from 'semantic-ui-react'
 import type { SportsMatchup, UserPick } from '../../../additional'
 import MatchupCard from '../Card'
-import DualRingLoader from '../../DualRingLoader'
+import MatchupPlaceholder from '../Card/placeholder'
 
 const MatchupCardSection = ({
   schedule,
@@ -19,18 +19,8 @@ const MatchupCardSection = ({
   <>
     <style jsx>{`
       section.placeholderSection {
-        position: relative;
-        display: flex;
-        box-shadoe: 0px 10px 10px #aaa;
-        background: linear-gradient(
-          123deg,
-          var(--light-mode, #fff),
-          var(--dark-mode, #000)
-        );
-        color: #000;
-        min-height: 200px;
-        width: 100%;
         margin: auto;
+        margin-top: 2rem;
       }
     `}</style>
     {
@@ -40,7 +30,7 @@ const MatchupCardSection = ({
       */
       !schedule || !schedule?.length ? (
         <section className="placeholderSection">
-          <DualRingLoader text="Loading matchups, one moment please." />
+          <MatchupPlaceholder darkMode={darkMode} amount={6} />
         </section>
       ) : !isCurrentUser && Date.now() < lockDate ? (
         <section>
