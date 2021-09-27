@@ -1,6 +1,6 @@
 import React from 'react'
 
-const DualRingLoader = ({ text = ' ' }) => (
+const DualRingLoader = ({ text = ' ', size = 'medium', color = 'black' }) => (
   <>
     <style jsx>{`
       aside {
@@ -23,13 +23,15 @@ const DualRingLoader = ({ text = ' ' }) => (
         display: inline-block;
       }
       .lds-dual-ring:after {
+        --base-color: ${color};
         content: ' ';
         display: block;
-        width: 2.69rem;
-        height: 2.69rem;
+        width: ${size !== 'tiny' ? '2.69rem' : '.89rem'};
+        height: ${size !== 'tiny' ? '2.69rem' : '.89rem'};
         margin: auto;
         border-radius: 50%;
-        border: 6px solid var(--base-color, black);
+        border: ${size !== 'tiny' ? '6px' : '1px'} solid
+          var(--base-color, black);
         border-color: var(--base-color, black) transparent
           var(--base-color, black) transparent;
         animation: lds-dual-ring 1.2s linear infinite;
