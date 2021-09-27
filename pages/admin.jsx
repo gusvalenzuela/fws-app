@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useCurrentUser, useSchedule } from '../lib/hooks'
 import Store from '../lib/stores/FootballPool'
 import AdminEventSection from '../components/AdminEventSection'
 import WeekDropdown from '../components/WeekDropdown'
 import SeasonDropdown from '../components/SeasonDropdown'
 import DualRingLoader from '../components/DualRingLoader'
+import ScheduleRefresher from '../components/ScheduleRefresher'
 
 const AdminPage = () => {
   const [season, setSeason] = useState(
@@ -19,20 +20,6 @@ const AdminPage = () => {
   // Stored variables
   // Fetches
   const [user] = useCurrentUser()
-  // Other state
-  const [events, setEvents] = useState([]) // events held in state
-
-  // on week, schedule set
-  useEffect(() => {
-    // filter out the desired week
-    const filteredEvents = schedule?.filter(
-      (event) => event.week === week && event.season_type === 'Regular Season'
-    )
-
-    if (filteredEvents && filteredEvents.length > 0) {
-      setEvents(filteredEvents)
-    }
-  }, [week, schedule])
 
   if (!user?.isAdmin || !user) {
     return (
@@ -49,10 +36,11 @@ const AdminPage = () => {
         <h1>Game scores:</h1>
       </header>
       <div className="page-content">
+        <ScheduleRefresher />
         <SeasonDropdown season={season} setSeasonYear={setSeason} />
         <WeekDropdown week={week} setWeek={setWeek} />
-        {!scheduleIsLoading && events.length ? (
-          events.map((event) => (
+        {!scheduleIsLoading && schedule.length ? (
+          schedule.map((event) => (
             <AdminEventSection key={event?.event_id} event={event} />
           ))
         ) : (
