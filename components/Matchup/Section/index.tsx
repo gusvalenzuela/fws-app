@@ -1,6 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Divider } from 'semantic-ui-react'
 import type { SportsMatchup, UserPick } from '../../../additional'
+import { MatchupShape } from '../../../lib/proptypes'
 import MatchupCard from '../Card'
 import MatchupPlaceholder from '../Card/placeholder'
 
@@ -123,3 +125,29 @@ const MatchupCardSection = ({
 )
 
 export default MatchupCardSection
+
+MatchupCardSection.propTypes = {
+  schedule: PropTypes.arrayOf(PropTypes.shape(MatchupShape)),
+  lockDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  userPicks: PropTypes.arrayOf(
+    PropTypes.shape({ matchupId: PropTypes.string })
+  ),
+  compactCards: PropTypes.bool,
+  darkMode: PropTypes.bool,
+  currentUser: PropTypes.shape({ _id: PropTypes.string }),
+  isCurrentUser: PropTypes.bool.isRequired,
+  // modernLayout,
+  tiebreakMatch: PropTypes.shape(MatchupShape),
+  timeZone: PropTypes.string,
+}
+
+MatchupCardSection.defaultProps = {
+  darkMode: false,
+  compactCards: true,
+  timeZone: 'America/Los_Angeles',
+  userPicks: null,
+  currentUser: null,
+  schedule: null,
+  lockDate: null,
+  tiebreakMatch: null,
+}

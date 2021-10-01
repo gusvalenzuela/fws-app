@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Image,
-  Transformation,
-  // CloudinaryContext,
-  Placeholder,
-} from 'cloudinary-react'
+import PropTypes from 'prop-types'
+import { Image, Transformation, Placeholder } from 'cloudinary-react'
 import { toast } from 'react-toastify'
 import { Grid, Segment, Icon } from 'semantic-ui-react'
+import { MatchupShape, UserShape, UserPickShape } from '../../../lib/proptypes'
 import MatchupDivider from '../Divider'
 import Tiebreaker from '../../Tiebreaker'
 import Style from './Card.module.css'
@@ -54,7 +51,7 @@ const MatchupCardAt = ({
         ? awayTeam
         : homeTeam
     // don't do anything if clicked team is already selected
-    if (newlySelectedTeam.team_id === selectedTeam.team_id) return null
+    if (newlySelectedTeam.team_id === selectedTeam?.team_id) return null
     // wait for Mongo DB to respond
     if (isUpdating) return toast.info('Still updating, please wait')
     if (isLocked) {
@@ -268,19 +265,20 @@ const MatchupCardAt = ({
       <Segment
         loading={!matchup.event_id}
         attached
-        tertiary={isPastEvent}
         raised
         className={Style.matchupSegment}
       >
         <div
           className={Style.matchupSegmentOverlay}
-          style={{ background: !darkMode ? '#fff3' : '#000b' }}
+          style={{
+            background: !darkMode ? '#fff3' : '#000b',
+          }}
         />
         <div
           className={Style.matchupGrid}
           style={{
             backgroundColor: 'grey',
-            background: `linear-gradient(125deg, var(--color-${awayTeam?.abbreviation}-primary, white) 50%, var(--color-${homeTeam?.abbreviation}-primary, grey) 50%)`,
+            background: isPastEvent ? '#e6e6e6' : `linear-gradient(125deg, var(--color-${awayTeam?.abbreviation}-primary, white) 50%, var(--color-${homeTeam?.abbreviation}-primary, grey) 50%)`,
           }}
         >
           <Grid columns="equal">
@@ -387,3 +385,23 @@ const MatchupCardAt = ({
 }
 
 export default MatchupCardAt
+
+MatchupCardAt.propTypes = {
+  matchup: PropTypes.shape(MatchupShape).isRequired,
+  userPick: PropTypes.shape(UserPickShape),
+  user: PropTypes.shape(UserShape),
+  tiebreak: PropTypes.bool.isRequired,
+  lockDate: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
+  compactCards: PropTypes.bool,
+  darkMode: PropTypes.bool,
+  timeZone: PropTypes.string,
+}
+
+MatchupCardAt.defaultProps = {
+  darkMode: false,
+  compactCards: true,
+  timeZone: 'America/Los_Angeles',
+  userPick: null,
+  user: null,
+}
