@@ -51,7 +51,7 @@ handler.patch(upload.single('profilePicture'), async (req, res) => {
     })
     profilePicture = image.secure_url
   }
-  const { name, bio, layout } = req.body
+  const { name, bio, layout, theme } = req.body
   const updatedUser = await req.db.collection('users').updateOne(
     { _id: objId },
     {
@@ -60,6 +60,7 @@ handler.patch(upload.single('profilePicture'), async (req, res) => {
         bio: bio || '',
         ...(profilePicture && { profilePicture }),
         ...(layout && { prefersModernLayout: layout === 'modern' }),
+        ...(theme && { colorTheme: theme }),
       },
     }
   )

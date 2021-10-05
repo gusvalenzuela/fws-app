@@ -6,6 +6,9 @@ const ProfileSection = ({ user, mutateUser }) => {
   const initLayoutPreference = !user?.prefersModernLayout ? 'classic' : 'modern'
   const [isUpdating, setIsUpdating] = useState(false)
   const [layoutPreference, setLayoutPreference] = useState(initLayoutPreference)
+  const [themePreference, setThemePreference] = useState(
+    user?.colorTheme || 'light'
+  )
   const nameRef: MutableRefObject<HTMLInputElement> = useRef(null)
   const bioRef: MutableRefObject<HTMLTextAreaElement> = useRef(null)
   const profilePictureRef: MutableRefObject<HTMLInputElement> = useRef(null)
@@ -28,6 +31,9 @@ const ProfileSection = ({ user, mutateUser }) => {
     }
     if (initLayoutPreference !== layoutPreference) {
       formData.append('layout', layoutPreference)
+    }
+    if (user?.colorTheme !== themePreference) {
+      formData.append('theme', themePreference)
     }
     formData.append('name', nameRef.current.value)
     formData.append('bio', bioRef.current.value)
@@ -239,6 +245,31 @@ const ProfileSection = ({ user, mutateUser }) => {
               (left). HOME is team with all capitalized name.
               <br />
             </details>
+          </div>
+          <div>
+            <p>Choose a theme: </p>
+            <label htmlFor="darkTheme">
+              <input
+                type="radio"
+                id="darkTheme"
+                name="chooseTheme"
+                value="dark"
+                onChange={() => setThemePreference('dark')}
+                checked={themePreference === 'dark'}
+              />
+              Dark
+            </label>
+            <label htmlFor="lightTheme">
+              <input
+                type="radio"
+                id="lightTheme"
+                name="chooseTheme"
+                value="light"
+                onChange={() => setThemePreference('light')}
+                checked={themePreference === 'light'}
+              />
+              Light
+            </label>{' '}
           </div>
           <button disabled={isUpdating} type="submit">
             Sav{isUpdating ? 'ing' : 'e'}

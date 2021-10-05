@@ -74,6 +74,15 @@ const Menubar = ({ darkMode }) => {
     }
   }, [menubar, darkMode])
 
+  // on USER CHANGE
+  useEffect(() => {
+    if (!user) return null
+    if (user.colorTheme) {
+      Store.setState({ darkMode: user.colorTheme === 'dark' })
+    }
+    return () => {}
+  }, [user])
+
   return (
     <nav className="menubar responsive" id="menubar" ref={menubar}>
       <Menu
@@ -197,6 +206,9 @@ const Menubar = ({ darkMode }) => {
             tabIndex={0}
             role="button"
             id="darkModeButton"
+            title={`Change to ${
+              darkMode ? 'light' : 'dark'
+            } mode. Pro tip: Make permanent in settings page.`}
             className={Styles.darkModeButton}
             onClick={() => Store.setState({ darkMode: !darkMode })}
           >
