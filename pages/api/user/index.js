@@ -1,5 +1,5 @@
 import nextConnect from 'next-connect'
-import { ObjectID as ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { getSession } from 'next-auth/react'
 import multer from 'multer'
 import { v2 as cloudinary } from 'cloudinary'
