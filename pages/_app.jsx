@@ -23,12 +23,8 @@ export default function MyApp({ Component, pageProps }) {
   const storedUsers = Store((s) => s.allUsers)
   const darkMode = Store((s) => s.darkMode)
 
-  // Mount & M O M E N T
+  // Mount
   useEffect(() => {
-    // Start the pooled timer which runs every 1 second(s)
-    // (60000 milliseconds) by default.
-    // Moment.startPooledTimer(1000)
-
     // startDateIndex finds the first date that is not in the past
     // for the start of the nfl week (wednesday)
     const startDateIndex = weekStartDates.findIndex(
@@ -41,7 +37,6 @@ export default function MyApp({ Component, pageProps }) {
       currentWeek: startDateIndex < 0 ? weekStartDates.length : startDateIndex,
       currentSeasonYear: 2021,
       timeZone: 'America/Los_Angeles',
-      // Moment,
     })
   }, [])
 
