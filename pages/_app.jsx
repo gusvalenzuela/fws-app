@@ -1,5 +1,5 @@
-/* 
-Global CSS cannot be imported from files other than your Custom <App>. 
+/*
+Global CSS cannot be imported from files other than your Custom <App>.
 Please move all global CSS imports to src\pages\_app.js.
 Read more: https://err.sh/next.js/css-global
 */
@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.min.css'
 import 'semantic-ui-css/semantic.min.css'
 import './_app.css'
 
-import { Provider } from 'next-auth/client'
+import { SessionProvider } from 'next-auth/react'
 import { ToastContainer } from 'react-toastify'
 import startDates from '../lib/stores/startDays.json'
 import { useAllUsers } from '../lib/hooks'
@@ -53,7 +53,7 @@ export default function MyApp({ Component, pageProps }) {
   }, [users, storedUsers])
 
   return (
-    <Provider session={pageProps.session}>
+    <SessionProvider session={pageProps.session}>
       <Layout darkMode={darkMode}>
         <ToastContainer
           limit={4}
@@ -64,6 +64,6 @@ export default function MyApp({ Component, pageProps }) {
         />
         <Component {...pageProps} />
       </Layout>
-    </Provider>
+    </SessionProvider>
   )
 }

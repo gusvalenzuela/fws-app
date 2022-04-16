@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-import { getProviders, signIn, useSession } from 'next-auth/client'
+import { getProviders, signIn, useSession } from 'next-auth/react'
 import PropTypes from 'prop-types'
 import Loader from '../components/DualRingLoader'
 import SignInForm from '../components/SignInForm'
@@ -9,7 +9,7 @@ import Store from '../lib/stores/FootballPool'
 
 const SignInPage = ({ demoAccount, providers }) => {
   const router = useRouter()
-  const [session] = useSession()
+  const { data: session } = useSession()
   const darkMode = Store((s) => s.darkMode)
   const season = Store((s) => ({
     week: s.week || s.currentWeek,

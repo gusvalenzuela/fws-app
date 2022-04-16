@@ -1,6 +1,10 @@
 import nodemailer from 'nodemailer'
 import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
+import GoogleProvider from 'next-auth/providers/google'
+import FacebookProvider from 'next-auth/providers/facebook'
+import EmailProvider from 'next-auth/providers/email'
+import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
+import { clientPromise } from '../../../middlewares/database'
 import { html, text } from '../../../lib/utils/auth'
 
 const { NODE_ENV } = process.env
@@ -12,11 +16,11 @@ export default async function handler(req, res) {
   NextAuth(req, res, {
     // https://next-auth.js.org/configuration/providers
     providers: [
-      Providers.Google({
+      GoogleProvider({
         clientId: process.env.GOOGLE_ID,
         clientSecret: process.env.GOOGLE_SECRET,
       }),
-      Providers.Facebook({
+      FacebookProvider({
         clientId: isDev
           ? process.env.FACEBOOK_ID_TEST
           : process.env.FACEBOOK_ID,
@@ -24,7 +28,7 @@ export default async function handler(req, res) {
           ? process.env.FACEBOOK_SECRET_TEST
           : process.env.FACEBOOK_SECRET,
       }),
-      Providers.Email({
+      EmailProvider({
         server: process.env.EMAIL_SERVER,
         from: process.env.EMAIL_FROM,
         sendVerificationRequest: async ({
@@ -37,6 +41,7 @@ export default async function handler(req, res) {
             // given an access or sessiontoken
             // const loggingIn = await fetch(url).then((r) => r)
           }
+          // console.log(url)
           const { host } = new URL(url)
           const transport = nodemailer.createTransport(server)
           // mail creation helper
@@ -209,5 +214,6 @@ export default async function handler(req, res) {
 
     // Enable debug messages in the console if you are having problems
     debug: false,
+    adapter: MongoDBAdapter(clientPromise),
   })
 }

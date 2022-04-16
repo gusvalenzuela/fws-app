@@ -1,20 +1,20 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react'
 import Head from 'next/head'
-import { useSession } from 'next-auth/client'
+import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 const HomePage = () => {
   const router = useRouter()
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
 
   React.useEffect(() => {
     if (session?.user) router.push('/weeks?sport=football&yr=2021')
-  }, [router, session, loading])
+  }, [router, session, status])
 
   return (
     <>
-      <style jsx>{`
+      <style>{`
         #index .page-header {
           padding: 0;
           text-align: left;
@@ -98,7 +98,6 @@ const HomePage = () => {
                 role="button"
                 tabIndex={0}
                 className="button"
-                name="signup"
                 onClick={() => {
                   router.push('/signin')
                 }}
@@ -109,7 +108,6 @@ const HomePage = () => {
                 role="button"
                 tabIndex={0}
                 className="button"
-                name="signin"
                 onClick={() => {
                   router.push('/signin')
                 }}
@@ -148,7 +146,7 @@ const HomePage = () => {
             <span
               role="img"
               aria-label="Winking face emoji"
-              alt="Winking face emoji"
+              // alt="Winking face emoji"
             >
               😉
             </span>
