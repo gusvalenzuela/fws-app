@@ -1,10 +1,10 @@
 import React from 'react'
-import { signOut, useSession } from 'next-auth/client'
+import { signOut, useSession } from 'next-auth/react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 const LogoutPage = () => {
-  const [session] = useSession()
+  const { data: session } = useSession()
   const router = useRouter()
   const [signingOff, setSigningOff] = React.useState(false)
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
-import { getSession } from 'next-auth/client'
+import { getSession } from 'next-auth/react'
 import ProfileSection from '../components/ProfileSection'
 import { useCurrentUser } from '../lib/hooks'
 
