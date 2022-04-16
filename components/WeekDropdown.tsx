@@ -12,7 +12,7 @@ const WeekDropdown = () => {
       <Dropdown
         className="custom-dropdown"
         onChange={(e, { value }) => Store.setState({ week: value })}
-        options={generateNumbersArray(1, 17).map((num) => ({
+        options={generateNumbersArray().map((num) => ({
           key: num,
           value: num,
           text: `${num}`,
