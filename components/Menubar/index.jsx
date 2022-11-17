@@ -117,12 +117,10 @@ const Menubar = ({ darkMode }) => {
             Store.setState({
               selectedUser: user ? user._id : undefined,
               week: Store.getState().currentWeek,
-              season: Store.getState().currentSeasonYear,
+              seasonYear: Store.getState().currentSeasonYear,
             })
             if (user) {
-              router.push(
-                `/weeks?sport=${selectedSport}&yr=${selectedSeasonYear}`
-              )
+              router.push(`/weeks?sport=${selectedSport}`)
             } else {
               router.push('/')
             }
