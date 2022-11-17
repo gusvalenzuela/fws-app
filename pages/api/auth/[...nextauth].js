@@ -183,7 +183,7 @@ export default async function handler(req, res) {
        *                               JSON Web Token (if not using database sessions)
        * @return {object}              Session that will be returned to the client
        */
-      async session(session, token) {
+      async session(session) {
         return session
       },
       // /**
