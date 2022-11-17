@@ -147,7 +147,10 @@ const Menubar = ({ darkMode }) => {
             />
             <Dropdown
               selectOnNavigation={false}
-              options={generateNumbersArray().map((num) => ({
+              options={generateNumbersArray(
+                1,
+                selectedSeasonYear < 2021 ? 17 : 18
+              ).map((num) => ({
                 key: num,
                 text: num,
                 value: num,
