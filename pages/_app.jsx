@@ -35,7 +35,7 @@ export default function MyApp({ Component, pageProps }) {
     //  use last week ([array].length == "weeks" in array)
     Store.setState({
       currentWeek: startDateIndex < 0 ? weekStartDates.length : startDateIndex,
-      currentSeasonYear: 2021,
+      currentSeasonYear: 2022,
       timeZone: 'America/Los_Angeles',
     })
   }, [])

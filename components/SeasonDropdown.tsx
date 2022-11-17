@@ -3,9 +3,9 @@ import { Dropdown } from 'semantic-ui-react'
 import { generateNumbersArray } from '../lib/utils'
 import Store from '../lib/stores/FootballPool'
 
-const SeasonDropdown = ({ maxYear = 2021 }) => {
+const SeasonDropdown = ({ maxYear = 2022 }) => {
   const seasonYr = Store((s) => s.seasonYear || s.currentSeasonYear)
-  
+
   return (
     <>
       <span>Season </span>
