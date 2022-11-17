@@ -3,27 +3,25 @@ import Head from 'next/head'
 import nextConnect from 'next-connect'
 import database from '../../middlewares/database'
 
-export default function EmailVerifyPage({ success }) {
-  return (
-    <>
-      <Head>
-        <title>Sign up</title>
-      </Head>
-      <style jsx>
-        {`
-          p {
-            text-align: center;
-          }
-        `}
-      </style>
-      <p>
-        {success
-          ? 'Thank you for verifying your email address. You may close this page.'
-          : 'This link may have been expired.'}
-      </p>
-    </>
-  )
-}
+const EmailVerifyPage = ({ success }) => (
+  <>
+    <Head>
+      <title>Sign up</title>
+    </Head>
+    <style jsx>
+      {`
+        p {
+          text-align: center;
+        }
+      `}
+    </style>
+    <p>
+      {success
+        ? 'Thank you for verifying your email address. You may close this page.'
+        : 'This link may have been expired.'}
+    </p>
+  </>
+)
 
 export async function getServerSideProps(ctx) {
   const handler = nextConnect()
@@ -45,3 +43,5 @@ export async function getServerSideProps(ctx) {
 
   return { props: { success: true } }
 }
+
+export default EmailVerifyPage

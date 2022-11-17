@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import SignupForm from '../components/SignupForm'
 import { useCurrentUser } from '../lib/hooks'
 
-function SignupPage() {
+const SignupPage = () => {
   const [user, { mutate }] = useCurrentUser()
   const router = useRouter()
 

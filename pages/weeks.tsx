@@ -23,7 +23,7 @@ const TimeDisplay: any = dynamic(() => import('../components/TimeDisplay'), {
   loading: () => null,
   ssr: false,
 })
-function Weeks({ query }) {
+const Weeks = ({ query }) => {
   // Stored variables
   const week = Store((s) => s.week || s.currentWeek) // Store.week initializes as undefined
   const seasonType = Store((s) => s.seasonType || s.currentSeasonType) // Store.seasonType initializes as undefined

@@ -18,7 +18,7 @@ import Store from '../lib/stores/FootballPool'
 const { week_start_days: weekStartDates } = startDates
 
 // This default export is required in a new `pages/_app.js\x` file.
-export default function MyApp({ Component, pageProps }) {
+const MyApp = ({ Component, pageProps }) => {
   const [users] = useAllUsers()
   const storedUsers = Store((s) => s.allUsers)
   const darkMode = Store((s) => s.darkMode)
@@ -62,3 +62,5 @@ export default function MyApp({ Component, pageProps }) {
     </SessionProvider>
   )
 }
+
+export default MyApp

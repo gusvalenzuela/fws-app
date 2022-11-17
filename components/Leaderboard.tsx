@@ -7,7 +7,7 @@ import WeekDropdown from './WeekDropdown'
 import SeasonDropdown from './SeasonDropdown'
 import DualRingLoader from './DualRingLoader'
 
-export default function LeaderboardTable({ category }) {
+const LeaderboardTable = ({ category }) => {
   const isWeeklyType = category === 'weekly'
   const sport = 'football'
   const season = Store((s) => ({
@@ -93,6 +93,7 @@ export default function LeaderboardTable({ category }) {
     </>
   )
 }
+export default LeaderboardTable
 
 LeaderboardTable.propTypes = {
   category: PropTypes.oneOf(['weekly', 'season']).isRequired,

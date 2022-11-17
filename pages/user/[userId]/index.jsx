@@ -7,7 +7,7 @@ import DualRingLoader from '../../../components/DualRingLoader'
 import Store from '../../../lib/stores/FootballPool'
 import { useCurrentUser, useUserStandings, useUser } from '../../../lib/hooks'
 
-export default function UserPage({ userId }) {
+const UserPage = ({ userId }) => {
   const [currentUser] = useCurrentUser()
   const { user, isLoading: userIsLoading } = useUser(userId)
   const { name, email, bio, profilePicture, image } = user || {}
@@ -132,3 +132,5 @@ export async function getServerSideProps({ params }) {
     props: { userId }, // will be passed to the page component as props
   }
 }
+
+export default UserPage
