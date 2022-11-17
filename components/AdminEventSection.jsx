@@ -11,7 +11,7 @@ const AdminEventSection = ({ event }) => {
   const pointSpreadRef = useRef()
 
   useEffect(() => {
-    pointSpreadRef.current.value = -event?.line_?.point_spread
+    pointSpreadRef.current.value = -(event?.line_?.point_spread || 0.5)
     homeTeamScoreRef.current.value = event?.home_score
     awayTeamScoreRef.current.value = event?.away_score
     // console.log(event);
