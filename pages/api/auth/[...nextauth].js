@@ -184,14 +184,7 @@ export default async function handler(req, res) {
        * @return {object}              Session that will be returned to the client
        */
       async session(session, token) {
-        // console.log(session, token)
-        const reshapedSession = { ...session }
-        // Add property to session, like an access_token from a provider.
-        // session.accessToken = token.accessToken
-        if (session?.user) {
-          reshapedSession.user.id = token.id
-        }
-        return reshapedSession
+        return session
       },
       // /**
       //  * @param  {object}  token     Decrypted JSON Web Token
