@@ -33,12 +33,12 @@ function Weeks({ query }) {
   const userTimeZone = Store((s) => s.timeZone)
   // Hooks
   const [currentUser] = useCurrentUser()
-  const { sportTeams } = useSportTeams(query.sport)
+  const { sportTeams } = useSportTeams(query)
   const {
     schedule,
     lockDate,
     // isLoading: scheduleIsLoading,
-  } = useSchedule(query.sport, seasonYear, week)
+  } = useSchedule(query, seasonYear, week)
   // States
   const [Sport] = useState(2) // 2 = NFL, 7 = UFC
   const [teamsOnBye, setTeamsOnBye] = useState([])
@@ -210,7 +210,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   return {
     props: {
-      query: { sport },
+      query: sport,
     }, // will be passed to the page component as props
   }
 }
