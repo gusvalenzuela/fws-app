@@ -1,24 +1,24 @@
 import React from 'react'
 import type { FormEvent } from 'react'
-import { convertToNewSchema } from './createScheduleForMongo'
+import { convertToNewSchema, weekdates2022 } from './createScheduleForMongo'
 import StartDays from '../../lib/stores/startDays.json'
 
-const ScheduleRefresher = () => {
+const ScheduleRefresher = ({ url }) => {
   const startDates = StartDays.week_start_days
-  const currentWeek = startDates.findIndex(
-    (d: string) => Date.parse(d) > Date.now()
-  )
+  const currentWeek =
+    startDates.findIndex((d: string) => Date.parse(d) > Date.now()) || 18
   const weekInputRef = React.useRef(null)
   // message, updating, error
   const msgDefault = { message: '', isError: false }
   const [msg, setMsg] = React.useState(msgDefault)
   const [isUpdating, setIsUpdating] = React.useState(false)
+
   // ...
   const grabGamesFromAPI = async () => {
-    const queryURI = `https://www.espn.com/nfl/schedule/_/week/${weekInputRef.current.value}/seasontype/2?xhr=1`
-    // grab events from the ESPN schedule endpoint
-    const footballGames = await fetch(queryURI).then(async (r) => r.json())
+    const queryURI = url + weekdates2022[weekInputRef.current.value - 1]
 
+    // grab events from the schedule endpoint
+    const footballGames = await fetch(queryURI).then(async (r) => r.json())
     return footballGames
   }
 
@@ -39,6 +39,7 @@ const ScheduleRefresher = () => {
         message: 'Update complete with no information',
       })
     } else {
+      // this is currently not working as intended
       const reducer = (_prev, curr, ind: number) => {
         let updatedOk: number
 
@@ -70,14 +71,13 @@ const ScheduleRefresher = () => {
     try {
       const footballGames = await grabGamesFromAPI()
       // stop if error in retrieving from API
-      if (!footballGames) return
+      if (!footballGames?.events) return
       // convert to a friendly array i can upload to mongodb
       const formattedGames = await convertToNewSchema(
         // TODO make type for API schedule
-        footballGames.content?.schedule,
+        footballGames.events,
         weekInputRef.current.value
       )
-
       if (formattedGames) {
         await patchMatchupstoDB(formattedGames)
       }

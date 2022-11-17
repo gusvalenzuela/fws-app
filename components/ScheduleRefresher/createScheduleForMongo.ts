@@ -18,32 +18,58 @@ const weekDetails2021 = [
   'Dec 29-Jan 4',
   'Jan 5-11',
 ]
-async function flattenGames(schedule: object) {
-  // convert the ESPN schedule object into an array of games
-  // first check that it is an object
-  const allIncomingGamedays =
-    typeof schedule === 'object' &&
-    // Each object value is a game day (i.e. Thu, Sun, or Mon)
-    Object.values(schedule)
-      // map out the games from each game day and flatten to get
-      // them all in one nice neat array
-      ?.map((gameday) => gameday.games)
-      .flat()
-
-  if (!allIncomingGamedays) return null
-  //   console.log(allIncomingGamedays[0])
-
-  return allIncomingGamedays
-}
+export const weekdates2022 = [
+  '20220908-20220914',
+  '20220915-20220921',
+  '20220922-20220928',
+  '20220929-20221005',
+  '20221006-20221012',
+  '20221013-20221019',
+  '20221020-20221026',
+  '20221027-20221102',
+  '20221103-20221109',
+  '20221110-20221116',
+  '20221117-20221123',
+  '20221124-20221130',
+  '20221201-20221207',
+  '20221208-20221214',
+  '20221215-20221221',
+  '20221222-20221228',
+  '20221229-20230104',
+  '20230105-20230111',
+]
 
 export async function convertToNewSchema(
-  schedule: object,
+  schedule: any[],
   incomingWeek: number
 ) {
-  const allIncomingGamedays = await flattenGames(schedule)
+  // const allIncomingGamedays = await flattenGames(schedule)
 
-  const games = allIncomingGamedays.map((game) => ({
+  /*
+  NFLTeams referenced below is only needed at the initial matchup entry
+  uncomment as needed and provide array
+  */
+
+  const games = schedule.map((game) => ({
+    sport_id: 2,
+    season_year: game.season?.year,
     matchupId: game.uid,
+    // away_team_id:
+    //   game.competitions[0].competitors[1]?.homeAway === 'away'
+    //     ? Number(
+    //         NFLTeams.find(
+    //           (g) =>
+    //             g.mascot ===
+    //             game.competitions[0].competitors[1]?.team.shortDisplayName
+    //         )?.team_id
+    //       )
+    //     : Number(
+    //         NFLTeams.find(
+    //           (g) =>
+    //             g.mascot ===
+    //             game.competitions[0].competitors[0]?.team.shortDisplayName
+    //         )?.team_id
+    //       ),
     away_score:
       game.competitions[0].competitors[1]?.homeAway === 'away'
         ? Number(game.competitions[0].competitors[1]?.score)
@@ -66,6 +92,22 @@ export async function convertToNewSchema(
     event_name: `${game.name} - ${game.date.split('T')[0]}`, // "Seattle at Atlanta - 2020-09-13"
     event_status: game.status.type.name,
     event_status_detail: game.status.type.detail,
+    // home_team_id:
+    //   game.competitions[0].competitors[0]?.homeAway === 'home'
+    //     ? Number(
+    //         NFLTeams.find(
+    //           (g) =>
+    //             g.mascot ===
+    //             game.competitions[0].competitors[0]?.team.shortDisplayName
+    //         )?.team_id
+    //       )
+    //     : Number(
+    //         NFLTeams.find(
+    //           (g) =>
+    //             g.mascot ===
+    //             game.competitions[0].competitors[1]?.team.shortDisplayName
+    //         )?.team_id
+    //       ),
     home_score:
       game.competitions[0].competitors[0]?.homeAway === 'home'
         ? Number(game.competitions[0].competitors[0]?.score)
@@ -81,6 +123,7 @@ export async function convertToNewSchema(
     week: Number(incomingWeek),
     week_detail: weekDetails2021[incomingWeek - 1],
     week_name: `Week ${incomingWeek}`,
+    season_type: 'Regular Season',
   }))
 
   return games

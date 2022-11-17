@@ -7,7 +7,7 @@ import SeasonDropdown from '../components/SeasonDropdown'
 import DualRingLoader from '../components/DualRingLoader'
 import ScheduleRefresher from '../components/ScheduleRefresher'
 
-const AdminPage = () => {
+const AdminPage = ({ apiURL }) => {
   const [season, setSeason] = useState(
     Store((s) => s.seasonYear) || Store.getState().currentSeasonYear
   )
@@ -36,7 +36,7 @@ const AdminPage = () => {
         <h1>Game scores:</h1>
       </header>
       <div className="page-content">
-        <ScheduleRefresher />
+        <ScheduleRefresher url={apiURL} />
         <SeasonDropdown season={season} setSeasonYear={setSeason} />
         <WeekDropdown week={week} setWeek={setWeek} />
         {!scheduleIsLoading && schedule.length ? (
@@ -58,3 +58,9 @@ const AdminPage = () => {
 }
 
 export default AdminPage
+
+export async function getStaticProps() {
+  return {
+    props: { apiURL: process.env.SPORT_API_QUERY },
+  }
+}
