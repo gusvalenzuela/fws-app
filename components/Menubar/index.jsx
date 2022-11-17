@@ -244,48 +244,46 @@ const Menubar = ({ darkMode }) => {
               </Dropdown.Item> */}
             </>
           ) : (
-            <>
-              <Dropdown simple item text="Account">
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    onClick={() => {
-                      toggleResponsiveMenu()
-                      router.push(`/user/${user._id}`)
-                    }}
-                  >
-                    My Profile
-                  </Dropdown.Item>
-                  {
-                    // add dropdown for admin page, if user is an Admin User
-                    user?.isAdmin && (
-                      <Dropdown.Item
-                        text="Admin Page"
-                        onClick={() => {
-                          toggleResponsiveMenu()
-                          router.push('/admin')
-                        }}
-                      />
-                    )
-                  }
-                  <Dropdown.Item
-                    text="Settings"
-                    icon="settings"
-                    onClick={() => {
-                      toggleResponsiveMenu()
-                      router.push('/settings')
-                    }}
-                  />
-                  <Dropdown.Item
-                    icon="log out"
-                    text="Sign Out"
-                    onClick={() => {
-                      toggleResponsiveMenu()
-                      router.push('/signout')
-                    }}
-                  />
-                </Dropdown.Menu>
-              </Dropdown>
-            </>
+            <Dropdown simple item text="Account">
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    toggleResponsiveMenu()
+                    router.push(`/user/${user._id}`)
+                  }}
+                >
+                  My Profile
+                </Dropdown.Item>
+                {
+                  // add dropdown for admin page, if user is an Admin User
+                  user?.isAdmin && (
+                    <Dropdown.Item
+                      text="Admin Page"
+                      onClick={() => {
+                        toggleResponsiveMenu()
+                        router.push('/admin')
+                      }}
+                    />
+                  )
+                }
+                <Dropdown.Item
+                  text="Settings"
+                  icon="settings"
+                  onClick={() => {
+                    toggleResponsiveMenu()
+                    router.push('/settings')
+                  }}
+                />
+                <Dropdown.Item
+                  icon="log out"
+                  text="Sign Out"
+                  onClick={() => {
+                    toggleResponsiveMenu()
+                    router.push('/signout')
+                  }}
+                />
+              </Dropdown.Menu>
+            </Dropdown>
           )}
         </Menu.Menu>
       </Menu>
