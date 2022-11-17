@@ -26,8 +26,8 @@ const MatchupCardSection = ({
       }
     `}</style>
     {
-      /* 
-        for each game of the week, make a header or divider and a matchup card component 
+      /*
+        for each game of the week, make a header or divider and a matchup card component
         Caveat: -- only displays other user's if Date now is after the lockdate (i.e. after first Sunday Game)
       */
       !schedule || !schedule?.length ? (
@@ -137,7 +137,7 @@ MatchupCardSection.propTypes = {
   currentUser: PropTypes.shape({ _id: PropTypes.string }),
   isCurrentUser: PropTypes.bool.isRequired,
   // modernLayout,
-  tiebreakMatch: PropTypes.shape(MatchupShape),
+  tiebreakMatch: PropTypes.shape({ matchupId: PropTypes.string }),
   timeZone: PropTypes.string,
 }
 
