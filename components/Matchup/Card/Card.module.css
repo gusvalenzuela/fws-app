@@ -95,12 +95,29 @@
   color: #000;
   font-weight: 900;
 }
-
+.awayFavorite,
+.homeUnderdog {
+  position: absolute;
+  color: var(--main-white);
+  background-color: #000000;
+  text-orientation: upright;
+  writing-mode: vertical-lr;
+  height: max-content;
+  width: min-content;
+  margin: 0;
+  padding: 0.225rem !important;
+}
+.awayFavorite {
+  left: 0;
+}
+.homeUnderdog {
+  right: 0;
+}
 .teamContainer {
   text-align: center;
   height: 100%;
   cursor: pointer;
-  margin: auto 14px !important;
+  margin: 0 6px !important;
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
   -webkit-animation-fill-mode: both;
@@ -121,9 +138,11 @@
 }
 .compactCards {
   display: grid !important;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr;
   align-items: center;
   justify-content: space-evenly;
+  justify-items: center;
+  margin-top: 8px;
 }
 .teamContainer .compactCards img {
   margin-bottom: inherit;
@@ -131,7 +150,21 @@
 .pastEvent {
   filter: grayscale(100%);
 }
-
+.selectionCheckBox {
+  z-index: 99;
+  margin: auto;
+  position: absolute;
+  top: 2%;
+  left: 0;
+}
+.lineSpread {
+  margin: 0;
+  align-self: center;
+  color: red;
+  transform: scale(1.25);
+  font-weight: 700;
+  text-shadow: 0.7px 0.7px #000f;
+}
 /* animations  */
 @keyframes bounce {
   0%,
@@ -155,7 +188,7 @@
   }
 }
 
-/* when pointer is a mouse (fine) 
+/* when pointer is a mouse (fine)
 run Bounce animation on hover */
 @media (hover: hover) and (pointer: fine) {
   .teamContainer:hover {

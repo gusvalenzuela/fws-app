@@ -153,7 +153,7 @@ const MatchupCardAt = ({
     return () => {}
   }, [userPick, awayTeam, homeTeam, tbValue, tiebreak])
 
-  const buildTeamCard = (team = {}) => {
+  const buildTeamCard = (team) => {
     const isSelectedTeam = Number(selectedTeam?.team_id) === team.team_id
     return (
       <Grid.Column
@@ -166,16 +166,11 @@ const MatchupCardAt = ({
         data-team_name={team.abbreviation}
         data-event={matchup.event_id}
         stretched
-        // width="6"
       >
         {/* selected team tag */}
         <span
+          className={Style.selectionCheckBox}
           style={{
-            zIndex: 99,
-            margin: 'auto',
-            position: 'absolute',
-            top: '7px',
-            left: 0,
             width: '100%',
           }}
         >
@@ -187,75 +182,65 @@ const MatchupCardAt = ({
           />
         </span>
         <section className={!compactCards ? undefined : Style.compactCards}>
-          {' '}
           {/* team logo / image  */}
-          {/* hosting the images on cloudinary */}
-          <Image
-            cloudName="fwscloud"
-            publicId={`NFL-Team_logos/${
-              sport === 2 ? team.abbreviation : 'nfl'
-            }.png`}
-            loading="lazy"
-            alt={`${team.abbreviation}'s team logo`}
-            title={`${team.name} ${team.mascot}`}
-            id="team-logo-img"
+          {
+            /* hosting the images on cloudinary */
+            <Image
+              cloudName="fwscloud"
+              publicId={`NFL-Team_logos/${
+                sport === 2 ? team.abbreviation : 'nfl'
+              }.png`}
+              loading="lazy"
+              alt={`${team.abbreviation}'s team logo`}
+              title={`${team.name} ${team.mascot}`}
+              id="team-logo-img"
+            >
+              <Placeholder type="vectorize" />
+              <Transformation
+                quality="auto"
+                fetchFormat="auto"
+                height={!compactCards ? '150' : '75'}
+                width={!compactCards ? '150' : '75'}
+                crop="fit"
+              />
+            </Image>
+          }
+          <h4
+            style={
+              compactCards
+                ? {
+                    margin: '0',
+                    marginRight: '5px',
+                  }
+                : { marginBottom: '2px' }
+            }
           >
-            <Placeholder type="vectorize" />
-            <Transformation
-              quality="auto"
-              fetchFormat="auto"
-              height={!compactCards ? '175' : '75'}
-              width={!compactCards ? '175' : '75'}
-              crop="fit"
-            />
-          </Image>
-          <h3>
-            {!compactCards &&
-            !prefersModernLayout &&
-            team.team_id === homeTeam.team_id
-              ? `${team.name}`.toUpperCase()
-              : !compactCards
-              ? team.name
-              : !prefersModernLayout && team.team_id === homeTeam.team_id
-              ? `${team.abbreviation}`.toLowerCase()
-              : team.abbreviation}
+            {!compactCards ? team.name : team.abbreviation}
             {!compactCards && <br />}
-            {!compactCards &&
-            !prefersModernLayout &&
-            team.team_id === homeTeam.team_id
-              ? `${team.mascot}`.toUpperCase()
-              : !compactCards && team.mascot}
+            {!compactCards && team.mascot}
             <br />
-            {/* team record  */}
-            <span style={{ fontSize: '.85rem' }}>
+            {/* {!compactCards && <br />} */}
+          </h4>
+          {/* team record  */}
+          {!compactCards && (
+            <h4 style={{ margin: '0', fontSize: '.75rem' }}>
               {homeTeam.team_id === team.team_id
                 ? matchup.home_record
                 : matchup.away_record}
-            </span>
-          </h3>
+            </h4>
+          )}
           {/* Line spread */}
-          <p
-            style={{
-              margin: 0,
-              alignSelf: 'center',
-              color: 'red',
-              transform: 'scale(1.75)',
-              fontWeight: '900',
-              textShadow: '.5px .5px #555',
-            }}
-          >
+          <p className={Style.lineSpread}>
             {
               // displays the point spread for favorite (0.5)
-              !prefersModernLayout ? (
-                <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
-              ) : matchup.line_ && team.team_id === matchup.line_.favorite ? (
+              team.team_id === matchup.line_?.favorite ? (
                 -matchup.line_.point_spread
               ) : (
-                <span style={{ visibility: 'hidden' }}>--</span>
+                <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
               )
             }
           </p>
-        </section>{' '}
+        </section>
       </Grid.Column>
     )
   }
@@ -278,23 +263,36 @@ const MatchupCardAt = ({
           className={Style.matchupGrid}
           style={{
             backgroundColor: 'grey',
-            background: isPastEvent ? '#e6e6e6' : `linear-gradient(125deg, var(--color-${awayTeam?.abbreviation}-primary, white) 50%, var(--color-${homeTeam?.abbreviation}-primary, grey) 50%)`,
+            background: isPastEvent
+              ? '#e6e6e6'
+              : `linear-gradient(125deg, var(--color-${awayTeam?.abbreviation}-primary, white) 50%, var(--color-${homeTeam?.abbreviation}-primary, grey) 50%)`,
           }}
         >
           <Grid columns="equal">
-            {/* 
+            {/*
             buildTeamCard function returns a grid column for any team fed.
             takes in specific team Obj containing abbr, name, mascot, and more  */}
+            <section className={Style.awayFavorite}>
+              {prefersModernLayout && awayTeam.team_id === favoriteTeam.team_id
+                ? 'F'
+                : prefersModernLayout &&
+                  homeTeam.team_id === favoriteTeam.team_id
+                ? 'U'
+                : !prefersModernLayout &&
+                  awayTeam.team_id === favoriteTeam.team_id
+                ? 'A'
+                : 'H'}
+            </section>
             {
               // away team
               // or favorite team if prefersModernLayout = false
               buildTeamCard(prefersModernLayout ? awayTeam : favoriteTeam)
             }
             {
-              /* 
-              this divider has slight changes 
+              /*
+              this divider has slight changes
               varied on the sport type
-             (i.e.american football vs mma) 
+             (i.e.american football vs mma)
              */
               <MatchupDivider
                 compactCards={compactCards}
@@ -312,6 +310,17 @@ const MatchupCardAt = ({
               // or underdog team if prefersModernLayout = false
               buildTeamCard(prefersModernLayout ? homeTeam : underdogTeam)
             }
+            <section className={Style.homeUnderdog}>
+              {prefersModernLayout && homeTeam.team_id === favoriteTeam.team_id
+                ? 'F'
+                : prefersModernLayout &&
+                  awayTeam.team_id === favoriteTeam.team_id
+                ? 'U'
+                : !prefersModernLayout &&
+                  awayTeam.team_id === favoriteTeam.team_id
+                ? 'H'
+                : 'A'}
+            </section>
           </Grid>
         </div>
       </Segment>
@@ -330,7 +339,12 @@ const MatchupCardAt = ({
             matchup && matchup.event_status === 'STATUS_FINAL' ? (
               <>
                 <Grid.Column className={Style.finalColumn}>
-                  <h3>{matchup.away_score}</h3>
+                  <h3>
+                    {!prefersModernLayout &&
+                    homeTeam.team_id === matchup.line_?.favorite
+                      ? matchup.home_score
+                      : matchup.away_score}
+                  </h3>
                 </Grid.Column>
                 <Grid.Column className={Style.finalColumn} width={3}>
                   <span style={{ fontSize: 'medium' }}>
@@ -338,7 +352,12 @@ const MatchupCardAt = ({
                   </span>
                 </Grid.Column>
                 <Grid.Column className={Style.finalColumn}>
-                  <h3>{matchup.home_score}</h3>
+                  <h3>
+                    {!prefersModernLayout &&
+                    homeTeam.team_id === matchup.line_?.favorite
+                      ? matchup.away_score
+                      : matchup.home_score}
+                  </h3>
                 </Grid.Column>
               </>
             ) : (
