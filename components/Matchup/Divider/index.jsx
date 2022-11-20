@@ -58,16 +58,7 @@ const MatchupDivider = ({
       )
     }
 
-    {!isPastEvent ? (
-      <p
-        className="divider-pick"
-        style={{ marginTop: '.5rem', fontSize: '1.12rem' }}
-      >
-        {!selectedTeam && '◀ Pick ▶'}
-      </p>
-    ) : (
-      <br />
-    )}
+    {prefersModernLayout && <br />}
 
     {!selectedTeam && userPick ? (
       <Loader text="Fetching your pick" />

@@ -127,8 +127,8 @@
   .matchup-divider i.at {
     font-size: 4em !important;
   }
-  .matchup-divider p {
-    font-size: 0.9rem !important;
+  .matchup-divider p:not(.divider-pick) {
+    font-size: 2.3rem !important;
   }
 }
 /* @media screen and (max-width: 576px) {
@@ -141,7 +141,7 @@
 } */
 @media screen and (max-width: 425px) {
   .week-header {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   .current-time-container {
     font-size: 1.1rem !important;
@@ -152,8 +152,8 @@
   .matchup-divider i.at {
     font-size: 2.6em !important;
   }
-  .matchup-divider p.divider-pick {
-    font-size: 1rem !important;
+  .matchup-divider p:not(.divider-pick){
+    font-size: 1.8rem !important;
   }
 }
 

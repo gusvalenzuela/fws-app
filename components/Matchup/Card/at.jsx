@@ -181,7 +181,14 @@ const MatchupCardAt = ({
             // inverted
           />
         </span>
-        <section className={!compactCards ? undefined : Style.compactCards}>
+        <section
+          className={!compactCards ? undefined : Style.compactCards}
+          style={
+            prefersModernLayout
+              ? { gridTemplateColumns: '1fr 1fr 1fr' }
+              : { gridTemplateColumns: '1fr 1fr' }
+          }
+        >
           {/* team logo / image  */}
           {
             /* hosting the images on cloudinary */
@@ -229,17 +236,22 @@ const MatchupCardAt = ({
                 : matchup.away_record}
             </h4>
           )}
-          {/* Line spread */}
-          <p className={Style.lineSpread}>
-            {
-              // displays the point spread for favorite (0.5)
-              team.team_id === matchup.line_?.favorite ? (
-                -matchup.line_.point_spread
-              ) : (
-                <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
-              )
-            }
-          </p>
+          {
+            /* Line spread
+             */
+            prefersModernLayout && (
+              <p className={Style.lineSpread}>
+                {
+                  // displays the point spread for favorite (0.5)
+                  team.team_id === matchup.line_?.favorite ? (
+                    -matchup.line_.point_spread
+                  ) : (
+                    <span style={{ visibility: 'hidden' }}>--</span> // display and hide an equivalent element to keep balance layout
+                  )
+                }
+              </p>
+            )
+          }
         </section>
       </Grid.Column>
     )
