@@ -41,7 +41,7 @@ body {
 #lightModeCheckbox input ~ label {
   color: var(--color-dark, --main-black, #020202) !important;
 }
-/* 
+/*
 MENUBAR RELATED
 */
 
@@ -130,7 +130,7 @@ main {
 }
 time.time {
   color: #979797;
-  font-size: 1em;
+  font-size: 1rem;
 }
 .brand-name {
   font-weight: 700;
@@ -190,4 +190,7 @@ time.time {
 .season-dropdown {
   background-color: transparent !important ;
   color: var(--brand-color1, #f00) !important;
+}
+.picked {
+  background: radial-gradient(var(--light-mode, #ffffff), transparent 72%);
 }
