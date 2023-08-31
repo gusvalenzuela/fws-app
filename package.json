@@ -30,7 +30,7 @@
     "lodash": "^4.17.21",
     "moment": "2.29.1",
     "moment-timezone": "^0.5.39",
-    "mongodb": "^4.4.1",
+    "mongodb": "^4.17.0",
     "multer": "1.4.5-lts.1",
     "nanoid": "^3.1.25",
     "next": "12.1.5",
